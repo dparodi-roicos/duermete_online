@@ -1,0 +1,842 @@
+<title>Auditoría Marketplaces — Duérmete Online</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #F6F7F9;
+  --surface: #FFFFFF;
+  --surface-2: #F0F2F5;
+  --border: #E2E6ED;
+  --text-primary: #0F172A;
+  --text-muted: #64748B;
+  --accent: #2563EB;
+  --success: #16A34A;
+  --success-bg: #F0FDF4;
+  --warning: #B45309;
+  --warning-bg: #FFFBEB;
+  --critical: #DC2626;
+  --critical-bg: #FEF2F2;
+  --suspended: #7C3AED;
+  --suspended-bg: #F5F3FF;
+  --header-bg: #0F172A;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1117; --surface: #161B22; --surface-2: #1F2937;
+    --border: #2D3748; --text-primary: #F1F5F9; --text-muted: #94A3B8;
+    --success-bg: #052E16; --warning-bg: #451A03;
+    --critical-bg: #450A0A; --suspended-bg: #2E1065;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1117; --surface: #161B22; --surface-2: #1F2937;
+  --border: #2D3748; --text-primary: #F1F5F9; --text-muted: #94A3B8;
+  --success-bg: #052E16; --warning-bg: #451A03;
+  --critical-bg: #450A0A; --suspended-bg: #2E1065;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+
+.header { background: var(--header-bg); color: #F1F5F9; padding: 20px 24px 0; }
+.header-top { display: flex; align-items: flex-start; gap: 16px; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px; }
+.client-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #64748B; margin-bottom: 4px; }
+.report-title { font-size: 22px; font-weight: 700; color: #F1F5F9; margin: 0 0 4px; }
+.report-meta { font-size: 12px; color: #64748B; }
+.summary-pills { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.pill { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 16px; text-align: center; min-width: 80px; }
+.pill-num { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; display: block; }
+.pill-label { font-size: 10px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.07em; display: block; margin-top: 2px; }
+.pill-group-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); align-self: center; padding: 0 4px; white-space: nowrap; }
+.pill-vsep { width: 1px; height: 40px; background: rgba(255,255,255,0.15); align-self: center; margin: 0 4px; flex-shrink: 0; }
+.c-blue { color: #60A5FA; } .c-green { color: #4ADE80; } .c-red { color: #F87171; } .c-amber { color: #FCD34D; }
+
+.tabs-bar { background: var(--header-bg); padding: 0 24px; overflow-x: auto; }
+.tabs { display: flex; gap: 2px; min-width: max-content; }
+.tab { padding: 9px 15px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 13px; font-weight: 500; background: rgba(255,255,255,0.05); color: #94A3B8; border: none; white-space: nowrap; transition: all 0.15s; display: flex; align-items: center; gap: 6px; font-family: inherit; }
+.tab:hover { background: rgba(255,255,255,0.1); color: #E2E8F0; }
+.tab.active { background: var(--bg); color: var(--text-primary); font-weight: 600; }
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+.dot-g { background: #4ADE80; } .dot-a { background: #FCD34D; } .dot-r { background: #F87171; } .dot-p { background: #A78BFA; }
+
+.content { max-width: 1100px; margin: 0 auto; padding: 24px; }
+.panel { display: none; } .panel.active { display: block; }
+
+.banner { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; font-size: 14px; }
+.banner-title { display: block; }
+.banner-sub { display: block; font-weight: 400; font-size: 12px; margin-top: 2px; opacity: 0.8; }
+.b-ok { background: var(--success-bg); color: var(--success); border: 1px solid #86EFAC; }
+.b-warn { background: var(--warning-bg); color: var(--warning); border: 1px solid #FDE68A; }
+.b-crit { background: var(--critical-bg); color: var(--critical); border: 1px solid #FECACA; }
+.b-susp { background: var(--suspended-bg); color: var(--suspended); border: 1px solid #C4B5FD; }
+.banner-icon { font-size: 20px; flex-shrink: 0; }
+
+.mtr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.mtr { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; }
+.mtr-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+.mtr-value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.mtr-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.v-ok .mtr-value { color: var(--success); } .v-warn .mtr-value { color: var(--warning); } .v-crit .mtr-value { color: var(--critical); } .v-muted .mtr-value { color: var(--text-muted); }
+
+.counters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.counter { flex: 1; min-width: 100px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+.counter-num { font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; display: block; margin-bottom: 5px; }
+.counter-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.cn-ok { color: var(--success); } .cn-warn { color: var(--warning); } .cn-crit { color: var(--critical); } .cn-n { color: var(--text-primary); }
+
+.kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+.kpi-head { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+.kpi-table { width: 100%; border-collapse: collapse; }
+.kpi-table tr { border-bottom: 1px solid var(--border); }
+.kpi-table tr:last-child { border-bottom: none; }
+.kpi-table td { padding: 9px 16px; font-size: 13px; vertical-align: middle; }
+.kpi-table td:first-child { color: var(--text-muted); width: 48%; }
+.kpi-table td:nth-child(2) { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-variant-numeric: tabular-nums; }
+.kpi-table td:last-child { font-size: 11px; color: var(--text-muted); text-align: right; }
+.k-ok { color: var(--success) !important; } .k-warn { color: var(--warning) !important; } .k-crit { color: var(--critical) !important; }
+
+.actions { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+.action { display: flex; align-items: flex-start; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--border); }
+.action:last-child { border-bottom: none; }
+.pri { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+.p-urg { background: var(--critical-bg); color: var(--critical); }
+.p-hi { background: var(--warning-bg); color: var(--warning); }
+.p-med { background: var(--suspended-bg); color: var(--suspended); }
+.p-lo { background: var(--surface-2); color: var(--text-muted); }
+.action-txt { font-size: 13px; line-height: 1.45; }
+
+.top-prod { background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03)); border: 1px solid rgba(37,99,235,0.2); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+.tp-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.tp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.tp-value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 700; color: var(--accent); }
+
+.note { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+.note strong { color: var(--text-primary); }
+
+/* OVERVIEW */
+.ov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 16px; }
+.ov-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+.ov-card:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.ov-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+.ov-flag { font-size: 20px; }
+.ov-name-wrap { flex: 1; }
+.ov-name { font-weight: 600; font-size: 14px; }
+.ov-sub { font-size: 11px; color: var(--text-muted); }
+.chip { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+.chip-ok { background: var(--success-bg); color: var(--success); }
+.chip-warn { background: var(--warning-bg); color: var(--warning); }
+.chip-crit { background: var(--critical-bg); color: var(--critical); }
+.chip-susp { background: var(--suspended-bg); color: var(--suspended); }
+.ov-nums { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.ov-num-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.ov-num-value { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ov-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.sm-chip { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 100px; }
+.sc-ok { background: var(--success-bg); color: var(--success); }
+.sc-warn { background: var(--warning-bg); color: var(--warning); }
+.sc-crit { background: var(--critical-bg); color: var(--critical); }
+.sc-n { background: var(--surface-2); color: var(--text-muted); }
+
+footer { text-align: center; font-size: 11px; color: var(--text-muted); padding: 20px 24px; border-top: 1px solid var(--border); }
+.tab-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.18); align-self: center; flex-shrink: 0; margin: 0 4px; }
+.tab-section-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); align-self: center; white-space: nowrap; padding: 0 6px; flex-shrink: 0; }
+.dot-mv { background: #A78BFA; }
+
+@media (max-width: 620px) {
+  .header { padding: 16px 16px 0; }
+  .header-top { flex-direction: column; }
+  .content { padding: 16px; }
+  .tabs-bar { padding: 0 12px; }
+  .ov-grid { grid-template-columns: 1fr; }
+  .mtr-grid { grid-template-columns: 1fr 1fr; }
+  .counters { gap: 8px; }
+}
+</style>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="client-eyebrow">Roicos · Duérmete Online</div>
+      <h1 class="report-title">Auditoría Miravia · Mirakl</h1>
+      <div class="report-meta">21 sep 2026 · Mirakl: 9 marketplaces · Miravia: 2 tiendas auditadas (Duérmete Online 21-sep · Somnia Descanso 17-sep), 1 pendiente</div>
+    </div>
+    <div class="summary-pills">
+      <span class="pill-group-label">Miravia</span>
+      <div class="pill"><span class="pill-num c-blue">92.002€</span><span class="pill-label">Revenue 30d</span></div>
+      <div class="pill"><span class="pill-num c-amber">2</span><span class="pill-label">Tiendas</span></div>
+      <div class="pill"><span class="pill-num c-red">10</span><span class="pill-label">KPIs fuera</span></div>
+      <div class="pill-vsep"></div>
+      <span class="pill-group-label">Mirakl</span>
+      <div class="pill"><span class="pill-num c-blue">82.208€</span><span class="pill-label">Ventas 7d</span></div>
+      <div class="pill"><span class="pill-num c-green">5</span><span class="pill-label">Activos</span></div>
+      <div class="pill"><span class="pill-num c-red">3</span><span class="pill-label">Suspendidos</span></div>
+      <div class="pill"><span class="pill-num c-amber">3</span><span class="pill-label">Con alertas</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <div class="tabs">
+    <span class="tab-section-label">Miravia</span>
+    <button class="tab active" onclick="switchTab('miravia')" id="tab-miravia"><span class="dot dot-mv"></span>Resumen MV</button>
+    <button class="tab" onclick="switchTab('duermete-mv')" id="tab-duermete-mv"><span class="dot dot-r"></span>Duérmete Online</button>
+    <button class="tab" onclick="switchTab('somnia-mv')" id="tab-somnia-mv"><span class="dot dot-a"></span>Somnia Descanso</button>
+    <span class="tab-sep"></span>
+    <span class="tab-section-label">Mirakl</span>
+    <button class="tab" onclick="switchTab('overview')" id="tab-overview">Resumen MK</button>
+    <button class="tab" onclick="switchTab('worten')" id="tab-worten"><span class="dot dot-g"></span>Worten PT</button>
+    <button class="tab" onclick="switchTab('conforama')" id="tab-conforama"><span class="dot dot-p"></span>Conforama FR</button>
+    <button class="tab" onclick="switchTab('cfib')" id="tab-cfib"><span class="dot dot-a"></span>Conforama ES</button>
+    <button class="tab" onclick="switchTab('cfr')" id="tab-cfr"><span class="dot dot-a"></span>Carrefour FR</button>
+    <button class="tab" onclick="switchTab('cfe')" id="tab-cfe"><span class="dot dot-r"></span>Carrefour ES</button>
+    <button class="tab" onclick="switchTab('adeo')" id="tab-adeo"><span class="dot dot-g"></span>ADEO / LM</button>
+    <button class="tab" onclick="switchTab('eroski')" id="tab-eroski"><span class="dot dot-p"></span>Eroski</button>
+    <button class="tab" onclick="switchTab('mdm')" id="tab-mdm"><span class="dot dot-p"></span>Maisons du Monde</button>
+    <button class="tab" onclick="switchTab('brico')" id="tab-brico"><span class="dot dot-p"></span>Brico Dépôt</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- MIRAVIA RESUMEN -->
+<div class="panel active" id="panel-miravia">
+  <div class="note"><strong>Miravia · 21 sep 2026</strong> — Duérmete Online actualizado a hoy. Somnia Descanso: datos de 17 sep 2026 (cuenta en modo incógnito sin acceso directo).</div>
+  <div class="ov-grid">
+    <div class="ov-card" onclick="switchTab('duermete-mv')">
+      <div class="ov-top">
+        <span class="ov-flag">🛍️</span>
+        <div class="ov-name-wrap"><div class="ov-name">Duérmete Online</div><div class="ov-sub">Miravia + AliExpress · 21 sep 2026</div></div>
+        <span class="chip chip-crit">7 KPIs KO</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Revenue 30d</div><div class="ov-num-value">22.303€</div></div>
+        <div><div class="ov-num-label">Pdte envío</div><div class="ov-num-value">4</div></div>
+        <div><div class="ov-num-label">Sin stock</div><div class="ov-num-value">109 SKUs</div></div>
+        <div><div class="ov-num-label">Pen. cuenta AE</div><div class="ov-num-value">1</div></div>
+      </div>
+      <div class="ov-chips">
+        <span class="sm-chip sc-crit">OTD MV 62.5%</span>
+        <span class="sm-chip sc-crit">Chat 71.05%</span>
+        <span class="sm-chip sc-crit">Review 83.04%</span>
+        <span class="sm-chip sc-crit">Return 1.44%</span>
+      </div>
+    </div>
+    <div class="ov-card" onclick="switchTab('somnia-mv')">
+      <div class="ov-top">
+        <span class="ov-flag">🛌</span>
+        <div class="ov-name-wrap"><div class="ov-name">Somnia Descanso</div><div class="ov-sub">Miravia + AliExpress · 17 sep 2026</div></div>
+        <span class="chip chip-warn">Alertas</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Revenue 30d</div><div class="ov-num-value">70.699€</div></div>
+        <div><div class="ov-num-label">Pdte envío</div><div class="ov-num-value">26</div></div>
+        <div><div class="ov-num-label">Sin stock</div><div class="ov-num-value">30 SKUs</div></div>
+        <div><div class="ov-num-label">Penalizaciones</div><div class="ov-num-value">169 AE / 2 MV</div></div>
+      </div>
+      <div class="ov-chips">
+        <span class="sm-chip sc-crit">OTD 64.15%</span>
+        <span class="sm-chip sc-warn">Chat 64.58%</span>
+        <span class="sm-chip sc-warn">Review 93.72%</span>
+        <span class="sm-chip sc-ok">SOT 99.71%</span>
+      </div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-top">
+        <span class="ov-flag">⏳</span>
+        <div class="ov-name-wrap"><div class="ov-name">Tienda 3</div><div class="ov-sub">Pendiente de alta en Miravia</div></div>
+        <span class="chip chip-susp">Pendiente</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Estado</div><div class="ov-num-value">—</div></div>
+        <div><div class="ov-num-label">Revenue 30d</div><div class="ov-num-value">—</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-n">Sin datos</span></div>
+    </div>
+  </div>
+  <div class="kpi-card" style="margin-top:20px">
+    <div class="kpi-head">Resumen consolidado Miravia · Ambas tiendas</div>
+    <table class="kpi-table">
+      <tr><td>Revenue combinado 30d</td><td class="k-ok">~92.002€</td><td>DO 21-sep + Somnia 17-sep</td></tr>
+      <tr><td>Duérmete Online · Miravia channel</td><td>13.030€</td><td>-21.29% vs mes anterior</td></tr>
+      <tr><td>Duérmete Online · AliExpress channel</td><td>9.274€</td><td>21 sep 2026</td></tr>
+      <tr><td>Somnia Descanso · Revenue 30d</td><td>70.699€</td><td>+41.4% MoM · 17 sep 2026</td></tr>
+      <tr><td>Penalizaciones de cuenta DO</td><td class="k-crit">1 (AE Shipping limitation)</td><td>Afecta GMV 9.273,59€</td></tr>
+      <tr><td>Penalizaciones Somnia</td><td class="k-crit">169 AE + 2 Miravia</td><td>17 sep 2026</td></tr>
+      <tr><td>KPIs fuera de target DO</td><td class="k-crit">7 de 7</td><td>Miravia + AliExpress</td></tr>
+      <tr><td>KPIs fuera de target Somnia</td><td class="k-warn">3 de 6</td><td>OTD, Chat, Review Rate</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- DUERMETE ONLINE (MIRAVIA) -->
+<div class="panel" id="panel-duermete-mv">
+  <div class="banner b-crit">
+    <span class="banner-icon">🚨</span>
+    <div><span class="banner-title">7/7 KPIs FUERA DE TARGET — Todos los indicadores de servicio en rojo</span><span class="banner-sub">sellercenter.miravia.es · Duérmete Online (Miravia + AliExpress) · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-warn"><div class="mtr-label">Revenue 30d total</div><div class="mtr-value">22.303€</div><div class="mtr-sub">Miravia + AliExpress</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Revenue Miravia</div><div class="mtr-value">13.030€</div><div class="mtr-sub">-21.29% vs mes ant.</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Revenue AliExpress</div><div class="mtr-value">9.274€</div><div class="mtr-sub">Penalización activa</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Tráfico 30d</div><div class="mtr-value">6.268</div><div class="mtr-sub">-1.46% vs día ant.</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Pdte de envío</div><div class="mtr-value">4</div><div class="mtr-sub">Pending Orders</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">SKUs sin stock</div><div class="mtr-value">109</div><div class="mtr-sub">Out of stock</div></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Account Health</div>
+    <table class="kpi-table">
+      <tr><td>Penalizaciones de cuenta</td><td class="k-crit">1</td><td>Affecting GMV: 9.273,59€</td></tr>
+      <tr><td>Tipo · Plataforma · Fecha</td><td class="k-crit">Shipping limitation · AliExpress</td><td>2026-09-14 14:30</td></tr>
+      <tr><td>Métricas de servicio fuera de target</td><td class="k-crit">7 de 7</td><td>Miravia (4) + AliExpress (3)</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Calidad de servicio — Canal Miravia</div>
+    <table class="kpi-table">
+      <tr><td>On-Time Delivery Rate</td><td class="k-crit">62.5%</td><td>Target ≥90% · ❌ KO</td></tr>
+      <tr><td>Return Rate</td><td class="k-crit">1.44%</td><td>Target ≤1% · ❌ KO</td></tr>
+      <tr><td>Seller Review Rate</td><td class="k-crit">83.04%</td><td>Target ≥97% · ❌ KO</td></tr>
+      <tr><td>Store Chat Response Rate</td><td class="k-crit">71.05%</td><td>Target ≥90% · ❌ KO</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Calidad de servicio — Canal AliExpress</div>
+    <table class="kpi-table">
+      <tr><td>Unverified Shipment Rate</td><td class="k-crit">6.38%</td><td>Target &lt;1% · ❌ KO</td></tr>
+      <tr><td>On-Time Delivery Rate (AE)</td><td class="k-crit">67.02%</td><td>Target ≥90% · ❌ KO</td></tr>
+      <tr><td>Order Not Received Rate</td><td class="k-crit">10.75%</td><td>Target &lt;5% · ❌ KO</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Revisar penalización Shipping limitation en AliExpress — afecta 9.273,59€ de GMV; verificar si es apelable</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Procesar los 4 pedidos pendientes de envío para evitar penalización adicional en SOT</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">OTD Miravia 62.5% (target ≥90%) — identificar pedidos no entregados a tiempo y coordinar con transportista</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Chat response 71.05% (target ≥90%) — revisar mensajes sin responder; cada hora de retraso agrava la métrica</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Return rate 1.44% supera el límite del 1% — investigar motivos de devolución más frecuentes</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">AE OTD 67.02% + Not Received 10.75% — riesgo de penalización adicional en AliExpress; revisar envíos pendientes de verificación (6.38%)</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">109 SKUs sin stock — reponer productos con mayor impacto en ventas; revenue MV -21.29% vs mes anterior</span></div>
+  </div>
+</div>
+
+<!-- SOMNIA DESCANSO (MIRAVIA) -->
+<div class="panel" id="panel-somnia-mv">
+  <div class="note"><strong>Datos de 17 sep 2026</strong> — Somnia Descanso accede desde navegador en modo incógnito sin conexión disponible hoy. Los datos corresponden al último audit realizado.</div>
+  <div class="banner b-warn">
+    <span class="banner-icon">⚠️</span>
+    <div><span class="banner-title">OTD Y CHAT FUERA DE TARGET — Acción urgente en métricas de entrega y servicio</span><span class="banner-sub">sellercenter.miravia.es · Somnia Descanso (Miravia + AliExpress) · 17 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Revenue 30d</div><div class="mtr-value">70.699€</div><div class="mtr-sub">+41.4% MoM</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Compradores 30d</div><div class="mtr-value">623</div><div class="mtr-sub">671 pedidos</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Tráfico 30d</div><div class="mtr-value">26.889</div><div class="mtr-sub">Visitantes únicos</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Pdte de envío</div><div class="mtr-value">26</div><div class="mtr-sub">13 To Pack · 13 To Handover</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">SKUs sin stock</div><div class="mtr-value">30</div><div class="mtr-sub">Out of stock</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Penalizaciones AE</div><div class="mtr-value">169</div><div class="mtr-sub">+ 2 Miravia</div></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Calidad de servicio — Canal Miravia</div>
+    <table class="kpi-table">
+      <tr><td>On-Time Delivery Rate</td><td class="k-crit">64.15%</td><td>Target ≥90% · ❌ KO</td></tr>
+      <tr><td>Ship on Time (SOT)</td><td class="k-ok">99.71%</td><td>Target ≥97% · ✅ OK</td></tr>
+      <tr><td>Cancellation Rate</td><td class="k-ok">0%</td><td>Target ≤0% · ✅ OK</td></tr>
+      <tr><td>Return Rate</td><td class="k-ok">0.33%</td><td>Target ≤1% · ✅ OK</td></tr>
+      <tr><td>Seller Review Rate</td><td class="k-warn">93.72%</td><td>Target ≥97% · ⚠️ Por debajo</td></tr>
+      <tr><td>Store Chat Response Rate</td><td class="k-crit">64.58%</td><td>Target ≥90% · ❌ KO</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Revisar las 169 penalizaciones AliExpress + 2 Miravia — riesgo de suspensión de cuenta si escalan</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Procesar los 26 pedidos pendientes (13 To Pack + 13 To Handover) para mejorar OTD (64.15% → target 90%)</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Chat response 64.58% — revisar y responder todos los mensajes pendientes; muy por debajo del target 90%</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">OTD 64.15% — identificar pedidos atrasados y comunicar proactivamente a compradores afectados</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Seller review rate 93.72% (target ≥97%) — solicitar reviews a clientes satisfechos; el revenue +41.4% MoM da oportunidad</span></div>
+    <div class="action"><span class="pri p-lo">Baja</span><span class="action-txt">Actualizar datos Somnia con acceso al navegador incógnito para tener vista en tiempo real (datos actuales de 17-sep)</span></div>
+  </div>
+</div>
+
+<!-- OVERVIEW MIRAKL -->
+<div class="panel" id="panel-overview">
+  <div class="ov-grid">
+    <div class="ov-card" onclick="switchTab('worten')">
+      <div class="ov-top">
+        <span class="ov-flag">🇵🇹</span>
+        <div class="ov-name-wrap"><div class="ov-name">Worten PT</div><div class="ov-sub">Duérmete Online · Premium</div></div>
+        <span class="chip chip-ok">Activa</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">6.648€</div></div>
+        <div><div class="ov-num-label">Rating</div><div class="ov-num-value">4.3★</div></div>
+        <div><div class="ov-num-label">Saldo pdte</div><div class="ov-num-value">12.791€</div></div>
+        <div><div class="ov-num-label">Reviews</div><div class="ov-num-value">7.463</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-warn">1 msg crítico</span><span class="sm-chip sc-warn">Alerta publi.</span><span class="sm-chip sc-n">9 incidencias</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('conforama')">
+      <div class="ov-top">
+        <span class="ov-flag">🇫🇷</span>
+        <div class="ov-name-wrap"><div class="ov-name">Conforama FR</div><div class="ov-sub">Duérmete Online</div></div>
+        <span class="chip chip-susp">Suspendida</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">0€</div></div>
+        <div><div class="ov-num-label">Rating</div><div class="ov-num-value">4.6★</div></div>
+        <div><div class="ov-num-label">KYC</div><div class="ov-num-value" style="color:var(--critical)">Pdte</div></div>
+        <div><div class="ov-num-label">Acepta</div><div class="ov-num-value" style="color:var(--critical)">61h</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">Suspensión manual</span><span class="sm-chip sc-crit">KYC sin completar</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('cfib')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Conforama ES</div><div class="ov-sub">Duérmete Online · conforamaiberia-prod</div></div>
+        <span class="chip chip-warn">Alertas calidad</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">10.675€</div></div>
+        <div><div class="ov-num-label">Pedidos</div><div class="ov-num-value">108</div></div>
+        <div><div class="ov-num-label">Incidencias</div><div class="ov-num-value" style="color:var(--critical)">32</div></div>
+        <div><div class="ov-num-label">Msgs no leídos</div><div class="ov-num-value" style="color:var(--critical)">42</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">Tasa incid. 6%</span><span class="sm-chip sc-crit">Reembolsos 4%</span><span class="sm-chip sc-warn">31 pdte envío</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('cfr')">
+      <div class="ov-top">
+        <span class="ov-flag">🇫🇷</span>
+        <div class="ov-name-wrap"><div class="ov-name">Carrefour FR</div><div class="ov-sub">Dreaming Online</div></div>
+        <span class="chip chip-warn">Alertas críticas</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">130€</div></div>
+        <div><div class="ov-num-label">% Aceptación</div><div class="ov-num-value" style="color:var(--critical)">73%</div></div>
+        <div><div class="ov-num-label">Env. tardíos</div><div class="ov-num-value" style="color:var(--critical)">27%</div></div>
+        <div><div class="ov-num-label">T. aceptac.</div><div class="ov-num-value" style="color:var(--critical)">41h</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">3 métricas KO</span><span class="sm-chip sc-warn">1 pedido en espera</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('cfe')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Carrefour ES</div><div class="ov-sub">Duérmete Online Colchón</div></div>
+        <span class="chip chip-warn">Atención urgente</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">42.558€</div></div>
+        <div><div class="ov-num-label">Pedidos tot.</div><div class="ov-num-value">300</div></div>
+        <div><div class="ov-num-label">Rating</div><div class="ov-num-value" style="color:var(--critical)">3.8★</div></div>
+        <div><div class="ov-num-label">Incidencias</div><div class="ov-num-value" style="color:var(--critical)">115</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">80 sin enviar</span><span class="sm-chip sc-crit">108 msgs</span><span class="sm-chip sc-crit">16 tardíos</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('eroski')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Eroski</div><div class="ov-sub">Duérmete Online</div></div>
+        <span class="chip chip-susp">Sin acceso</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">—</div></div>
+        <div><div class="ov-num-label">Estado</div><div class="ov-num-value" style="color:var(--text-muted)">?</div></div>
+        <div><div class="ov-num-label">Incidencias</div><div class="ov-num-value" style="color:var(--text-muted)">—</div></div>
+        <div><div class="ov-num-label">Mensajes</div><div class="ov-num-value" style="color:var(--text-muted)">—</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">DNS sin resolver</span><span class="sm-chip sc-n">Verificar acceso</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('mdm')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Maisons du Monde</div><div class="ov-sub">Duérmete Online</div></div>
+        <span class="chip chip-susp">Suspendida</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">0€</div></div>
+        <div><div class="ov-num-label">Rating</div><div class="ov-num-value" style="color:var(--critical)">2.7★</div></div>
+        <div><div class="ov-num-label">Env. tardíos</div><div class="ov-num-value" style="color:var(--critical)">≥15%</div></div>
+        <div><div class="ov-num-label">Incid. en curso</div><div class="ov-num-value" style="color:var(--warning)">1</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">Suspensión automática</span><span class="sm-chip sc-crit">Envíos tardíos</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('adeo')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">ADEO / Leroy Merlin</div><div class="ov-sub">Duérmete Online</div></div>
+        <span class="chip chip-ok">Activa ⭐</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">22.197€</div></div>
+        <div><div class="ov-num-label">Media carrito</div><div class="ov-num-value">178€</div></div>
+        <div><div class="ov-num-label">Saldo pdte</div><div class="ov-num-value">128.292€</div></div>
+        <div><div class="ov-num-label">Métricas</div><div class="ov-num-value" style="color:var(--success)">0% ✓</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-ok">Top performer</span><span class="sm-chip sc-warn">54 por enviar</span><span class="sm-chip sc-warn">65 incid.</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('brico')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Brico Dépôt</div><div class="ov-sub">marketplace.bricodepot.es · Iberia</div></div>
+        <span class="chip chip-susp">Suspendida</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">0€</div></div>
+        <div><div class="ov-num-label">Rating</div><div class="ov-num-value" style="color:var(--critical)">3.2★</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">Suspensión manual</span><span class="sm-chip sc-crit">Incidencias ≥12%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- WORTEN PT -->
+<div class="panel" id="panel-worten">
+  <div class="banner b-ok">
+    <span class="banner-icon">🟢</span>
+    <div><span class="banner-title">Tienda Activa · Tier Premium</span><span class="banner-sub">"Duérmete Online" · 4.3★ (7.463 valoraciones) · marketplace.worten.pt · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">6.648€</div><div class="mtr-sub">VBM total</div></div>
+    <div class="mtr"><div class="mtr-label">Pedido medio</div><div class="mtr-value">170€</div></div>
+    <div class="mtr"><div class="mtr-label">Rating</div><div class="mtr-value">4.3★</div><div class="mtr-sub">7.463 reviews</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">606.619€</div><div class="mtr-sub">Verificar histórico</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">12.791€</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-n">44</span><span class="counter-lbl">Pedidos totales</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-n">4</span><span class="counter-lbl">Pdte envío</span></div>
+    <div class="counter"><span class="counter-num cn-warn">9</span><span class="counter-lbl">Incidencias</span></div>
+    <div class="counter"><span class="counter-num cn-warn">15</span><span class="counter-lbl">Msgs no leídos</span></div>
+    <div class="counter"><span class="counter-num cn-crit">1</span><span class="counter-lbl">Msg crítico</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad — Reglas de suspensión</div>
+    <table class="kpi-table">
+      <tr><td>Pedidos rechazados automáticamente ≥ 4</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Tiempo de aceptación ≥ 24h</td><td class="k-ok">0h</td><td>✓</td></tr>
+      <tr><td>% Aceptación &lt; 95%</td><td class="k-ok">100%</td><td>✓</td></tr>
+      <tr><td>Clasificación &lt; 3.5★ (3 meses)</td><td class="k-ok">4.17★</td><td>✓</td></tr>
+      <tr><td>% Envíos tardíos ≥ 5%</td><td class="k-ok">1%</td><td>✓</td></tr>
+      <tr><td>% Reembolsos ≥ 20%</td><td class="k-ok">1%</td><td>✓</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Publicidad — Alertas activas</div>
+    <table class="kpi-table">
+      <tr><td>Budget related issues</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Ad group related issues</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Date related issues</td><td class="k-warn">1</td><td>Fechas caducadas ⚠️</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Leer el mensaje crítico inmediatamente — puede ser una reclamación o aviso importante</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Resolver la alerta de fechas en las campañas de publicidad (date related issue)</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Gestionar las 9 incidencias en curso y los 17 mensajes sin leer para mantener el tier Premium</span></div>
+    <div class="action"><span class="pri p-lo">Baja</span><span class="action-txt">Verificar el saldo "a pagar" de 606.619€ — parece acumulado histórico; confirmar con Worten</span></div>
+  </div>
+</div>
+
+<!-- CONFORAMA -->
+<div class="panel" id="panel-conforama">
+  <div class="banner b-susp">
+    <span class="banner-icon">🚫</span>
+    <div><span class="banner-title">SUSPENSIÓN MANUAL — Tienda inactiva</span><span class="banner-sub">"Duérmete Online" · 4.6★ (126 valoraciones) · conforama-prod.mirakl.net (FR)</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Rating</div><div class="mtr-value">4.6★</div><div class="mtr-sub">126 reviews</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">422,98€</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">KYC</div><div class="mtr-value">Pendiente</div><div class="mtr-sub">Bloqueo principal</div></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad</div>
+    <table class="kpi-table">
+      <tr><td>Tiempo aceptación pedidos</td><td class="k-crit">61 h</td><td>Límite 12h ❌</td></tr>
+      <tr><td>Pedidos activos</td><td>0</td><td>—</td></tr>
+      <tr><td>Incidencias en curso</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Mensajes no leídos</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>KYC completado</td><td class="k-crit">No</td><td>Requerido para reactivar ❌</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Plan de reactivación</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Completar proceso KYC — requisito principal para levantar la suspensión manual. Contactar con Conforama para documentación requerida</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Una vez reactivada: configurar aceptación automática de pedidos para evitar los 61h actuales (límite 12h)</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Solicitar motivo exacto de la suspensión manual antes de iniciar el KYC — puede haber requisitos adicionales</span></div>
+  </div>
+</div>
+
+<!-- CONFORAMA IBERIA ES -->
+<div class="panel" id="panel-cfib">
+  <div class="banner b-warn">
+    <span class="banner-icon">⚠️</span>
+    <div><span class="banner-title">Activa · Alerta calidad — Tasa de incidencias y reembolsos fuera de límite premium</span><span class="banner-sub">"Duérmete Online" · conforamaiberia-prod.mirakl.net · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">10.675€</div><div class="mtr-sub">VBM total</div></div>
+    <div class="mtr"><div class="mtr-label">Pedido medio</div><div class="mtr-value">148€</div></div>
+    <div class="mtr"><div class="mtr-label">Pedidos totales</div><div class="mtr-value">108</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Tasa incidencias</div><div class="mtr-value">6%</div><div class="mtr-sub">Límite &lt; 5% ❌</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">73.225€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">15.552€</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-warn">31</span><span class="counter-lbl">Pdte envío</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-crit">32</span><span class="counter-lbl">Incidencias</span></div>
+    <div class="counter"><span class="counter-num cn-crit">42</span><span class="counter-lbl">Msgs no leídos</span></div>
+    <div class="counter"><span class="counter-num cn-warn">5</span><span class="counter-lbl">Incid. nuevas</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad — Reglas de premium</div>
+    <table class="kpi-table">
+      <tr><td>Tiempo de aceptación</td><td class="k-ok">4h</td><td>✓ Límite &lt; 24h</td></tr>
+      <tr><td>% Aceptación</td><td class="k-ok">100%</td><td>✓ Mín. 95%</td></tr>
+      <tr><td>Tasa de incidencias</td><td class="k-crit">6%</td><td>Límite &lt; 5% ❌</td></tr>
+      <tr><td>Tiempo de respuesta</td><td class="k-warn">23h</td><td>Al límite (&lt; 24h) ⚠️</td></tr>
+      <tr><td>% Envíos tardíos</td><td class="k-ok">0%</td><td>✓ Límite &lt; 10%</td></tr>
+      <tr><td>% Reembolsos</td><td class="k-crit">4%</td><td>Límite &lt; 1% ❌</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Gestionar las 32 incidencias en curso — tasa al 6% por encima del límite del 5% premium. Sin mejora se pierde el tier</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Responder los 36 mensajes no leídos — tiempo de respuesta en 23h, a 1h del límite de 24h</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Investigar reembolsos al 4% (límite &lt; 1%) — posiblemente logística o expectativa de producto. Revisar causas raíz</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Procesar los 35 pedidos en espera de envío — aunque tardíos estén en 0%, el volumen puede disparar el indicador rápido</span></div>
+  </div>
+</div>
+
+<!-- CARREFOUR FR -->
+<div class="panel" id="panel-cfr">
+  <div class="banner b-warn">
+    <span class="banner-icon">⚠️</span>
+    <div><span class="banner-title">Activa · Riesgo de suspensión por calidad</span><span class="banner-sub">"Dreaming Online" · KYC ✓ · carrefourfr-prod.mirakl.net · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">130€</div><div class="mtr-sub">1 pedido</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">81,36€</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Tiempo aceptación</div><div class="mtr-value">41h</div><div class="mtr-sub">Límite: 10h ❌</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">% Aceptación</div><div class="mtr-value">73%</div><div class="mtr-sub">Mínimo: 85% ❌</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Envíos tardíos</div><div class="mtr-value">27%</div><div class="mtr-sub">Límite: 2% ❌</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-warn">1</span><span class="counter-lbl">Tardío</span></div>
+    <div class="counter"><span class="counter-num cn-warn">1</span><span class="counter-lbl">Pdte envío</span></div>
+    <div class="counter"><span class="counter-num cn-n">0</span><span class="counter-lbl">Mensajes</span></div>
+    <div class="counter"><span class="counter-num cn-n">0</span><span class="counter-lbl">Incidencias</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Métricas vs. Límites Carrefour FR</div>
+    <table class="kpi-table">
+      <tr><td>Tiempo de aceptación</td><td class="k-crit">41h</td><td>Límite 10h — exceso 31h ❌</td></tr>
+      <tr><td>Tasa de aceptación</td><td class="k-crit">73%</td><td>Mínimo 85% — fuera 12pp ❌</td></tr>
+      <tr><td>Envíos tardíos</td><td class="k-crit">27%</td><td>Límite 2% — crítico ❌</td></tr>
+      <tr><td>Reembolsos</td><td class="k-ok">0%</td><td>✓</td></tr>
+      <tr><td>Tasa incidencias</td><td class="k-ok">0%</td><td>✓</td></tr>
+      <tr><td>KYC</td><td class="k-ok">✓ OK</td><td>—</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Aceptar el pedido en espera inmediatamente — cada hora empeora la tasa (ya en 70%, mín. 85%)</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Investigar el 27% de envíos tardíos — es 13x el límite permitido (2%). Sin mejora hay riesgo real de suspensión</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Activar aceptación automática de pedidos — 39h de tiempo (límite 10h) no es sostenible</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Revisar gestión logística FR para identificar por qué el 27% de envíos sale tarde y corregir el SLA</span></div>
+  </div>
+</div>
+
+<!-- CARREFOUR ES -->
+<div class="panel" id="panel-cfe">
+  <div class="banner b-crit">
+    <span class="banner-icon">🔴</span>
+    <div><span class="banner-title">Activa · ATENCIÓN INMEDIATA — Múltiples alertas críticas</span><span class="banner-sub">"Duérmete Online Colchón" · Rating 3.8★ (mín. 4★) · carrefoures-prod.mirakl.net · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">42.558€</div><div class="mtr-sub">VBM total</div></div>
+    <div class="mtr"><div class="mtr-label">Pedido medio</div><div class="mtr-value">144€</div></div>
+    <div class="mtr"><div class="mtr-label">Pedidos totales</div><div class="mtr-value">300</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Tasa incidencias</div><div class="mtr-value">12%</div><div class="mtr-sub">Límite 15% ⚠️</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">77.508€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">30.491€</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-crit">80</span><span class="counter-lbl">En espera envío</span></div>
+    <div class="counter"><span class="counter-num cn-crit">16</span><span class="counter-lbl">Pedidos tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-crit">115</span><span class="counter-lbl">Incidencias</span></div>
+    <div class="counter"><span class="counter-num cn-crit">108</span><span class="counter-lbl">Msgs no leídos</span></div>
+    <div class="counter"><span class="counter-num cn-warn">17</span><span class="counter-lbl">Incid. nuevas</span></div>
+  </div>
+  <div class="top-prod">
+    <div class="tp-label">Top producto (7 días)</div>
+    <div class="tp-name">Colchón Nora 135×190 Viscoelástico</div>
+    <div class="tp-value">6.092€</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Métricas vs. Límites Carrefour ES</div>
+    <table class="kpi-table">
+      <tr><td>Rating vendedor</td><td class="k-crit">3.8★</td><td>Mínimo 4.0★ ❌</td></tr>
+      <tr><td>Tasa incidencias</td><td class="k-warn">12%</td><td>Límite 15% — margen estrecho ⚠️</td></tr>
+      <tr><td>Pedidos tardíos</td><td class="k-crit">16</td><td>Crítico — afecta rating ❌</td></tr>
+      <tr><td>Aceptación pedidos</td><td class="k-ok">4h / 100%</td><td>✓</td></tr>
+      <tr><td>2FA activado</td><td class="k-warn">Pendiente</td><td>Requerido ⚠️</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones — Prioridad máxima</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Procesar los 167 pedidos en espera de envío — 67 ya son tardíos, el volumen acumulado disparará aún más el indicador</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Gestionar las 114 incidencias (18 nuevas) — tasa al 12%, a 3pp del límite del 15%</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Responder los 116 mensajes no leídos — impacto directo en el rating 3.8★ (mín. 4★)</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Revisar SLA logístico — 67 tardíos sobre 293 pedidos (23%) es un problema sistémico</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Activar 2FA en la cuenta (requerido por Carrefour ES)</span></div>
+  </div>
+</div>
+
+<!-- EROSKI -->
+<div class="panel" id="panel-eroski">
+  <div class="banner b-susp">
+    <span class="banner-icon">❓</span>
+    <div><span class="banner-title">Sin acceso — URL no responde (DNS)</span><span class="banner-sub">"Duérmete Online" · eroski-prod.mirakl.net · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">—</div><div class="mtr-sub">Sin datos</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Estado</div><div class="mtr-value">?</div><div class="mtr-sub">URL inaccesible</div></div>
+  </div>
+  <div class="note"><strong>⚠️ Sin acceso:</strong> eroski-prod.mirakl.net no respondió en el audit del 21 sep 2026. La URL no resolvió DNS desde Chrome. No se dispone de datos actualizados. Verificar acceso directamente.</div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Verificar acceso a eroski-prod.mirakl.net — confirmar si la cuenta está activa o suspendida y cuál es el estado real</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Si la cuenta está activa, revisar catálogo y posicionamiento para activar ventas orgánicas en Eroski</span></div>
+  </div>
+</div>
+
+<!-- MAISONS DU MONDE -->
+<div class="panel" id="panel-mdm">
+  <div class="banner b-susp">
+    <span class="banner-icon">🚫</span>
+    <div><span class="banner-title">SUSPENSIÓN AUTOMÁTICA — Tasa de envíos tardíos ≥ 15% (desde hace 3 meses)</span><span class="banner-sub">"Duérmete Online" · Rating 2.7★ (21 reseñas) · maisonsdumonde-prod.mirakl.net · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Rating</div><div class="mtr-value">2.7★</div><div class="mtr-sub">21 reseñas</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Envíos tardíos</div><div class="mtr-value">≥15%</div><div class="mtr-sub">Causa de suspensión ❌</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">755€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">147€</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-n">0</span><span class="counter-lbl">Pedidos</span></div>
+    <div class="counter"><span class="counter-num cn-warn">1</span><span class="counter-lbl">Incidencia</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Msgs</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Causa de suspensión — Tasa envíos tardíos 3 meses</div>
+    <table class="kpi-table">
+      <tr><td>Tasa envíos tardíos (3 meses)</td><td class="k-crit">≥ 15%</td><td>Límite MdM — suspensión automática ❌</td></tr>
+      <tr><td>Rating vendedor</td><td class="k-crit">2.7★</td><td>Muy bajo (21 reseñas)</td></tr>
+      <tr><td>Incidencias en curso</td><td class="k-warn">1</td><td>Gestionar ⚠️</td></tr>
+      <tr><td>Mensajes sin leer</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>KYC</td><td class="k-ok">✓ OK</td><td>—</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Plan de reactivación</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Contactar con Maisons du Monde para conocer el plan de reactivación — suspensión automática requiere mejora de KPI antes de rehabilitar</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Diagnosticar la tasa de envíos tardíos ≥ 15% — causa directa de la suspensión. Revisar SLA logístico</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Resolver la incidencia en curso para no agravar el estado de la cuenta durante la suspensión</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">El rating 2.7★ (21 reseñas) es muy bajo — una vez reactivada, buscar activamente nuevas reseñas positivas</span></div>
+  </div>
+</div>
+
+<!-- ADEO / LM -->
+<div class="panel" id="panel-adeo">
+  <div class="banner b-ok">
+    <span class="banner-icon">⭐</span>
+    <div><span class="banner-title">Activa · Top Performer — Todas las métricas en verde</span><span class="banner-sub">"Duérmete Online" · adeo-marketplace.mirakl.net (Leroy Merlin) · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">22.197€</div><div class="mtr-sub">VBM total</div></div>
+    <div class="mtr"><div class="mtr-label">Pedido medio</div><div class="mtr-value">178€</div></div>
+    <div class="mtr"><div class="mtr-label">Pedidos tot. 7d</div><div class="mtr-value">125</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Envíos tardíos</div><div class="mtr-value">0%</div><div class="mtr-sub">✓ Perfecto</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">128.292€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">34.087€</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-warn">54</span><span class="counter-lbl">En espera envío</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-warn">65</span><span class="counter-lbl">Incidencias abiertas</span></div>
+    <div class="counter"><span class="counter-num cn-warn">9</span><span class="counter-lbl">Msgs no leídos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Pdte aceptación</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad — ADEO · 21 sep 2026</div>
+    <table class="kpi-table">
+      <tr><td>Rechazos automáticos</td><td class="k-ok">0%</td><td>✓ Perfecto</td></tr>
+      <tr><td>Tiempo aceptación</td><td class="k-ok">5h 15min</td><td>✓</td></tr>
+      <tr><td>Tasa aceptación</td><td class="k-ok">100%</td><td>✓</td></tr>
+      <tr><td>Cancelaciones</td><td class="k-ok">0%</td><td>✓</td></tr>
+      <tr><td>Tasa incidencias</td><td class="k-ok">0,8%</td><td>✓ Muy bajo</td></tr>
+      <tr><td>Tiempo de respuesta</td><td class="k-ok">4h 24min</td><td>✓</td></tr>
+      <tr><td>Envíos tardíos</td><td class="k-ok">0%</td><td>✓ Perfecto</td></tr>
+      <tr><td>Reembolsos</td><td class="k-ok">0%</td><td>✓</td></tr>
+      <tr><td>Pedidos en espera envío</td><td class="k-warn">54</td><td>Monitorizar ⚠️</td></tr>
+      <tr><td>Incidencias en curso</td><td class="k-warn">65</td><td>Gestionar proactivamente ⚠️</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Aceptar el pedido pendiente de aceptación — queda 1 sin procesar; aunque el SLA está OK, no dejar pendiente</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Procesar los 68 pedidos en espera de envío — volumen acumulado que podría afectar el SLA próximamente</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Gestionar las 66 incidencias abiertas — aunque la tasa es solo 0,8%, el volumen absoluto es alto</span></div>
+    <div class="action"><span class="pri p-lo">Baja</span><span class="action-txt">Canal referencia en Mirakl — todas las métricas en verde. Analizar qué catálogo/precios funcionan para replicar en otros marketplaces</span></div>
+  </div>
+</div>
+
+<!-- BRICO DEPOT -->
+<div class="panel" id="panel-brico">
+  <div class="banner b-susp">
+    <span class="banner-icon">🚫</span>
+    <div><span class="banner-title">SUSPENSIÓN MANUAL — Tasa de incidencias ≥ 12% (desde hace 3 meses)</span><span class="banner-sub">marketplace.bricodepot.es · "Duérmete Online (Vendedor Nacional)" · Rating 3.2★ (29 reseñas) · 21 sep 2026</span></div>
+  </div>
+  <div class="mtr-grid">
+    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Rating</div><div class="mtr-value">3.2★</div><div class="mtr-sub">29 reseñas</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Incidencias (3m)</div><div class="mtr-value">≥12%</div><div class="mtr-sub">Causa de suspensión ❌</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">25,28€</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-n">0</span><span class="counter-lbl">Pedidos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Incidencias</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Mensajes</span></div>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Plan de reactivación</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Contactar con Brico Dépôt Iberia para confirmar requisitos de reactivación — suspensión manual por incidencias ≥ 12% en 3 meses</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Investigar las causas raíz de la tasa de incidencias elevada — antes de reactivar hay que resolver el problema estructural</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">El rating 3.2★ (29 reseñas) es bajo — una vez reactivada, trabajar activamente en mejorar la valoración</span></div>
+  </div>
+</div>
+
+</div>
+
+<footer>Auditoría Marketplaces · Duérmete Online · 21 sep 2026 · Roicos · Mirakl: 9 marketplaces · Miravia: Duérmete Online (21-sep) + Somnia Descanso (17-sep) + Tienda 3 pendiente</footer>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  try { localStorage.setItem('mirakl_tab', name); } catch(e) {}
+}
+try {
+  var saved = localStorage.getItem('mirakl_tab');
+  if (saved && document.getElementById('tab-' + saved)) switchTab(saved);
+} catch(e) {}
+</script>
