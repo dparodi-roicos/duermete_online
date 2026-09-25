@@ -157,7 +157,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
     <div>
       <div class="client-eyebrow">Roicos · Duérmete Online</div>
       <h1 class="report-title">Auditoría Miravia · Mirakl</h1>
-      <div class="report-meta">25 sep 2026 · Mirakl: 9 marketplaces · Miravia: 2 tiendas auditadas (Duérmete Online 25-sep · Somnia Descanso 25-sep), 1 pendiente</div>
+      <div class="report-meta">25 sep 2026 · Mirakl: 8 marketplaces · Miravia: 2 tiendas auditadas (Duérmete Online 25-sep · Somnia Descanso 25-sep), 1 pendiente</div>
     </div>
     <div class="summary-pills">
       <span class="pill-group-label">Miravia</span>
@@ -189,8 +189,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
     <button class="tab" onclick="switchTab('cfr')" id="tab-cfr"><span class="dot dot-a"></span>Carrefour FR</button>
     <button class="tab" onclick="switchTab('cfe')" id="tab-cfe"><span class="dot dot-r"></span>Carrefour ES</button>
     <button class="tab" onclick="switchTab('adeo')" id="tab-adeo"><span class="dot dot-g"></span>ADEO / LM</button>
-    <button class="tab" onclick="switchTab('eroski')" id="tab-eroski"><span class="dot dot-p"></span>Eroski</button>
-    <button class="tab" onclick="switchTab('mdm')" id="tab-mdm"><span class="dot dot-p"></span>Maisons du Monde</button>
+        <button class="tab" onclick="switchTab('mdm')" id="tab-mdm"><span class="dot dot-p"></span>Maisons du Monde</button>
     <button class="tab" onclick="switchTab('brico')" id="tab-brico"><span class="dot dot-p"></span>Brico Dépôt</button>
   </div>
 </div>
@@ -462,21 +461,6 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
       <div class="ov-chips"><span class="sm-chip sc-crit">95 sin enviar</span><span class="sm-chip sc-crit">94 tardíos</span><span class="sm-chip sc-crit">2 msgs críticos</span></div>
     </div>
 
-    <div class="ov-card" onclick="switchTab('eroski')">
-      <div class="ov-top">
-        <span class="ov-flag">🇪🇸</span>
-        <div class="ov-name-wrap"><div class="ov-name">Eroski</div><div class="ov-sub">Duérmete Online</div></div>
-        <span class="chip chip-susp">Sin acceso</span>
-      </div>
-      <div class="ov-nums">
-        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">—</div></div>
-        <div><div class="ov-num-label">Estado</div><div class="ov-num-value" style="color:var(--text-muted)">?</div></div>
-        <div><div class="ov-num-label">Incidencias</div><div class="ov-num-value" style="color:var(--text-muted)">—</div></div>
-        <div><div class="ov-num-label">Mensajes</div><div class="ov-num-value" style="color:var(--text-muted)">—</div></div>
-      </div>
-      <div class="ov-chips"><span class="sm-chip sc-crit">DNS sin resolver</span><span class="sm-chip sc-n">Verificar acceso</span></div>
-    </div>
-
     <div class="ov-card" onclick="switchTab('mdm')">
       <div class="ov-top">
         <span class="ov-flag">🇪🇸</span>
@@ -724,24 +708,6 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
   </div>
 </div>
 
-<!-- EROSKI -->
-<div class="panel" id="panel-eroski">
-  <div class="banner b-susp">
-    <span class="banner-icon">❓</span>
-    <div><span class="banner-title">Sin acceso — URL no responde (DNS)</span><span class="banner-sub">"Duérmete Online" · eroski-prod.mirakl.net · 25 sep 2026</span></div>
-  </div>
-  <div class="mtr-grid">
-    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">—</div><div class="mtr-sub">Sin datos</div></div>
-    <div class="mtr v-muted"><div class="mtr-label">Estado</div><div class="mtr-value">?</div><div class="mtr-sub">URL inaccesible</div></div>
-  </div>
-  <div class="note"><strong>⚠️ Sin acceso:</strong> eroski-prod.mirakl.net sigue sin responder en el audit del 25 sep 2026 (también falló el 23 sep). La URL no resolvió DNS desde Chrome. No se dispone de datos actualizados. Verificar acceso directamente.</div>
-  <div class="actions">
-    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
-    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Verificar acceso a eroski-prod.mirakl.net — confirmar si la cuenta está activa o suspendida y cuál es el estado real</span></div>
-    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Si la cuenta está activa, revisar catálogo y posicionamiento para activar ventas orgánicas en Eroski</span></div>
-  </div>
-</div>
-
 <!-- MAISONS DU MONDE -->
 <div class="panel" id="panel-mdm">
   <div class="banner b-susp">
@@ -785,11 +751,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 
 <!-- ADEO / LM -->
 <div class="panel" id="panel-adeo">
-  <div class="banner b-warn">
-    <span class="banner-icon">⚠️</span>
-    <div><span class="banner-title">Activa · Atención — 67 incidencias en curso y 43 pedidos pendientes de envío</span><span class="banner-sub">"Duérmete Online" · adeo-marketplace.mirakl.net (Leroy Merlin) · 25 sep 2026</span></div>
-  </div>
-  <div class="mtr-grid">
+<div class="mtr-grid">
     <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">22.731€</div><div class="mtr-sub">Ingresos · 19–25 sep · 126 pedidos</div></div>
     <div class="mtr"><div class="mtr-label">Media carrito</div><div class="mtr-value">181€</div></div>
     <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">129.721,16€</div></div>
@@ -864,7 +826,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 
 </div>
 
-<footer>Auditoría Marketplaces · Duérmete Online · 25 sep 2026 · Roicos · Mirakl: 9 marketplaces (ventas = ingresos por ventas, 19–25 sep; Worten en hora de Lisboa) · Miravia: Duérmete Online (25-sep) + Somnia Descanso (25-sep) + Tienda 3 pendiente</footer>
+<footer>Auditoría Marketplaces · Duérmete Online · 25 sep 2026 · Roicos · Mirakl: 8 marketplaces (ventas = ingresos por ventas, 19–25 sep; Worten en hora de Lisboa) · Miravia: Duérmete Online (25-sep) + Somnia Descanso (25-sep) + Tienda 3 pendiente</footer>
 
 <script>
 function switchTab(name) {
