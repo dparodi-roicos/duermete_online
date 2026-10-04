@@ -1,7 +1,7 @@
 import re, html
 import json
 P = r'C:\Users\Daniela\Downloads\duermete_online\index.html'
-src = open(r'C:\Users\Daniela\Downloads\duermete_index_backup_04oct.html', encoding='utf-8').read()   # versión del 1-oct
+import os; src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "base_1oct.html"), encoding="utf-8").read()   # versión del 1-oct
 H = json.load(open(r'C:\Users\Daniela\Downloads\duermete_online\cierres.json', encoding='utf-8'))      # histórico de cierres de mes
 
 # ---------------- formato ----------------
