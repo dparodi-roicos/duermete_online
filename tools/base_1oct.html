@@ -1,0 +1,970 @@
+<title>Auditoría Marketplaces — Duérmete Online</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #F6F7F9;
+  --surface: #FFFFFF;
+  --surface-2: #F0F2F5;
+  --border: #E2E6ED;
+  --text-primary: #0F172A;
+  --text-muted: #64748B;
+  --accent: #2563EB;
+  --success: #16A34A;
+  --success-bg: #F0FDF4;
+  --warning: #B45309;
+  --warning-bg: #FFFBEB;
+  --critical: #DC2626;
+  --critical-bg: #FEF2F2;
+  --suspended: #7C3AED;
+  --suspended-bg: #F5F3FF;
+  --header-bg: #0F172A;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1117; --surface: #161B22; --surface-2: #1F2937;
+    --border: #2D3748; --text-primary: #F1F5F9; --text-muted: #94A3B8;
+    --success-bg: #052E16; --warning-bg: #451A03;
+    --critical-bg: #450A0A; --suspended-bg: #2E1065;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1117; --surface: #161B22; --surface-2: #1F2937;
+  --border: #2D3748; --text-primary: #F1F5F9; --text-muted: #94A3B8;
+  --success-bg: #052E16; --warning-bg: #451A03;
+  --critical-bg: #450A0A; --suspended-bg: #2E1065;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; padding: 0; background: var(--bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+
+.header { background: var(--header-bg); color: #F1F5F9; padding: 20px 24px 0; }
+.header-top { display: flex; align-items: flex-start; gap: 16px; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px; }
+.client-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #64748B; margin-bottom: 4px; }
+.report-title { font-size: 22px; font-weight: 700; color: #F1F5F9; margin: 0 0 4px; }
+.report-meta { font-size: 12px; color: #64748B; }
+.summary-pills { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.pill { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 16px; text-align: center; min-width: 80px; }
+.pill-num { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; display: block; }
+.pill-label { font-size: 10px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.07em; display: block; margin-top: 2px; }
+.pill-group-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); align-self: center; padding: 0 4px; white-space: nowrap; }
+.pill-vsep { width: 1px; height: 40px; background: rgba(255,255,255,0.15); align-self: center; margin: 0 4px; flex-shrink: 0; }
+.c-blue { color: #60A5FA; } .c-green { color: #4ADE80; } .c-red { color: #F87171; } .c-amber { color: #FCD34D; }
+
+.tabs-bar { background: var(--header-bg); padding: 0 24px; overflow-x: auto; }
+.tabs { display: flex; gap: 2px; min-width: max-content; }
+.tab { padding: 9px 15px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 13px; font-weight: 500; background: rgba(255,255,255,0.05); color: #94A3B8; border: none; white-space: nowrap; transition: all 0.15s; display: flex; align-items: center; gap: 6px; font-family: inherit; }
+.tab:hover { background: rgba(255,255,255,0.1); color: #E2E8F0; }
+.tab.active { background: var(--bg); color: var(--text-primary); font-weight: 600; }
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+.dot-g { background: #4ADE80; } .dot-a { background: #FCD34D; } .dot-r { background: #F87171; } .dot-p { background: #A78BFA; }
+
+.content { max-width: 1100px; margin: 0 auto; padding: 24px; }
+.panel { display: none; } .panel.active { display: block; }
+
+.banner { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; font-size: 14px; }
+.banner-title { display: block; }
+.banner-sub { display: block; font-weight: 400; font-size: 12px; margin-top: 2px; opacity: 0.8; }
+.b-ok { background: var(--success-bg); color: var(--success); border: 1px solid #86EFAC; }
+.b-warn { background: var(--warning-bg); color: var(--warning); border: 1px solid #FDE68A; }
+.b-crit { background: var(--critical-bg); color: var(--critical); border: 1px solid #FECACA; }
+.b-susp { background: var(--suspended-bg); color: var(--suspended); border: 1px solid #C4B5FD; }
+.banner-icon { font-size: 20px; flex-shrink: 0; }
+
+.mtr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.mtr { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; }
+.mtr-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+.mtr-value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.mtr-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.v-ok .mtr-value { color: var(--success); } .v-warn .mtr-value { color: var(--warning); } .v-crit .mtr-value { color: var(--critical); } .v-muted .mtr-value { color: var(--text-muted); }
+
+.counters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.counter { flex: 1; min-width: 100px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+.counter-num { font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; display: block; margin-bottom: 5px; }
+.counter-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.cn-ok { color: var(--success); } .cn-warn { color: var(--warning); } .cn-crit { color: var(--critical); } .cn-n { color: var(--text-primary); }
+
+.kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+.kpi-head { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+.kpi-table { width: 100%; border-collapse: collapse; }
+.kpi-table tr { border-bottom: 1px solid var(--border); }
+.kpi-table tr:last-child { border-bottom: none; }
+.kpi-table td { padding: 9px 16px; font-size: 13px; vertical-align: middle; }
+.kpi-table td:first-child { color: var(--text-muted); width: 48%; }
+.kpi-table td:nth-child(2) { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-variant-numeric: tabular-nums; }
+.kpi-table td:last-child { font-size: 11px; color: var(--text-muted); text-align: right; }
+.k-ok { color: var(--success) !important; } .k-warn { color: var(--warning) !important; } .k-crit { color: var(--critical) !important; }
+
+.actions { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+.action { display: flex; align-items: flex-start; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--border); }
+.action:last-child { border-bottom: none; }
+.pri { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+.p-urg { background: var(--critical-bg); color: var(--critical); }
+.p-hi { background: var(--warning-bg); color: var(--warning); }
+.p-med { background: var(--suspended-bg); color: var(--suspended); }
+.p-lo { background: var(--surface-2); color: var(--text-muted); }
+.action-txt { font-size: 13px; line-height: 1.45; }
+
+.top-prod { background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03)); border: 1px solid rgba(37,99,235,0.2); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+.tp-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.tp-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.tp-value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 700; color: var(--accent); }
+
+.note { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+.note strong { color: var(--text-primary); }
+
+/* OVERVIEW */
+.ov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 16px; }
+.ov-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+.ov-card:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.ov-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+.ov-flag { font-size: 20px; }
+.ov-name-wrap { flex: 1; }
+.ov-name { font-weight: 600; font-size: 14px; }
+.ov-sub { font-size: 11px; color: var(--text-muted); }
+.chip { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+.chip-ok { background: var(--success-bg); color: var(--success); }
+.chip-warn { background: var(--warning-bg); color: var(--warning); }
+.chip-crit { background: var(--critical-bg); color: var(--critical); }
+.chip-susp { background: var(--suspended-bg); color: var(--suspended); }
+.ov-nums { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.ov-num-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.ov-num-value { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ov-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.sm-chip { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 100px; }
+.sc-ok { background: var(--success-bg); color: var(--success); }
+.sc-warn { background: var(--warning-bg); color: var(--warning); }
+.sc-crit { background: var(--critical-bg); color: var(--critical); }
+.sc-n { background: var(--surface-2); color: var(--text-muted); }
+
+footer { text-align: center; font-size: 11px; color: var(--text-muted); padding: 20px 24px; border-top: 1px solid var(--border); }
+.tab-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.18); align-self: center; flex-shrink: 0; margin: 0 4px; }
+.tab-section-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); align-self: center; white-space: nowrap; padding: 0 6px; flex-shrink: 0; }
+.dot-mv { background: #A78BFA; }
+.kpi-table td.sku { font-family: 'IBM Plex Mono', monospace; font-size: 12px; word-break: break-all; color: var(--text-primary); }
+
+@media (max-width: 620px) {
+  .header { padding: 16px 16px 0; }
+  .header-top { flex-direction: column; }
+  .content { padding: 16px; }
+  .tabs-bar { padding: 0 12px; }
+  .ov-grid { grid-template-columns: 1fr; }
+  .mtr-grid { grid-template-columns: 1fr 1fr; }
+  .counters { gap: 8px; }
+}
+</style>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="client-eyebrow">Roicos · Duérmete Online</div>
+      <h1 class="report-title">Auditoría Amazon · Miravia · Mirakl</h1>
+      <div class="report-meta">1 oct 2026 · Amazon ES · Mirakl: 8 marketplaces · Miravia: Somnia Descanso y Duérmete Online 1-oct · Septiembre: facturación sin IVA e inversión en publicidad por canal</div>
+    </div>
+    <div class="summary-pills">
+      <span class="pill-group-label">Amazon</span>
+      <div class="pill"><span class="pill-num c-blue">156.211€</span><span class="pill-label">Ventas sept. sin IVA</span></div>
+      <div class="pill"><span class="pill-num c-amber">6.284€</span><span class="pill-label">Ads sept.</span></div>
+      <div class="pill"><span class="pill-num c-green">312</span><span class="pill-label">Activos</span></div>
+      <div class="pill-vsep"></div>
+      <span class="pill-group-label">Miravia</span>
+      <div class="pill"><span class="pill-num c-blue">56.726€</span><span class="pill-label">Revenue 30d</span></div>
+      <div class="pill"><span class="pill-num c-amber">2</span><span class="pill-label">Tiendas</span></div>
+      <div class="pill"><span class="pill-num c-red">12</span><span class="pill-label">KPIs fuera</span></div>
+      <div class="pill-vsep"></div>
+      <span class="pill-group-label">Mirakl</span>
+      <div class="pill"><span class="pill-num c-blue">87.879€</span><span class="pill-label">Ventas 7d</span></div>
+      <div class="pill"><span class="pill-num c-green">5</span><span class="pill-label">Activos</span></div>
+      <div class="pill"><span class="pill-num c-red">3</span><span class="pill-label">Suspendidos</span></div>
+      <div class="pill"><span class="pill-num c-amber">4</span><span class="pill-label">Con alertas</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <div class="tabs">
+    <span class="tab-section-label">Amazon</span>
+    <button class="tab active" onclick="switchTab('amazon')" id="tab-amazon"><span class="dot dot-a"></span>Amazon ES</button>
+    <span class="tab-sep"></span>
+    <span class="tab-section-label">Miravia</span>
+    <button class="tab" onclick="switchTab('miravia')" id="tab-miravia"><span class="dot dot-mv"></span>Resumen MV</button>
+    <button class="tab" onclick="switchTab('duermete-mv')" id="tab-duermete-mv"><span class="dot dot-r"></span>Duérmete Online</button>
+    <button class="tab" onclick="switchTab('somnia-mv')" id="tab-somnia-mv"><span class="dot dot-a"></span>Somnia Descanso</button>
+    <span class="tab-sep"></span>
+    <span class="tab-section-label">Mirakl</span>
+    <button class="tab" onclick="switchTab('overview')" id="tab-overview">Resumen MK</button>
+    <button class="tab" onclick="switchTab('worten')" id="tab-worten"><span class="dot dot-g"></span>Worten PT</button>
+    <button class="tab" onclick="switchTab('conforama')" id="tab-conforama"><span class="dot dot-p"></span>Conforama FR</button>
+    <button class="tab" onclick="switchTab('cfib')" id="tab-cfib"><span class="dot dot-a"></span>Conforama ES</button>
+    <button class="tab" onclick="switchTab('cfr')" id="tab-cfr"><span class="dot dot-a"></span>Carrefour FR</button>
+    <button class="tab" onclick="switchTab('cfe')" id="tab-cfe"><span class="dot dot-r"></span>Carrefour ES</button>
+    <button class="tab" onclick="switchTab('adeo')" id="tab-adeo"><span class="dot dot-g"></span>ADEO / LM</button>
+        <button class="tab" onclick="switchTab('mdm')" id="tab-mdm"><span class="dot dot-p"></span>Maisons du Monde</button>
+    <button class="tab" onclick="switchTab('brico')" id="tab-brico"><span class="dot dot-p"></span>Brico Dépôt</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- AMAZON ES -->
+<div class="panel active" id="panel-amazon">
+  <div class="note"><strong>Amazon ES · 1 oct 2026</strong> — Cuenta "Duérmete Online" en Seller Central España. Listings, Buy Box y estado de la cuenta a 1-oct; ventas e inversión en publicidad de septiembre (1–30 sep, hora de Madrid). En septiembre solo hay ventas en Amazon.es: Francia, Alemania e Italia salen a 0 en Epinium.</div>
+  <div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas sept. sin IVA</div><div class="mtr-value">156.211€</div><div class="mtr-sub">189.015€ con IVA tras promociones · 600 pedidos · 616 uds</div></div>
+    <div class="mtr"><div class="mtr-label">Panel · ventas sept.</div><div class="mtr-value">197.495€</div><div class="mtr-sub">Informes de empresa · ⚠️ con IVA y antes de cupones</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Inversión Ads sept.</div><div class="mtr-value">6.284€</div><div class="mtr-sub">Sponsored Products ES · ventas atribuidas 70.562€ · ACOS 8,91%</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Estado de la cuenta</div><div class="mtr-value">282</div><div class="mtr-sub">En buen estado · 4 incidencias abiertas</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Listings activos</div><div class="mtr-value">312</div><div class="mtr-sub">229 SellerFlex + 83 FBM · todos con stock</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Buy Box hoy</div><div class="mtr-value">312/312</div><div class="mtr-sub">Activos con la oferta destacada · sept.: 91,64% de las sesiones</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-ok">312</span><span class="counter-lbl">Activos</span></div>
+    <div class="counter"><span class="counter-num cn-warn">530</span><span class="counter-lbl">Agotados</span></div>
+    <div class="counter"><span class="counter-num cn-crit">6</span><span class="counter-lbl">Agotados con ventas sept.</span></div>
+    <div class="counter"><span class="counter-num cn-n">2</span><span class="counter-lbl">Inactivos otros</span></div>
+    <div class="counter"><span class="counter-num cn-warn">120</span><span class="counter-lbl">Incompletos</span></div>
+    <div class="counter"><span class="counter-num cn-crit">4</span><span class="counter-lbl">Incidencias cuenta</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Ventas e inversión en publicidad · septiembre 2026</div>
+    <table class="kpi-table">
+      <tr><td>Ventas con IVA (precio de artículo)</td><td>199.276,62€</td><td>Informe "Todos los pedidos" · 600 pedidos · 616 uds · sin cancelados</td></tr>
+      <tr><td>Promociones y cupones</td><td class="k-warn">-10.261,44€</td><td>Con IVA</td></tr>
+      <tr><td>Ventas con IVA tras promociones</td><td>189.015,18€</td><td>Lo que paga el cliente por los artículos · portes aparte: 400,89€</td></tr>
+      <tr><td>Ventas sin IVA</td><td class="k-ok">156.211,04€</td><td>Base imponible de los pedidos (IVA 21%) · 28 líneas pendientes aún sin impuesto calculado: se les aplica el 21%</td></tr>
+      <tr><td>Informes de empresa (panel)</td><td>197.495,30€</td><td>"Ventas de productos encargados" · ⚠️ con IVA · B2B 7.435,17€</td></tr>
+      <tr><td>Inversión en publicidad</td><td class="k-warn">6.284,15€</td><td>Epinium (API de Amazon Ads) · 28 campañas Sponsored Products con gasto · solo España</td></tr>
+      <tr><td>Ventas atribuidas a publicidad</td><td>70.561,68€</td><td>ACOS 8,91% · 10.332 clics · 260 pedidos</td></tr>
+      <tr><td>Comisión 4% sobre la inversión</td><td>251,37€</td><td>4% de 6.284,15€</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Estado de la cuenta · 1 oct 2026</div>
+    <table class="kpi-table">
+      <tr><td>Estado de la cuenta</td><td class="k-ok">En buen estado</td><td>Nivel del estado de la cuenta 282 · cumplimiento de políticas: adecuado</td></tr>
+      <tr><td>Ratio de pedidos defectuosos</td><td class="k-ok">0,05%</td><td>Gestionado por Amazon · 1 de 1.910 pedidos (60 días) · objetivo &lt; 1%</td></tr>
+      <tr><td>EPR · embalaje de España</td><td class="k-crit">595 SKU</td><td>Ventas en riesgo 238.615,97€ · es obligatorio enviar la solicitud · por ahora sin impacto en el nivel</td></tr>
+      <tr><td>GPSR · datos de contacto del fabricante</td><td class="k-warn">20 ASIN</td><td>Sin ventas en 12 meses · es obligatorio enviar la solicitud</td></tr>
+      <tr><td>GPSR · persona responsable</td><td class="k-warn">1 ASIN</td><td>Envío en revisión</td></tr>
+      <tr><td>Política de publicación · página de detalle</td><td class="k-warn">1</td><td>4 ago 2026 · advertencia enviada · impacto bajo</td></tr>
+      <tr><td>Rendimiento de envíos (FBM)</td><td>N/A</td><td>Sin datos de pedidos gestionados por el vendedor</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Listings y Buy Box · 1 oct 2026</div>
+    <table class="kpi-table">
+      <tr><td>Activos</td><td class="k-ok">312</td><td>229 SellerFlex (gestionado por Amazon) + 83 FBM · todos con stock disponible</td></tr>
+      <tr><td>Activos sin stock</td><td class="k-ok">0</td><td>Amazon pasa a "Agotado" los listings que se quedan sin unidades</td></tr>
+      <tr><td>Agotados (inactivos)</td><td class="k-warn">530</td><td>43 SellerFlex + 487 FBM</td></tr>
+      <tr><td>Inactivos por otros motivos</td><td>2</td><td>1 inactivo con stock (FBM) · 1 suprimido de los resultados de búsqueda</td></tr>
+      <tr><td>Incompletos</td><td class="k-warn">120</td><td>Falta información (borradores sin completar)</td></tr>
+      <tr><td>Buy Box (oferta destacada)</td><td class="k-ok">312 de 312</td><td>La oferta destacada de todos los activos es la de Duérmete, al mismo precio</td></tr>
+      <tr><td>Buy Box septiembre</td><td class="k-ok">91,64%</td><td>Porcentaje de ofertas destacadas sobre sesiones · B2B 85,07% · Informes de empresa</td></tr>
+      <tr><td>Activos sin ventas en septiembre</td><td>210</td><td>De los 312 activos</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">SellerFlex agotados hoy que vendieron en septiembre</div>
+    <table class="kpi-table">
+      <tr><td class="sku">SOFACAMAARON2PLAZABEIGESF</td><td>4 uds</td><td>1.511,96€ con IVA</td></tr>
+      <tr><td class="sku">CANAPESUPERSELLERGUADIWENGUE105190SF</td><td>3 uds</td><td>777,60€</td></tr>
+      <tr><td class="sku">CANAPESUPERSELLERGUADIBLANCO135190V2SF</td><td>2 uds</td><td>529,76€</td></tr>
+      <tr><td class="sku">CANAPESUPERSELLERGUADIBLANCO105190SF</td><td>2 uds</td><td>518,40€</td></tr>
+      <tr><td class="sku">CANAPESUPERSELLERGUADICAMBRIA105190SF</td><td>1 ud</td><td>259,20€</td></tr>
+      <tr><td class="sku">CANAPESUPERSELLERYECLABLANCO135190V2SF</td><td>1 ud</td><td>257,90€</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">EPR de embalaje en España: 595 SKU afectados y 238.615,97€ de ventas en riesgo — enviar la información de cumplimiento (Estado de la cuenta → Cumplimiento normativo)</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Reponer en SellerFlex los 6 SKU agotados que vendieron en septiembre (13 uds, 3.854,82€ con IVA) — solo el sofá cama Aaron beige suma 1.511,96€</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">GPSR: completar los datos del fabricante de 20 ASIN (sin ventas en 12 meses) y seguir el ASIN con la persona responsable en revisión</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">120 listings incompletos por falta de información y 1 inactivo con stock — decidir si se completan o se descartan</span></div>
+    <div class="action"><span class="pri p-lo">Baja</span><span class="action-txt">210 de los 312 activos no vendieron en septiembre — revisar visibilidad y publicidad de los que tengan stock real</span></div>
+  </div>
+</div>
+
+<!-- MIRAVIA RESUMEN -->
+<div class="panel" id="panel-miravia">
+  <div class="note"><strong>Miravia · 1 oct 2026</strong> — Duérmete Online y Somnia Descanso actualizados a 1-oct (revenue = ingresos de los últimos 30 días del inicio del Seller Center). ⚠️ Miravia muestra los importes con IVA.</div>
+  <div class="ov-grid">
+    <div class="ov-card" onclick="switchTab('duermete-mv')">
+      <div class="ov-top">
+        <span class="ov-flag">🛍️</span>
+        <div class="ov-name-wrap"><div class="ov-name">Duérmete Online</div><div class="ov-sub">Miravia + AliExpress · 1 oct 2026</div></div>
+        <span class="chip chip-crit">6 KPIs KO</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Revenue 30d</div><div class="ov-num-value">13.611€</div></div>
+        <div><div class="ov-num-label">Pdte envío</div><div class="ov-num-value">2</div></div>
+        <div><div class="ov-num-label">Sin stock</div><div class="ov-num-value">109 SKUs</div></div>
+        <div><div class="ov-num-label">Pen. AE</div><div class="ov-num-value">196</div></div>
+      </div>
+      <div class="ov-chips">
+        <span class="sm-chip sc-crit">AE bloqueada en España</span>
+        <span class="sm-chip sc-crit">NR AE 16.92% ↑</span>
+        <span class="sm-chip sc-crit">OTD MV 66.1%</span>
+        <span class="sm-chip sc-crit">Review 83.93%</span>
+      </div>
+    </div>
+    <div class="ov-card" onclick="switchTab('somnia-mv')">
+      <div class="ov-top">
+        <span class="ov-flag">🛌</span>
+        <div class="ov-name-wrap"><div class="ov-name">Somnia Descanso</div><div class="ov-sub">Miravia + AliExpress · 1 oct 2026</div></div>
+        <span class="chip chip-warn">6 KPIs KO</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Revenue 30d</div><div class="ov-num-value">43.115€</div></div>
+        <div><div class="ov-num-label">Pdte envío</div><div class="ov-num-value">12</div></div>
+        <div><div class="ov-num-label">Sin stock</div><div class="ov-num-value">32 SKUs</div></div>
+        <div><div class="ov-num-label">Penalizaciones</div><div class="ov-num-value" style="color:var(--warning)">169 AE + 2 MV</div></div>
+      </div>
+      <div class="ov-chips">
+        <span class="sm-chip sc-crit">NR AE 7.91% ↑</span>
+        <span class="sm-chip sc-crit">Unverified AE 27.52%</span>
+        <span class="sm-chip sc-crit">OTD MV 74.79%</span>
+        <span class="sm-chip sc-crit">Chat 87.5%</span>
+      </div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-top">
+        <span class="ov-flag">⏳</span>
+        <div class="ov-name-wrap"><div class="ov-name">Tienda 3</div><div class="ov-sub">Pendiente de alta en Miravia</div></div>
+        <span class="chip chip-susp">Pendiente</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Estado</div><div class="ov-num-value">—</div></div>
+        <div><div class="ov-num-label">Revenue 30d</div><div class="ov-num-value">—</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-n">Sin datos</span></div>
+    </div>
+  </div>
+  <div class="kpi-card" style="margin-top:20px">
+    <div class="kpi-head">Resumen consolidado Miravia · Ambas tiendas</div>
+    <table class="kpi-table">
+      <tr><td>Revenue combinado 30d</td><td class="k-ok">56.726€</td><td>DO 13.610,92€ + Somnia 43.115,28€ · 1 oct 2026</td></tr>
+      <tr><td>Duérmete Online · Miravia channel</td><td>8.753,25€</td><td>1 oct 2026 · 30 días</td></tr>
+      <tr><td>Duérmete Online · AliExpress channel</td><td>4.857,67€</td><td>1 oct 2026 · AliExpress restringe las ventas en España desde el 1-oct</td></tr>
+      <tr><td>Somnia Descanso · Miravia channel</td><td>28.802,31€</td><td>1 oct 2026 · 30 días</td></tr>
+      <tr><td>Somnia Descanso · AliExpress channel</td><td>14.312,97€</td><td>1 oct 2026 · 30 días</td></tr>
+      <tr><td>Penalizaciones DO</td><td class="k-crit">196 AE</td><td>Nueva el 1-oct: restricción de ventas en España por pedidos no recibidos · 0 puntos AE · 1 penalización de cuenta · 94 casos M2A</td></tr>
+      <tr><td>Penalizaciones Somnia</td><td class="k-warn">169 AE + 2 MV</td><td>Sin cambios a 1-oct · la última es de ene 2026 (congelación 5–12 ene ya cumplida) · 167 son bloqueos RAP/EPR en Alemania</td></tr>
+      <tr><td>KPIs fuera de target DO</td><td class="k-crit">6</td><td>Miravia (OTD/Review/Chat) + AE (Unverified/OTD/NR) · 1 oct 2026 · NR AE sube a 16.92%</td></tr>
+      <tr><td>KPIs fuera de target Somnia</td><td class="k-crit">6</td><td>Miravia (OTD/Review/Chat) + AE (Unverified/OTD/NR) · 1 oct 2026 · el chat vuelve a bajar del 90%</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Septiembre 2026 · facturación e inversión en publicidad · ⚠️ Miravia muestra los importes con IVA</div>
+    <table class="kpi-table">
+      <tr><td>Somnia · Miravia</td><td>20.716,14€</td><td>Sin IVA · 25.066,53€ con IVA · 250 pedidos</td></tr>
+      <tr><td>Somnia · AliExpress</td><td>10.689,61€</td><td>Sin IVA · 12.938,60€ con IVA · 111 pedidos (3 a Portugal, IVA 23%)</td></tr>
+      <tr><td>Somnia · total</td><td class="k-ok">31.405,75€</td><td>Sin IVA · 38.005,13€ con IVA · pedidos creados del 1 al 30 sep sin cancelados (cancelados: 4.481,69€)</td></tr>
+      <tr><td>Somnia · anuncios patrocinados Miravia</td><td class="k-warn">819,32€</td><td>Sponsored Discovery 1–30 sep · ingresos atribuidos 7.911,52€ · ROAS 9,66 · Display sin datos</td></tr>
+      <tr><td>Somnia · AliExpress Ads</td><td class="k-warn">500,58€</td><td>1–29 sep (el 28 y el 29 sin gasto; el panel de AliExpress Ads aún no publica el 30) · venta atribuida 3.594,64€ · ROAS 7,18</td></tr>
+      <tr><td>Duérmete Online · Miravia</td><td>6.315,15€</td><td>Sin IVA · 7.641,33€ con IVA · 72 pedidos</td></tr>
+      <tr><td>Duérmete Online · AliExpress</td><td>3.615,02€</td><td>Sin IVA · 4.374,17€ con IVA · 48 pedidos</td></tr>
+      <tr><td>Duérmete Online · total</td><td class="k-ok">9.930,17€</td><td>Sin IVA · 12.015,50€ con IVA · sin cancelados (cancelados: 1.065,02€)</td></tr>
+      <tr><td>Duérmete Online · anuncios</td><td>0€</td><td>Sponsored Discovery sin gasto en septiembre (4 impresiones) · no hay módulo de AliExpress Ads en esta tienda</td></tr>
+      <tr><td>Miravia · total</td><td class="k-ok">41.335,92€</td><td>Sin IVA (Somnia + DO) · publicidad 1.319,90€ (Somnia)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- DUERMETE ONLINE (MIRAVIA) -->
+<div class="panel" id="panel-duermete-mv">
+  <div class="mtr-grid">
+    <div class="mtr v-warn"><div class="mtr-label">Revenue 30d total</div><div class="mtr-value">13.610,92€</div><div class="mtr-sub">Miravia + AliExpress · con IVA</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Revenue Miravia</div><div class="mtr-value">8.753,25€</div><div class="mtr-sub">30 días · 1 oct</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Revenue AliExpress</div><div class="mtr-value">4.857,67€</div><div class="mtr-sub">Ventas restringidas en España desde el 1-oct</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Tráfico 30d</div><div class="mtr-value">5.103</div><div class="mtr-sub">Usuarios · -1.66% vs día anterior</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Pdte de envío</div><div class="mtr-value">2</div><div class="mtr-sub">0 por embalar · 2 listos para enviar</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">SKUs sin stock</div><div class="mtr-value">109</div><div class="mtr-sub">10 productos con ventas en 7 días agotados</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">9.930€</div><div class="mtr-sub">Sin IVA · 12.016€ con IVA · Miravia 6.315€ + AE 3.615€</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Anuncios sept.</div><div class="mtr-value">0€</div><div class="mtr-sub">Sponsored Discovery sin gasto (4 impresiones)</div></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Account Health</div>
+    <table class="kpi-table">
+      <tr><td>Restricción de ventas AliExpress en España</td><td class="k-crit">Desde 1-oct</td><td>Penalización 200708393373 (política de transacciones, 0 puntos): la tasa de disputas por pedidos no recibidos supera con creces el estándar · el panel avisa "Todos los productos de esta tienda están bloqueados en España"</td></tr>
+      <tr><td>Penalizaciones AliExpress</td><td class="k-crit">196</td><td>3 transacciones (la del 1-oct es nueva) · 193 propiedad intelectual / productos prohibidos o restringidos</td></tr>
+      <tr><td>Penalizaciones de cuenta (política de puntos AE)</td><td class="k-warn">1</td><td>Puntos AE actuales: 0 en las 4 categorías</td></tr>
+      <tr><td>Penalizaciones Miravia</td><td class="k-ok">0</td><td>✓ Sin penalizaciones activas</td></tr>
+      <tr><td>Casos de no recibido (M2A)</td><td class="k-crit">94</td><td>Aprobados para revisión · 24 facturas pendientes de emitir</td></tr>
+      <tr><td>Métricas de servicio fuera de target</td><td class="k-crit">6</td><td>Miravia (3) + AliExpress (3) · 1 oct 2026</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Calidad de servicio — Canal Miravia</div>
+    <table class="kpi-table">
+      <tr><td>Ratio de envíos en plazo</td><td class="k-ok">100%</td><td>Target ≥97% · ✓ OK</td></tr>
+      <tr><td>On-Time Delivery Rate</td><td class="k-crit">66.1%</td><td>Target ≥90% · ❌ KO (62.5% el 29-sep)</td></tr>
+      <tr><td>Cancellation Rate</td><td class="k-ok">0%</td><td>Target ≤1% · ✓ OK</td></tr>
+      <tr><td>Return Rate</td><td class="k-ok">0.74%</td><td>Target ≤1% · ✓ OK (0.69% el 29-sep)</td></tr>
+      <tr><td>Seller Review Rate</td><td class="k-crit">83.93%</td><td>Target ≥97% · ❌ KO (83.04% el 29-sep)</td></tr>
+      <tr><td>Store Chat Response Rate</td><td class="k-crit">85%</td><td>Target ≥90% · ❌ KO (92.31% el 29-sep)</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Calidad de servicio — Canal AliExpress</div>
+    <table class="kpi-table">
+      <tr><td>Unverified Shipment Rate</td><td class="k-crit">2.13%</td><td>Target &lt;1% · ❌ KO (6.38% el 29-sep)</td></tr>
+      <tr><td>On-Time Delivery Rate (AE)</td><td class="k-crit">65.96%</td><td>Target ≥90% · ❌ KO (67.02% el 29-sep)</td></tr>
+      <tr><td>Order Not Received Rate</td><td class="k-crit">16.92%</td><td>Target &lt;5% · ❌ KO (15.38% el 29-sep) · origen de la restricción en España</td></tr>
+      <tr><td>Envíos en plazo (2 días hábiles)</td><td class="k-ok">100%</td><td>Target ≥95% · ✓ OK (97.92% el 29-sep)</td></tr>
+      <tr><td>Ratio de omisión del envío</td><td class="k-ok">0%</td><td>Target &lt;5% · ✓ OK</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">AliExpress restringe desde hoy (1-oct) las ventas en España por la tasa de no recibidos (NR 16.92%, target &lt;5%; 15.38% el 29-sep). Para recurrir: bajar el NR y apelar desde Compliance Center → Store Assessment ("Download Details" y "Appeal"), con seguimiento y prueba de entrega de los 94 casos M2A</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">196 penalizaciones AE (193 de propiedad intelectual / productos prohibidos) y 1 penalización de cuenta — revisar producto a producto y apelar las que procedan</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">OTD Miravia 66.1% y AE 65.96% (target ≥90%) — identificar pedidos no entregados a tiempo y coordinar con transportista · enviar los 2 pedidos listos</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Chat 85% (target ≥90%; 92.31% el 29-sep) y valoraciones 83.93% (target ≥97%) — responder chats cada día y revisar valoraciones bajas</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">109 SKUs sin stock (10 con ventas en 7 días agotados) — reponer los de mayor impacto · sin anuncios en septiembre</span></div>
+    <div class="action"><span class="pri p-lo">Baja</span><span class="action-txt">Devoluciones 0.74% dentro de objetivo · emitir las 24 facturas pendientes</span></div>
+  </div>
+</div>
+
+<!-- SOMNIA DESCANSO (MIRAVIA) -->
+<div class="panel" id="panel-somnia-mv">
+  <div class="mtr-grid">
+    <div class="mtr v-warn"><div class="mtr-label">Revenue 30d</div><div class="mtr-value">43.115€</div><div class="mtr-sub">Miravia + AliExpress · con IVA</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Revenue Miravia</div><div class="mtr-value">28.802,31€</div><div class="mtr-sub">30 días · 1 oct</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Revenue AliExpress</div><div class="mtr-value">14.312,97€</div><div class="mtr-sub">30 días · 1 oct</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Tráfico 30d</div><div class="mtr-value">11.353</div><div class="mtr-sub">Usuarios · -2.39% vs día anterior</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Pdte de envío</div><div class="mtr-value">12</div><div class="mtr-sub">3 por embalar · 9 listos para enviar</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">SKUs sin stock</div><div class="mtr-value">32</div><div class="mtr-sub">10 productos con ventas en 7 días</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">31.406€</div><div class="mtr-sub">Sin IVA · 38.005€ con IVA · Miravia 20.716€ + AE 10.690€</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Anuncios sept.</div><div class="mtr-value">819,32€</div><div class="mtr-sub">Sponsored Discovery · ROAS 9,66</div></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Account Health — Penalizaciones (detalle del 28-sep · recuento sin cambios el 1-oct)</div>
+    <table class="kpi-table">
+      <tr><td>Penalizaciones Miravia</td><td class="k-warn">2</td><td>23 y 25 jun 2025 · 1 producto desactivado por imágenes con texto o logos · apelación rechazada</td></tr>
+      <tr><td>AliExpress · política de transacciones</td><td class="k-warn">2</td><td>5 ene 2026 · 12 puntos por pedidos no recibidos 11,11% (límite 10%) · apelación rechazada</td></tr>
+      <tr><td>AliExpress · penalización de cuenta (puntos)</td><td class="k-warn">1</td><td>Congelación de 7 días ya aplicada: del 5 al 12 ene 2026</td></tr>
+      <tr><td>AliExpress · propiedad intelectual / prohibidos</td><td class="k-warn">167</td><td>0 puntos · las revisadas son bloqueos en Alemania por no tener registrada la RAP/EPR (desde oct–dic 2025)</td></tr>
+      <tr><td>Puntos AE · Infracciones de transacción</td><td class="k-warn">12 puntos</td><td>Los de enero de 2026; siguen en el contador · el panel avisa: con 12 puntos la cuenta se congela 7 días</td></tr>
+      <tr><td>Puntos AE · Información del producto / PI / PI grave</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Casos de no recibido (M2A)</td><td class="k-crit">29</td><td>Aprobados para revisión (1-oct) · 7 facturas pendientes de emitir</td></tr>
+    </table>
+  </div>
+  <div class="note"><strong>Corrección:</strong> en la versión anterior se presentó como riesgo de congelación inmediato. La congelación por esos 12 puntos ya se aplicó en enero de 2026 y no hay penalizaciones nuevas desde entonces. El riesgo real es que se repita: la penalización de enero se generó al superar el 10% de pedidos no recibidos, y hoy esa métrica está en 7,91% y subiendo (7,5% el 29-sep, 5,94% el 25-sep).</div>
+  <div class="kpi-card">
+    <div class="kpi-head">Calidad de servicio — Canal Miravia</div>
+    <table class="kpi-table">
+      <tr><td>Ratio de envíos en plazo</td><td class="k-ok">99.6%</td><td>Target ≥97% · ✓ OK</td></tr>
+      <tr><td>On-Time Delivery Rate</td><td class="k-crit">74.79%</td><td>Target ≥90% · ❌ KO (64.15% el 29-sep)</td></tr>
+      <tr><td>Cancellation Rate</td><td class="k-ok">0%</td><td>Target ≤1% · ✓ OK</td></tr>
+      <tr><td>Return Rate</td><td class="k-ok">0%</td><td>Target ≤1% · ✓ OK</td></tr>
+      <tr><td>Seller Review Rate</td><td class="k-crit">90.65%</td><td>Target ≥97% · ❌ KO (90.53% el 29-sep)</td></tr>
+      <tr><td>Store Chat Response Rate</td><td class="k-crit">87.5%</td><td>Target ≥90% · ❌ KO (93.33% el 29-sep)</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Calidad de servicio — Canal AliExpress</div>
+    <table class="kpi-table">
+      <tr><td>Unverified Shipment Rate</td><td class="k-crit">27.52%</td><td>Target &lt;1% · ❌ KO (28.51% el 29-sep)</td></tr>
+      <tr><td>Envíos en plazo (2 días hábiles)</td><td class="k-ok">98.23%</td><td>Target ≥95% · ✓ OK (99.55% el 29-sep)</td></tr>
+      <tr><td>On-Time Delivery Rate</td><td class="k-crit">82.57%</td><td>Target ≥90% · ❌ KO (83.71% el 29-sep)</td></tr>
+      <tr><td>Ratio de omisión del envío</td><td class="k-ok">0%</td><td>Target &lt;5% · ✓ OK</td></tr>
+      <tr><td>Order Not Received Rate</td><td class="k-crit">7.91%</td><td>Target &lt;5% · ❌ KO (5.83% → 5.94% → 7.5% → 7.91%) · a partir del 10% AE resta 12 puntos</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Unverified Shipment Rate AE 27.52% (target &lt;1%) — validar el tracking de los envíos de AliExpress; es la métrica más alejada del objetivo</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Dar seguimiento a los 29 casos M2A de no recibido aprobados para revisión y emitir las 7 facturas pendientes</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Frenar los pedidos no recibidos en AE (7.91%; 7.5% el 29-sep y 5.94% el 25-sep): en enero, al pasar del 10%, AliExpress restó 12 puntos y congeló la cuenta 7 días</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Registrar la RAP/EPR para Alemania en el panel (Cuenta y autenticación → Mi información) para desbloquear los productos afectados en ese mercado</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">OTD Miravia 74.79% y AE 82.57% (target ≥90%) — procesar los 12 pedidos pendientes (3 por embalar) y revisar transportista</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Chat de tienda 87.5% (target ≥90%; 93.33% el 29-sep) — responder los chats pendientes cada día</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Seller review rate 90.65% (target ≥97%) — revisar valoraciones bajas · corregir imágenes del producto desactivado en Miravia (jun 2025) para reactivarlo</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Anuncios: 1 campaña activa y 5 pausadas; saldo de 363,26€ tras dos recargas de 200€ el 30-sep · septiembre 819,32€ con ROAS 9,66</span></div>
+    <div class="action"><span class="pri p-lo">Baja</span><span class="action-txt">32 SKUs sin stock (10 productos con ventas en 7 días) — reponer los que tienen ventas recientes</span></div>
+  </div>
+</div>
+
+<!-- OVERVIEW MIRAKL -->
+<div class="panel" id="panel-overview">
+  <div class="kpi-card">
+    <div class="kpi-head">Facturación septiembre 2026 · sin IVA (incluye portes) · ⚠️ Carrefour no desglosa impuestos: su panel va con IVA</div>
+    <table class="kpi-table">
+      <tr><td>Carrefour ES</td><td>193.310€</td><td>Sin IVA (÷1,21) · el panel muestra 233.904€ con IVA · 1.578 pedidos</td></tr>
+      <tr><td>Carrefour FR</td><td>108€</td><td>Sin IVA (÷1,20) · el pedido es de 129,88€ con IVA</td></tr>
+      <tr><td>Leroy Merlin (ADEO) · ES + FR</td><td>134.620€</td><td>España 134.203€ + Francia 417€ · 737 pedidos</td></tr>
+      <tr><td>Conforama Iberia · ES + PT</td><td>61.664€</td><td>España 58.342€ + Portugal 3.322€ · 630 pedidos</td></tr>
+      <tr><td>Conforama FR</td><td>0€</td><td>Suspendida · 0 pedidos</td></tr>
+      <tr><td>Worten</td><td>33.149€</td><td>249 pedidos · único canal Worten Online PT (IVA 23%)</td></tr>
+      <tr><td>Maisons du Monde</td><td>0€</td><td>Suspendida · 0 pedidos</td></tr>
+      <tr><td>Brico Dépôt</td><td>0€</td><td>Suspendida · 0 pedidos</td></tr>
+      <tr><td>Total Mirakl</td><td class="k-ok">422.851€</td><td>3.195 pedidos · 1–30 sep</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Inversión en publicidad septiembre 2026 · base para el 4% (la de Carrefour no la gestionamos)</div>
+    <table class="kpi-table">
+      <tr><td>Worten</td><td class="k-warn">957,47€</td><td>Mirakl Ads · Worten PT · ventas atribuidas 18.822,52€ · el panel muestra aparte 48,77€ de campañas opt-out</td></tr>
+      <tr><td>Leroy Merlin (ADEO)</td><td>-</td><td>Lo gestiona Valiuz (externo) · sin informe de gasto · recarga de 2.000€ pedida el 14-sep</td></tr>
+      <tr><td>Conforama Iberia</td><td>-</td><td>El panel no tiene módulo de publicidad</td></tr>
+      <tr><td>Conforama FR</td><td>-</td><td>Sin campañas: en Mirakl Ads solo está Worten PT</td></tr>
+      <tr><td>Maisons du Monde</td><td>-</td><td>Sin campañas: en Mirakl Ads solo está Worten PT</td></tr>
+      <tr><td>Brico Dépôt</td><td>-</td><td>El panel no tiene módulo de publicidad</td></tr>
+    </table>
+  </div>
+  <div class="ov-grid">
+    <div class="ov-card" onclick="switchTab('worten')">
+      <div class="ov-top">
+        <span class="ov-flag">🇵🇹</span>
+        <div class="ov-name-wrap"><div class="ov-name">Worten PT</div><div class="ov-sub">Duérmete Online · Premium</div></div>
+        <span class="chip chip-ok">Activa</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">5.864€</div></div>
+        <div><div class="ov-num-label">Rating 3m</div><div class="ov-num-value">4.15★</div></div>
+        <div><div class="ov-num-label">Saldo pdte</div><div class="ov-num-value">9.488€</div></div>
+        <div><div class="ov-num-label">Pedidos</div><div class="ov-num-value">42</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">1 msg crítico</span><span class="sm-chip sc-warn">2 msgs no leídos</span><span class="sm-chip sc-warn">Alerta publi.</span><span class="sm-chip sc-warn">7 incidencias</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('conforama')">
+      <div class="ov-top">
+        <span class="ov-flag">🇫🇷</span>
+        <div class="ov-name-wrap"><div class="ov-name">Conforama FR</div><div class="ov-sub">Duérmete Online</div></div>
+        <span class="chip chip-susp">Suspendida</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">0€</div></div>
+        <div><div class="ov-num-label">Rating</div><div class="ov-num-value" style="color:var(--text-muted)">–</div></div>
+        <div><div class="ov-num-label">KYC</div><div class="ov-num-value" style="color:var(--critical)">Pdte</div></div>
+        <div><div class="ov-num-label">Acepta</div><div class="ov-num-value" style="color:var(--text-muted)">–</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">Suspensión manual</span><span class="sm-chip sc-crit">KYC sin completar</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('cfib')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Conforama ES</div><div class="ov-sub">Duérmete Online · conforamaiberia-prod</div></div>
+        <span class="chip chip-warn">Alertas calidad</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">11.309€</div></div>
+        <div><div class="ov-num-label">Pedidos</div><div class="ov-num-value">118</div></div>
+        <div><div class="ov-num-label">Incidencias</div><div class="ov-num-value" style="color:var(--critical)">22</div></div>
+        <div><div class="ov-num-label">Msgs no leídos</div><div class="ov-num-value" style="color:var(--warning)">14</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">Incid. 6% ≥5%</span><span class="sm-chip sc-crit">Reembolsos 5% ≥1%</span><span class="sm-chip sc-warn">Resp. msgs 23h</span><span class="sm-chip sc-warn">2 en disputa</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('cfr')">
+      <div class="ov-top">
+        <span class="ov-flag">🇫🇷</span>
+        <div class="ov-name-wrap"><div class="ov-name">Carrefour FR</div><div class="ov-sub">Dreaming Online · KYC ✅</div></div>
+        <span class="chip chip-ok">Activa</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">0€</div></div>
+        <div><div class="ov-num-label">Pedidos</div><div class="ov-num-value">0</div></div>
+        <div><div class="ov-num-label">Saldo pdte</div><div class="ov-num-value">106€</div></div>
+        <div><div class="ov-num-label">Incidencias</div><div class="ov-num-value">0</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-n">Sin actividad 7d</span><span class="sm-chip sc-crit">Tardíos 36%</span><span class="sm-chip sc-warn">Acept. 41h</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('cfe')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Carrefour ES</div><div class="ov-sub">Duérmete Online Colchón</div></div>
+        <span class="chip chip-warn">Atención urgente</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">40.473€</div></div>
+        <div><div class="ov-num-label">Rating 6m</div><div class="ov-num-value" style="color:var(--critical)">3.77★</div></div>
+        <div><div class="ov-num-label">Incidencias</div><div class="ov-num-value" style="color:var(--critical)">108</div></div>
+        <div><div class="ov-num-label">Msgs no leídos</div><div class="ov-num-value" style="color:var(--critical)">34</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">83 sin enviar</span><span class="sm-chip sc-crit">78 tardíos</span><span class="sm-chip sc-crit">3 incid. nuevas</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('mdm')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Maisons du Monde</div><div class="ov-sub">Duérmete Online</div></div>
+        <span class="chip chip-susp">Suspendida</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">0€</div></div>
+        <div><div class="ov-num-label">Rating 3m</div><div class="ov-num-value" style="color:var(--critical)">3.29★</div></div>
+        <div><div class="ov-num-label">Env. tardíos</div><div class="ov-num-value" style="color:var(--critical)">17%</div></div>
+        <div><div class="ov-num-label">Msgs no leídos</div><div class="ov-num-value">0</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">Suspensión automática</span><span class="sm-chip sc-crit">Tardíos 17%</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('adeo')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">ADEO / Leroy Merlin</div><div class="ov-sub">Duérmete Online · adeo-marketplace</div></div>
+        <span class="chip chip-warn">Alertas</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value">30.233€</div></div>
+        <div><div class="ov-num-label">Media carrito</div><div class="ov-num-value">204€</div></div>
+        <div><div class="ov-num-label">Incid. en curso</div><div class="ov-num-value" style="color:var(--warning)">59</div></div>
+        <div><div class="ov-num-label">Msgs no leídos</div><div class="ov-num-value" style="color:var(--warning)">8</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-warn">59 incidencias</span><span class="sm-chip sc-warn">74 pdte envío</span><span class="sm-chip sc-warn">Reembolsos 2,61%</span></div>
+    </div>
+
+    <div class="ov-card" onclick="switchTab('brico')">
+      <div class="ov-top">
+        <span class="ov-flag">🇪🇸</span>
+        <div class="ov-name-wrap"><div class="ov-name">Brico Dépôt</div><div class="ov-sub">marketplace.bricodepot.es · Iberia</div></div>
+        <span class="chip chip-susp">Suspendida</span>
+      </div>
+      <div class="ov-nums">
+        <div><div class="ov-num-label">Ventas 7d</div><div class="ov-num-value" style="color:var(--text-muted)">0€</div></div>
+        <div><div class="ov-num-label">Rating 29-sep</div><div class="ov-num-value" style="color:var(--critical)">3.24★</div></div>
+      </div>
+      <div class="ov-chips"><span class="sm-chip sc-crit">Suspensión manual</span><span class="sm-chip sc-n">KYC aprobado</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- WORTEN PT -->
+<div class="panel" id="panel-worten">
+<div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">5.864€</div><div class="mtr-sub">Ingresos · 25 sep–1 oct (hora de Lisboa) · 42 pedidos</div></div>
+    <div class="mtr"><div class="mtr-label">Media carrito</div><div class="mtr-value">147€</div></div>
+    <div class="mtr"><div class="mtr-label">Rating</div><div class="mtr-value">4.15★</div><div class="mtr-sub">Clasificación 3 meses (control de calidad)</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">619.517€</div><div class="mtr-sub">Verificar histórico</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">9.488€</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">33.149€</div><div class="mtr-sub">Sin IVA · 249 pedidos · único canal Worten Online PT</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Publicidad sept.</div><div class="mtr-value">957,47€</div><div class="mtr-sub">Mirakl Ads · ventas atribuidas 18.822,52€ · +48,77€ opt-out aparte</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-n">42</span><span class="counter-lbl">Pedidos totales</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-warn">12</span><span class="counter-lbl">Pdte envío</span></div>
+    <div class="counter"><span class="counter-num cn-warn">7</span><span class="counter-lbl">Incidencias</span></div>
+    <div class="counter"><span class="counter-num cn-warn">2</span><span class="counter-lbl">Msgs no leídos</span></div>
+    <div class="counter"><span class="counter-num cn-crit">1</span><span class="counter-lbl">Msg crítico</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad — Reglas de suspensión</div>
+    <table class="kpi-table">
+      <tr><td>Pedidos rechazados automáticamente ≥ 4</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Tiempo de aceptación ≥ 24h</td><td class="k-ok">0h</td><td>✓</td></tr>
+      <tr><td>% Aceptación &lt; 95%</td><td class="k-ok">100%</td><td>✓</td></tr>
+      <tr><td>Clasificación &lt; 3.5★ (3 meses)</td><td class="k-ok">4.15★</td><td>✓</td></tr>
+      <tr><td>% Envíos tardíos ≥ 5%</td><td class="k-ok">1%</td><td>✓</td></tr>
+      <tr><td>% Reembolsos ≥ 20%</td><td class="k-ok">1%</td><td>✓</td></tr>
+    </table>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Publicidad — Alertas activas</div>
+    <table class="kpi-table">
+      <tr><td>Budget related issues</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Ad group related issues</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Date related issues</td><td class="k-warn">1</td><td>Fechas caducadas ⚠️</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Resolver la alerta de fechas en las campañas de publicidad (date related issue)</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Responder el mensaje crítico y el otro mensaje sin leer · gestionar las 7 incidencias en curso para mantener el tier Premium</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Procesar los 12 pedidos en espera de envío (20 el 29-sep)</span></div>
+    <div class="action"><span class="pri p-lo">Baja</span><span class="action-txt">Verificar el saldo "a pagar" de 619.517€ — parece acumulado histórico; confirmar con Worten</span></div>
+  </div>
+</div>
+
+<!-- CONFORAMA -->
+<div class="panel" id="panel-conforama">
+  <div class="banner b-susp">
+    <span class="banner-icon">🚫</span>
+    <div><span class="banner-title">SUSPENSIÓN MANUAL — Tienda inactiva · KYC pendiente</span><span class="banner-sub">"Duérmete Online" (ID 3802) · conforama-prod.mirakl.net (FR) · 1 oct 2026 · estado de la tienda: suspensión manual</span></div>
+  </div>
+<div class="mtr-grid">
+    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Rating</div><div class="mtr-value">–</div><div class="mtr-sub">Sin datos en el control de calidad</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">422,98€</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">KYC</div><div class="mtr-value">Pendiente</div><div class="mtr-sub">Bloqueo principal</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida · 0 pedidos</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Publicidad sept.</div><div class="mtr-value">-</div><div class="mtr-sub">Sin campañas: en Mirakl Ads solo está Worten PT</div></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad</div>
+    <table class="kpi-table">
+      <tr><td>Tiempo aceptación pedidos</td><td>–</td><td>Sin datos en el periodo (tienda suspendida) · límite premium 12h</td></tr>
+      <tr><td>Pedidos activos</td><td>0</td><td>—</td></tr>
+      <tr><td>Incidencias en curso</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Mensajes no leídos</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>% Reembolsos (3 meses)</td><td>–</td><td>Sin datos en el periodo · límite &lt; 5%</td></tr>
+      <tr><td>KYC completado</td><td class="k-crit">No</td><td>Requerido para reactivar ❌</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Plan de reactivación</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Completar proceso KYC — requisito principal para levantar la suspensión manual. Contactar con Conforama para documentación requerida</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Una vez reactivada: configurar aceptación automática de pedidos (límite premium 12h; antes de la suspensión estaba en 61h)</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Solicitar motivo exacto de la suspensión manual antes de iniciar el KYC — puede haber requisitos adicionales</span></div>
+  </div>
+</div>
+
+<!-- CONFORAMA IBERIA ES -->
+<div class="panel" id="panel-cfib">
+<div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">11.309€</div><div class="mtr-sub">Ingresos · 25 sep–1 oct · VBM 11.309€</div></div>
+    <div class="mtr"><div class="mtr-label">Media carrito</div><div class="mtr-value">174€</div></div>
+    <div class="mtr"><div class="mtr-label">Pedidos totales</div><div class="mtr-value">118</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Tasa incidencias</div><div class="mtr-value">6%</div><div class="mtr-sub">Límite &lt; 5% ❌</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">65.213€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">4.725€</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">61.664€</div><div class="mtr-sub">Sin IVA · ES 58.342€ + PT 3.322€ · 630 pedidos</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Publicidad sept.</div><div class="mtr-value">-</div><div class="mtr-sub">El panel no tiene módulo de publicidad</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-warn">20</span><span class="counter-lbl">Pdte envío</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-crit">22</span><span class="counter-lbl">Incid. en curso</span></div>
+    <div class="counter"><span class="counter-num cn-warn">2</span><span class="counter-lbl">Incid. en disputa</span></div>
+    <div class="counter"><span class="counter-num cn-warn">14</span><span class="counter-lbl">Msgs no leídos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Msg crítico</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Pdte aceptación</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad — Reglas de premium · 1 oct 2026</div>
+    <table class="kpi-table">
+      <tr><td>Tiempo de aceptación</td><td class="k-ok">4h</td><td>✓ Límite &lt; 24h</td></tr>
+      <tr><td>% Aceptación</td><td class="k-ok">100%</td><td>✓ Mín. 95%</td></tr>
+      <tr><td>Tasa de incidencias</td><td class="k-crit">6%</td><td>Límite &lt; 5% ❌</td></tr>
+      <tr><td>Tiempo de respuesta</td><td class="k-warn">23h</td><td>Muy cerca del límite (&lt; 24h) ⚠️</td></tr>
+      <tr><td>% Envíos tardíos</td><td class="k-ok">0%</td><td>✓ Límite &lt; 10%</td></tr>
+      <tr><td>% Reembolsos</td><td class="k-crit">5%</td><td>Límite &lt; 1% ❌ (5% el 29-sep)</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Gestionar las 22 incidencias en curso (2 en disputa) — tasa al 6% supera el límite del 5% premium; el panel mantiene el aviso de calidad por incidencias ≥ 10%</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Responder los 14 mensajes no leídos (19 el 29-sep) — tiempo de respuesta en 23h, a 1h del límite</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Investigar reembolsos al 5% (límite &lt; 1%) — causa directa de pérdida del tier premium. Revisar causas raíz</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Procesar los 20 pedidos en espera de envío (27 el 29-sep) — aunque tardíos están en 0%, el volumen puede disparar el indicador</span></div>
+  </div>
+</div>
+
+<!-- CARREFOUR FR -->
+<div class="panel" id="panel-cfr">
+<div class="mtr-grid">
+    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">0€</div><div class="mtr-sub">Sin pedidos</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">106,50€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">81,36€</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">KYC</div><div class="mtr-value">✓ OK</div></div>
+    <div class="mtr"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">108€</div><div class="mtr-sub">Sin IVA (÷1,20) · 1 pedido de 129,88€ con IVA</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Publicidad sept.</div><div class="mtr-value">-</div><div class="mtr-sub">No gestionamos su publicidad</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Pedidos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Mensajes</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Incidencias</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad — Reglas de premium · 1 oct 2026</div>
+    <table class="kpi-table">
+      <tr><td>Tiempo de aceptación</td><td class="k-crit">41h</td><td>Límite &lt; 10h ❌</td></tr>
+      <tr><td>% Aceptación</td><td class="k-crit">73%</td><td>Mín. 85% ❌</td></tr>
+      <tr><td>Clasificación</td><td>-</td><td>Mín. 4★</td></tr>
+      <tr><td>Tasa de incidencias</td><td class="k-ok">0%</td><td>✓ Límite &lt; 10%</td></tr>
+      <tr><td>Tiempo de respuesta</td><td class="k-ok">0h</td><td>✓ Límite &lt; 48h</td></tr>
+      <tr><td>% Envíos tardíos</td><td class="k-crit">36%</td><td>Límite &lt; 2% ❌</td></tr>
+      <tr><td>% Reembolsos</td><td class="k-ok">0%</td><td>✓ Límite &lt; 5%</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Tardíos 36%, aceptación 73% y 41h de aceptación — métricas históricas fuera de límite; si se reactiva la venta, configurar aceptación automática y revisar plazos de envío</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Verificar visibilidad del catálogo en Carrefour FR — 0€ en ventas puede indicar falta de stock, precios fuera de mercado o listing incompleto</span></div>
+    <div class="action"><span class="pri p-lo">Baja</span><span class="action-txt">Confirmar con Dreaming Online si esta cuenta tiene actividad prevista o está en proceso de cierre</span></div>
+  </div>
+</div>
+
+<!-- CARREFOUR ES -->
+<div class="panel" id="panel-cfe">
+<div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">40.473€</div><div class="mtr-sub">Ingresos · 25 sep–1 oct · 270 pedidos</div></div>
+    <div class="mtr"><div class="mtr-label">Media carrito</div><div class="mtr-value">153€</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Rating</div><div class="mtr-value">3.77★</div><div class="mtr-sub">Clasificación 6 meses · mín. 4★ ❌</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Incidencias en curso</div><div class="mtr-value">108</div><div class="mtr-sub">+3 nuevas</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">68.102€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">27.347€</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">193.310€</div><div class="mtr-sub">Sin IVA (÷1,21) · el panel muestra 233.904€ con IVA: Carrefour no desglosa impuestos · 1.578 pedidos</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Publicidad sept.</div><div class="mtr-value">-</div><div class="mtr-sub">No gestionamos su publicidad</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-crit">83</span><span class="counter-lbl">En espera envío</span></div>
+    <div class="counter"><span class="counter-num cn-crit">78</span><span class="counter-lbl">Pedidos tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-crit">108</span><span class="counter-lbl">Incidencias</span></div>
+    <div class="counter"><span class="counter-num cn-crit">34</span><span class="counter-lbl">Msgs no leídos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Msgs críticos</span></div>
+    <div class="counter"><span class="counter-num cn-warn">1</span><span class="counter-lbl">Pdte aceptación</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Métricas vs. Límites Carrefour ES</div>
+    <table class="kpi-table">
+      <tr><td>Rating vendedor (6 meses)</td><td class="k-crit">3.77★</td><td>Mínimo 4.0★ ❌</td></tr>
+      <tr><td>Tasa incidencias (6 meses)</td><td class="k-warn">12%</td><td>Límite premium 15% · alerta calidad ≥10% (3 meses) ⚠️</td></tr>
+      <tr><td>Pedidos tardíos</td><td class="k-crit">78</td><td>72 el 29-sep · tasa de envíos tardíos 49,63% en estadísticas ❌</td></tr>
+      <tr><td>Aceptación pedidos</td><td class="k-ok">4h / 100%</td><td>✓</td></tr>
+      <tr><td>2FA activado</td><td class="k-warn">Pendiente</td><td>El aviso sigue en el panel el 1-oct ⚠️</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones — Prioridad máxima</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Procesar los 83 pedidos en espera de envío (74 el 29-sep) — los tardíos suben a 78 (72 el 29-sep) · aceptar el pedido pendiente</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Gestionar las 108 incidencias en curso (+3 nuevas) — alerta de calidad por incidencias ≥10% en 3 meses</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Responder los 34 mensajes no leídos (52 el 29-sep) — impacto directo en el rating 3.77★ (mín. 4★)</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Revisar SLA logístico — tasa de envíos tardíos 49,63% en las estadísticas del panel; problema sistémico</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Activar 2FA en la cuenta (requerido por Carrefour ES)</span></div>
+  </div>
+</div>
+
+<!-- MAISONS DU MONDE -->
+<div class="panel" id="panel-mdm">
+  <div class="banner b-susp">
+    <span class="banner-icon">🚫</span>
+    <div><span class="banner-title">SUSPENSIÓN AUTOMÁTICA — Tasa de envíos tardíos ≥ 15% (desde hace 3 meses)</span><span class="banner-sub">"Duérmete Online" (ID 3244) · Clasificación 3.29★ (3 meses) · maisonsdumonde-prod.mirakl.net · 1 oct 2026 · KYC aprobado</span></div>
+  </div>
+<div class="mtr-grid">
+    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Rating</div><div class="mtr-value">3.29★</div><div class="mtr-sub">Clasificación 3 meses</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Envíos tardíos (3m)</div><div class="mtr-value">17%</div><div class="mtr-sub">Causa de suspensión ❌</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">0€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">0€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">169,45€</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida · 0 pedidos</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Publicidad sept.</div><div class="mtr-value">-</div><div class="mtr-sub">Sin campañas: en Mirakl Ads solo está Worten PT</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-n">0</span><span class="counter-lbl">Pedidos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Incidencias</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Msgs no leídos</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Causa de suspensión — Tasa envíos tardíos 3 meses</div>
+    <table class="kpi-table">
+      <tr><td>Tasa envíos tardíos (3 meses)</td><td class="k-crit">17%</td><td>Suspensión ≥15% · premium &lt; 4% ❌</td></tr>
+      <tr><td>Clasificación (3 meses)</td><td class="k-crit">3.29★</td><td>Mín. 4★ ❌</td></tr>
+      <tr><td>Tasa de incidencias (3 meses)</td><td class="k-crit">5%</td><td>Límite &lt; 4% ❌</td></tr>
+      <tr><td>Tiempo de respuesta</td><td class="k-crit">40h</td><td>Límite &lt; 24h ❌ (40h el 29-sep)</td></tr>
+      <tr><td>% Reembolsos (3 meses)</td><td class="k-crit">6%</td><td>Límite &lt; 4% ❌</td></tr>
+      <tr><td>Aceptación</td><td class="k-ok">9h / 100%</td><td>✓</td></tr>
+      <tr><td>Mensajes sin leer</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>KYC</td><td class="k-ok">✓ OK</td><td>—</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Plan de reactivación</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Contactar con Maisons du Monde para conocer el plan de reactivación — suspensión automática requiere mejora de KPI antes de rehabilitar</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Diagnosticar la tasa de envíos tardíos ≥ 15% — causa directa de la suspensión. Revisar SLA logístico</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Tiempo de respuesta 40h (límite 24h) — bajar el tiempo medio antes de pedir la reactivación</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Clasificación 3.29★ (mín. 4★) — una vez reactivada, buscar activamente nuevas reseñas positivas</span></div>
+  </div>
+</div>
+
+<!-- ADEO / LM -->
+<div class="panel" id="panel-adeo">
+<div class="mtr-grid">
+    <div class="mtr v-ok"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">30.233€</div><div class="mtr-sub">Ingresos · 25 sep–1 oct · 152 pedidos · VBM 31.067€</div></div>
+    <div class="mtr"><div class="mtr-label">Media carrito</div><div class="mtr-value">204€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pendiente</div><div class="mtr-value">112.343,16€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo a pagar</div><div class="mtr-value">215,65€</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">47.740,95€</div></div>
+    <div class="mtr v-ok"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">134.620€</div><div class="mtr-sub">Sin IVA · LM España 134.203€ + LM Francia 417€ · 737 pedidos</div></div>
+    <div class="mtr v-warn"><div class="mtr-label">Publicidad sept.</div><div class="mtr-value">-</div><div class="mtr-sub">Valiuz (externo): sin informe de gasto · recarga de 2.000€ pedida el 14-sep</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-warn">74</span><span class="counter-lbl">Pdte envío</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Tardíos</span></div>
+    <div class="counter"><span class="counter-num cn-warn">59</span><span class="counter-lbl">Incid. en curso</span></div>
+    <div class="counter"><span class="counter-num cn-warn">1</span><span class="counter-lbl">Nuevas incid.</span></div>
+    <div class="counter"><span class="counter-num cn-warn">8</span><span class="counter-lbl">Msgs no leídos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Pdte aceptación</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de calidad ADEO · 1 oct 2026</div>
+    <table class="kpi-table">
+      <tr><td>Tasa de rechazos automáticos</td><td class="k-ok">0%</td><td>✓ OK</td></tr>
+      <tr><td>Plazo de aceptación</td><td class="k-ok">4h 24min</td><td>✓ Dentro de límite</td></tr>
+      <tr><td>Tasa de aceptaciones</td><td class="k-ok">100%</td><td>✓ OK</td></tr>
+      <tr><td>Tasa de cancelación</td><td class="k-ok">0%</td><td>✓ OK</td></tr>
+      <tr><td>Tasa de incidencias</td><td class="k-ok">0%</td><td>✓ OK (0,76% el 29-sep)</td></tr>
+      <tr><td>Tiempo de respuesta</td><td class="k-ok">7h 37min</td><td>✓ OK (9h 33min el 29-sep)</td></tr>
+      <tr><td>Tasa de envíos tardíos</td><td class="k-ok">0%</td><td>✓ OK</td></tr>
+      <tr><td>Tasa de reembolso</td><td class="k-warn">2,61%</td><td>Monitorizar ⚠️ (1,52% el 29-sep)</td></tr>
+      <tr><td>Plazo de envío</td><td class="k-warn">1d 4h 58min</td><td>Sube (20h 30min el 29-sep)</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Acciones recomendadas</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Procesar los 74 pedidos en espera de envío (79 el 29-sep) — el plazo de envío sube a 1d 4h 58min</span></div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Gestionar las 59 incidencias en curso (+1 nueva) — priorizar las más antiguas antes de que impacten en la tasa</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Reembolsos suben a 2,61% (1,52% el 29-sep) — revisar causas; incidencias en 0%</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">Pedir a Valiuz (Cristina Fernández / Fabio Attardo) el informe de gasto de septiembre para calcular la comisión · responder los 8 mensajes no leídos</span></div>
+  </div>
+</div>
+
+<!-- BRICO DEPOT -->
+<div class="panel" id="panel-brico">
+  <div class="banner b-susp">
+    <span class="banner-icon">🚫</span>
+    <div><span class="banner-title">SUSPENSIÓN MANUAL — Tasa de incidencias ≥ 12% (desde hace 3 meses)</span><span class="banner-sub">marketplace.bricodepot.es · "Duérmete Online (Vendedor Nacional)" (ID 2547) · 1 oct 2026 · el panel ya no muestra el aviso ni las reglas de premium, pero la tienda sigue en suspensión manual · KYC aprobado</span></div>
+  </div>
+<div class="mtr-grid">
+    <div class="mtr v-muted"><div class="mtr-label">Ventas 7 días</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Rating</div><div class="mtr-value">3.24★</div><div class="mtr-sub">Clasificación del 29-sep · hoy el panel no muestra reglas de premium</div></div>
+    <div class="mtr v-crit"><div class="mtr-label">Incidencias (3m)</div><div class="mtr-value">≥12%</div><div class="mtr-sub">Causa de suspensión (aviso 25-sep) ❌</div></div>
+    <div class="mtr"><div class="mtr-label">Saldo pagado</div><div class="mtr-value">25,28€</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Facturación sept.</div><div class="mtr-value">0€</div><div class="mtr-sub">Suspendida · 0 pedidos</div></div>
+    <div class="mtr v-muted"><div class="mtr-label">Publicidad sept.</div><div class="mtr-value">-</div><div class="mtr-sub">El panel no tiene módulo de publicidad</div></div>
+  </div>
+  <div class="counters">
+    <div class="counter"><span class="counter-num cn-n">0</span><span class="counter-lbl">Pedidos</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Incidencias</span></div>
+    <div class="counter"><span class="counter-num cn-ok">0</span><span class="counter-lbl">Mensajes</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-head">Control de Calidad — Reglas de suspensión · 1 oct 2026</div>
+    <table class="kpi-table">
+      <tr><td>Pedidos rechazados automáticamente ≥ 2</td><td class="k-ok">0</td><td>✓</td></tr>
+      <tr><td>Tiempo de aceptación ≥ 72h (3 meses)</td><td class="k-ok">0h</td><td>✓</td></tr>
+      <tr><td>% Aceptación &lt; 75% (3 meses)</td><td class="k-ok">100%</td><td>✓</td></tr>
+      <tr><td>Tiempo de respuesta ≥ 72h (3 meses)</td><td>-</td><td>Sin datos</td></tr>
+      <tr><td>Estadísticas</td><td>n/c</td><td>Sin pedidos en el periodo · el 29-sep las reglas de premium daban 3.24★ y 8% de reembolsos</td></tr>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Plan de reactivación</div>
+    <div class="action"><span class="pri p-urg">Urgente</span><span class="action-txt">Contactar con Brico Dépôt Iberia para confirmar requisitos de reactivación — suspensión manual por incidencias ≥ 12% en 3 meses</span></div>
+    <div class="action"><span class="pri p-hi">Alta</span><span class="action-txt">Investigar las causas raíz de la tasa de incidencias elevada — antes de reactivar hay que resolver el problema estructural</span></div>
+    <div class="action"><span class="pri p-med">Media</span><span class="action-txt">El rating 3.2★ (29 reseñas) es bajo — una vez reactivada, trabajar activamente en mejorar la valoración</span></div>
+  </div>
+</div>
+
+</div>
+
+<footer>Auditoría Marketplaces · Duérmete Online · 1 oct 2026 · Roicos · Amazon ES: ventas de septiembre del informe "Todos los pedidos" (sin cancelados; sin IVA tras promociones), publicidad de Epinium (API de Amazon Ads), listings, Buy Box y estado de la cuenta a 1-oct · Mirakl: 8 marketplaces (ventas = ingresos por ventas, con portes; sin impuestos salvo Carrefour ES/FR, que no los desglosa y su panel va con IVA; 7 días = 25 sep–1 oct, hoy incluido hasta la hora de consulta; septiembre = 1–30 sep; Worten en hora de Lisboa; rating = clasificación del control de calidad de cada panel) · Miravia: Duérmete Online y Somnia Descanso (1-oct; septiembre = pedidos creados del 1 al 30 sin cancelados, importes con IVA; AliExpress Ads de Somnia hasta el 29 sep, último día publicado) + Tienda 3 pendiente</footer>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  try { localStorage.setItem('mirakl_tab', name); } catch(e) {}
+}
+try {
+  var saved = localStorage.getItem('mirakl_tab');
+  if (saved && document.getElementById('tab-' + saved)) switchTab(saved);
+} catch(e) {}
+</script>

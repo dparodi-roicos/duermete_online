@@ -1,0 +1,1040 @@
+{
+ "amazon": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": 0,
+    "sin": 0,
+    "det_con": "MerchantSpring · promociones y cupones no desglosados",
+    "det_sin": "Sin ventas registradas",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-02": {
+    "con": 0,
+    "sin": 0,
+    "det_con": "MerchantSpring · promociones y cupones no desglosados",
+    "det_sin": "Sin ventas registradas",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-03": {
+    "con": 0,
+    "sin": 0,
+    "det_con": "MerchantSpring · promociones y cupones no desglosados",
+    "det_sin": "Sin ventas registradas",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-04": {
+    "con": 27460.06,
+    "sin": 22866.09,
+    "det_con": "MerchantSpring · promociones y cupones no desglosados",
+    "det_sin": "94 uds",
+    "inv": 2021.54,
+    "vpub": 9830.2,
+    "det_inv": "Epinium (API de Amazon Ads)"
+   },
+   "2026-05": {
+    "con": 85702.46,
+    "sin": 71361.2,
+    "det_con": "MerchantSpring · promociones y cupones no desglosados",
+    "det_sin": "275 uds",
+    "inv": 3876.7,
+    "vpub": 26862.45,
+    "det_inv": "Epinium (API de Amazon Ads)"
+   },
+   "2026-06": {
+    "con": 213560.27,
+    "sin": 178069.94,
+    "det_con": "MerchantSpring · promociones y cupones no desglosados",
+    "det_sin": "684 uds",
+    "inv": 9521.66,
+    "vpub": 91026.6,
+    "det_inv": "Epinium (API de Amazon Ads)"
+   },
+   "2026-07": {
+    "con": 264923.7,
+    "sin": 222311.02,
+    "det_con": "MerchantSpring · promociones y cupones no desglosados",
+    "det_sin": "872 uds",
+    "inv": 8798.57,
+    "vpub": 119832.07,
+    "det_inv": "Epinium (API de Amazon Ads)"
+   },
+   "2026-08": {
+    "con": 260662.31,
+    "sin": 218230.62,
+    "det_con": "MerchantSpring · promociones y cupones no desglosados",
+    "det_sin": "823 uds",
+    "inv": 7385.75,
+    "vpub": 97224.34,
+    "det_inv": "Epinium (API de Amazon Ads)"
+   },
+   "2026-09": {
+    "con": 189015.18,
+    "sin": 156211.04,
+    "det_con": "Tras promociones · antes de promociones 199.276,62€ · promociones y cupones −10.261,44€ · informe «Todos los pedidos»",
+    "det_sin": "600 pedidos · 616 uds · sin cancelados",
+    "inv": 6284.15,
+    "vpub": 70561.68,
+    "det_inv": "Epinium · 28 campañas Sponsored Products · comisión 4%: 251,37€"
+   }
+  }
+ },
+ "cfe": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": 153959,
+    "sin": 127238.84,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1171 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-02": {
+    "con": 169919,
+    "sin": 140428.93,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1287 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-03": {
+    "con": 191077,
+    "sin": 157914.88,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1410 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-04": {
+    "con": 209592,
+    "sin": 173216.53,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1507 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-05": {
+    "con": 245220,
+    "sin": 202661.16,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1687 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-06": {
+    "con": 280532,
+    "sin": 231844.63,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1883 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-07": {
+    "con": 303385,
+    "sin": 250731.4,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "2013 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-08": {
+    "con": 305414,
+    "sin": 252408.26,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "2149 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-09": {
+    "con": 233724,
+    "sin": 193160.33,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1578 pedidos · ÷1,21",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   }
+  }
+ },
+ "cfr": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": 0,
+    "sin": 0.0,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "0 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-02": {
+    "con": 0,
+    "sin": 0.0,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "0 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-03": {
+    "con": 0,
+    "sin": 0.0,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "0 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-04": {
+    "con": 0,
+    "sin": 0.0,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "0 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-05": {
+    "con": 147,
+    "sin": 122.5,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-06": {
+    "con": 0,
+    "sin": 0.0,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "0 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-07": {
+    "con": 0,
+    "sin": 0.0,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "0 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-08": {
+    "con": 0,
+    "sin": 0.0,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "3 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   },
+   "2026-09": {
+    "con": 130,
+    "sin": 108.33,
+    "det_con": "Panel de Carrefour (no desglosa impuestos)",
+    "det_sin": "1 pedidos · ÷1,20",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "No gestionamos su publicidad"
+   }
+  }
+ },
+ "adeo": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": 76192,
+    "sin": 62992,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "353 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   },
+   "2026-02": {
+    "con": 43335,
+    "sin": 35826,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "215 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   },
+   "2026-03": {
+    "con": 61327,
+    "sin": 50705,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "327 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   },
+   "2026-04": {
+    "con": 61603,
+    "sin": 50924,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "314 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   },
+   "2026-05": {
+    "con": 79844,
+    "sin": 66006,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "425 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   },
+   "2026-06": {
+    "con": 89146,
+    "sin": 73699,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "519 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   },
+   "2026-07": {
+    "con": 125078,
+    "sin": 103400,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "754 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   },
+   "2026-08": {
+    "con": 202047,
+    "sin": 166997,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "962 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   },
+   "2026-09": {
+    "con": 162160,
+    "sin": 134020,
+    "det_con": "Panel de Leroy Merlin",
+    "det_sin": "737 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Lo gestiona Valiuz (externo) · sin informe de gasto"
+   }
+  }
+ },
+ "cfib": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": 71946,
+    "sin": 59456,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "606 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-02": {
+    "con": 51988,
+    "sin": 42966,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "447 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-03": {
+    "con": 51926,
+    "sin": 42912,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "392 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-04": {
+    "con": 42507,
+    "sin": 35129,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "363 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-05": {
+    "con": 46999,
+    "sin": 38840,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "436 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-06": {
+    "con": 43175,
+    "sin": 35695,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "376 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-07": {
+    "con": 80963,
+    "sin": 67666,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "703 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-08": {
+    "con": 101544,
+    "sin": 91011,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "886 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-09": {
+    "con": 72030,
+    "sin": 61634,
+    "det_con": "Panel de Conforama Iberia (ES + PT)",
+    "det_sin": "630 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   }
+  }
+ },
+ "conforama": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": 1787,
+    "sin": 1489,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "3 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-02": {
+    "con": 1380,
+    "sin": 1150,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "3 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-03": {
+    "con": 331,
+    "sin": 276,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "1 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-04": {
+    "con": 558,
+    "sin": 465,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "1 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-05": {
+    "con": 0,
+    "sin": 0,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "0 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-06": {
+    "con": 0,
+    "sin": 0,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "1 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-07": {
+    "con": 0,
+    "sin": 0,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "0 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-08": {
+    "con": 0,
+    "sin": 0,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "0 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-09": {
+    "con": 0,
+    "sin": 0,
+    "det_con": "Panel de Conforama FR",
+    "det_sin": "0 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   }
+  }
+ },
+ "worten": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": 5648,
+    "sin": 4593,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "46 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-02": {
+    "con": 6069,
+    "sin": 4939,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "28 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-03": {
+    "con": 7342,
+    "sin": 5979,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "46 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-04": {
+    "con": 8979,
+    "sin": 7312,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "58 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-05": {
+    "con": 7619,
+    "sin": 6196,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "52 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-06": {
+    "con": 25274,
+    "sin": 20563,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "190 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin datos de publicidad"
+   },
+   "2026-07": {
+    "con": 44897,
+    "sin": 36511,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "306 pedidos",
+    "inv": 1639.03,
+    "vpub": 22783.28,
+    "det_inv": "Mirakl Ads"
+   },
+   "2026-08": {
+    "con": 82093,
+    "sin": 66742,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "524 pedidos",
+    "inv": 2200.5,
+    "vpub": 35896.27,
+    "det_inv": "Mirakl Ads"
+   },
+   "2026-09": {
+    "con": 40555,
+    "sin": 32971,
+    "det_con": "Panel de Worten (IVA PT 23%)",
+    "det_sin": "249 pedidos",
+    "inv": 957.47,
+    "vpub": 18822.52,
+    "det_inv": "Mirakl Ads · +48,77€ de campañas opt-out aparte"
+   }
+  }
+ },
+ "mdm": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": 3965,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "20 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-02": {
+    "con": 3971,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "16 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-03": {
+    "con": 5445,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "23 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-04": {
+    "con": 2580,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "13 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-05": {
+    "con": 8688,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "29 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-06": {
+    "con": 4244,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "27 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-07": {
+    "con": 10534,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "43 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-08": {
+    "con": 7390,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "28 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   },
+   "2026-09": {
+    "con": 0,
+    "sin": null,
+    "det_con": "Panel de Maisons du Monde (no desglosa impuestos)",
+    "det_sin": "0 pedidos",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "Sin campañas"
+   }
+  }
+ },
+ "brico": {
+  "tipo": "mk",
+  "meses": {
+   "2026-01": {
+    "con": null,
+    "sin": 5059,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-02": {
+    "con": null,
+    "sin": 1878,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-03": {
+    "con": null,
+    "sin": 0,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-04": {
+    "con": null,
+    "sin": 236,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-05": {
+    "con": null,
+    "sin": 290,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-06": {
+    "con": null,
+    "sin": 1229,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-07": {
+    "con": null,
+    "sin": 889,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-08": {
+    "con": null,
+    "sin": 0,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   },
+   "2026-09": {
+    "con": null,
+    "sin": 0,
+    "det_con": "No consultado: el panel no respondía",
+    "det_sin": "",
+    "inv": null,
+    "vpub": null,
+    "det_inv": "El panel no tiene módulo de publicidad"
+   }
+  }
+ },
+ "somnia-mv": {
+  "tipo": "mv",
+  "meses": {
+   "2026-01": {
+    "mv_con": 9954.07,
+    "mv_sin": null,
+    "det_mv": "Importe pagado (Business Advisor) · 95 pedidos",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Sin histórico mensual en el panel",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-02": {
+    "mv_con": 5989.61,
+    "mv_sin": null,
+    "det_mv": "Importe pagado (Business Advisor) · 48 pedidos",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Sin histórico mensual en el panel",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-03": {
+    "mv_con": 2882.49,
+    "mv_sin": null,
+    "det_mv": "Importe pagado (Business Advisor) · 29 pedidos",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Sin histórico mensual en el panel",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-04": {
+    "mv_con": 3130.68,
+    "mv_sin": null,
+    "det_mv": "Importe pagado (Business Advisor) · 29 pedidos",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Sin histórico mensual en el panel",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-05": {
+    "mv_con": 5756.12,
+    "mv_sin": null,
+    "det_mv": "Importe pagado (Business Advisor) · 52 pedidos",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Sin histórico mensual en el panel",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-06": {
+    "mv_con": 16769.98,
+    "mv_sin": null,
+    "det_mv": "Importe pagado (Business Advisor) · 179 pedidos",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Sin histórico mensual en el panel",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-07": {
+    "mv_con": 27351.52,
+    "mv_sin": null,
+    "det_mv": "Importe pagado (Business Advisor) · 258 pedidos",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Sin histórico mensual en el panel",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": 1052.66,
+    "inv_ae": 1005.55,
+    "vpub_mv": 9584.68,
+    "vpub_ae": 8498.32
+   },
+   "2026-08": {
+    "mv_con": 48371.91,
+    "mv_sin": null,
+    "det_mv": "Importe pagado (Business Advisor) · 474 pedidos",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Sin histórico mensual en el panel",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": 1202.61,
+    "inv_ae": 775.09,
+    "vpub_mv": 15693.38,
+    "vpub_ae": 12393.68
+   },
+   "2026-09": {
+    "mv_con": 25066.53,
+    "mv_sin": 20716.14,
+    "det_mv": "250 pedidos creados del 1 al 30, sin cancelados",
+    "ae_con": 12938.6,
+    "ae_sin": 10689.61,
+    "det_ae": "111 pedidos (3 a Portugal, IVA 23%)",
+    "tot_con": 38005.13,
+    "tot_sin": 31405.75,
+    "inv_mv": 819.32,
+    "inv_ae": 500.58,
+    "vpub_mv": 7911.52,
+    "vpub_ae": 3594.64,
+    "det_inv": "AliExpress Ads hasta el 29 (el 28 y el 29 sin gasto)"
+   }
+  }
+ },
+ "duermete-mv": {
+  "tipo": "mv",
+  "meses": {
+   "2026-01": {
+    "mv_con": null,
+    "mv_sin": null,
+    "det_mv": "Pendiente de abrir la tienda",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Pendiente",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-02": {
+    "mv_con": null,
+    "mv_sin": null,
+    "det_mv": "Pendiente de abrir la tienda",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Pendiente",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-03": {
+    "mv_con": null,
+    "mv_sin": null,
+    "det_mv": "Pendiente de abrir la tienda",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Pendiente",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-04": {
+    "mv_con": null,
+    "mv_sin": null,
+    "det_mv": "Pendiente de abrir la tienda",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Pendiente",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-05": {
+    "mv_con": null,
+    "mv_sin": null,
+    "det_mv": "Pendiente de abrir la tienda",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Pendiente",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-06": {
+    "mv_con": null,
+    "mv_sin": null,
+    "det_mv": "Pendiente de abrir la tienda",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Pendiente",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-07": {
+    "mv_con": null,
+    "mv_sin": null,
+    "det_mv": "Pendiente de abrir la tienda",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Pendiente",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-08": {
+    "mv_con": null,
+    "mv_sin": null,
+    "det_mv": "Pendiente de abrir la tienda",
+    "ae_con": null,
+    "ae_sin": null,
+    "det_ae": "Pendiente",
+    "tot_con": null,
+    "tot_sin": null,
+    "inv_mv": null,
+    "inv_ae": null,
+    "vpub_mv": null,
+    "vpub_ae": null
+   },
+   "2026-09": {
+    "mv_con": 7641.33,
+    "mv_sin": 6315.15,
+    "det_mv": "72 pedidos",
+    "ae_con": 4374.17,
+    "ae_sin": 3615.02,
+    "det_ae": "48 pedidos",
+    "tot_con": 12015.5,
+    "tot_sin": 9930.17,
+    "inv_mv": 0,
+    "inv_ae": null,
+    "vpub_mv": 0,
+    "vpub_ae": null,
+    "det_inv": "Sponsored Discovery sin gasto · sin módulo de AliExpress Ads"
+   }
+  }
+ }
+}
