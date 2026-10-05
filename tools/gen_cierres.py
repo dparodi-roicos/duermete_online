@@ -72,8 +72,11 @@ som['2026-09'] = dict(mv_con=25066.53, mv_sin=20716.14, det_mv='250 pedidos crea
                       tot_con=38005.13, tot_sin=31405.75, inv_mv=819.32, inv_ae=500.58, vpub_mv=7911.52, vpub_ae=3594.64,
                       det_inv='AliExpress Ads hasta el 29 (el 28 y el 29 sin gasto)')
 H['somnia-mv'] = mv(som)
-do = {m: dict(mv_con=None, mv_sin=None, det_mv='Pendiente de abrir la tienda', ae_con=None, ae_sin=None, det_ae='Pendiente',
-              tot_con=None, tot_sin=None, inv_mv=None, inv_ae=None, vpub_mv=None, vpub_ae=None) for m in MM[:8]}
+ba_do = [7763.44, 5295.01, 4492.07, 5092.82, 4363.49, 15950.69, 14920.70, 17641.15]
+ba_do_ped = [62, 43, 52, 54, 67, 166, 170, 199]
+do = {m: dict(mv_con=ba_do[i], mv_sin=None, det_mv=f'Importe pagado (Business Advisor) · {ba_do_ped[i]} pedidos', ae_con=None, ae_sin=None,
+              det_ae='Sin histórico mensual en el panel', tot_con=None, tot_sin=None, inv_mv=None, inv_ae=None, vpub_mv=None, vpub_ae=None)
+      for i, m in enumerate(MM[:8])}
 do['2026-09'] = dict(mv_con=7641.33, mv_sin=6315.15, det_mv='72 pedidos', ae_con=4374.17, ae_sin=3615.02, det_ae='48 pedidos',
                      tot_con=12015.50, tot_sin=9930.17, inv_mv=0, inv_ae=None, vpub_mv=0, vpub_ae=None,
                      det_inv='Sponsored Discovery sin gasto · sin módulo de AliExpress Ads')

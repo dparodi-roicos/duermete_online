@@ -230,19 +230,27 @@ som_top = (
                  'Panel de AliExpress Ads · septiembre hasta el 29 · sin datos antes de julio', LEG_ADS)
     + "</div>" + cierre('somnia-mv') + sub_sep('Estado de la tienda')
 )
+do_m = [7763.44, 5295.01, 4492.07, 5092.82, 4363.49, 15950.69, 14920.70, 17641.15, 7975.30]
 do_top = (
-    "<div class='blk-row'>"
-    + block('Últimos 7 días', 'pendiente', [
-        tile('Ventas Miravia', '-', 'Pendiente', 'v-muted'), tile('Ventas AliExpress', '-', 'AliExpress restringe las ventas en España desde el 1-oct', 'v-muted')])
-    + block('Últimos 30 días', 'a 1 oct', [
-        tile('Revenue 30d Miravia', '8.753,25€', 'Con IVA', 'v-warn'),
-        tile('Revenue 30d AliExpress', '4.857,67€', 'Con IVA', 'v-crit'),
-        tile('Tráfico 30d', '5.103', 'Usuarios', 'v-warn'),
-        tile('Pdte de envío', '2', '0 por embalar · 2 listos para enviar', 'v-ok'),
-        tile('SKUs sin stock', '109', '10 productos con ventas en 7 días agotados', 'v-crit')])
+    "<div class='banner b-crit'><span class='banner-icon'>⛔</span><div><span class='banner-title'>Miravia: todos los productos de esta tienda están bloqueados en España</span>"
+    "<span class='banner-sub'>Aviso del inicio del Seller Center (5-oct) · AliExpress restringe las ventas en España desde el 1-oct</span></div></div>"
+    + "<div class='blk-row'>"
+    + block('Últimos 7 días', '27 sep – 3 oct', [
+        tile('Ventas Miravia', eur(1351.36, 2), delta(1351.36, 1639.62) + ' · 15 pedidos', 'v-warn'),
+        tile('Ventas AliExpress', '-', 'Sin desglose de 7 días en el panel', 'v-muted'),
+        tile('Anuncios Miravia', '0€', 'Sponsored Discovery sin gasto (28 sep–4 oct)', 'v-muted')])
+    + block('Mes en curso y 30 días', '1–3 oct · 4 sep–3 oct', [
+        tile('Octubre hasta la fecha · Miravia', eur(1149.09, 2), '1–3 oct · 10 pedidos', ''),
+        tile('Revenue 30d Miravia', eur(8297.92, 2), '76 pedidos', 'v-warn'),
+        tile('Revenue 30d AliExpress', eur(4276.74, 2), 'Inicio del Seller Center', 'v-crit'),
+        tile('Tráfico 30d', e(4771), 'Visitantes únicos · canal Miravia', 'v-warn'),
+        tile('Pedidos pendientes', '13', 'Aviso del inicio del Seller Center (5-oct)', 'v-warn'),
+        tile('Sin stock', '3', '10 de los más vendidos en 7 días están sin stock', 'v-crit')])
     + "</div><div class='chart-row'>"
-    + chart_card('Evolución de ventas · enero a septiembre 2026', "<div class='empty'>Pendiente de abrir la tienda en el Seller Center</div>",
-                 'Datos de arriba a 1-oct · 7 días y evolución pendientes de actualizar')
+    + chart_card('Evolución de ventas Miravia · enero a septiembre 2026', bar_chart(do_m),
+                 'Canal Miravia · importe pagado con IVA (Business Advisor) · AliExpress: el panel solo publica los ingresos de los últimos 30 días, sin histórico mensual')
+    + chart_card('Anuncios Miravia · inversión y ventas', "<div class='empty'>Sin gasto en anuncios</div>",
+                 'Sponsored Discovery sin gasto en septiembre ni del 28 sep al 4 oct · la tienda no tiene módulo de AliExpress Ads')
     + "</div>" + cierre('duermete-mv') + sub_sep('Estado de la tienda')
 )
 
