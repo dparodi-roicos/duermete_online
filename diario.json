@@ -29,9 +29,9 @@
    "inactivos_otros": 2
   },
   "d7": {
-   "ventas": 47788.77,
-   "lineas": 158,
-   "uds": 164,
+   "ventas": 47397.29,
+   "lineas": 157,
+   "uds": 163,
    "ads_inv": 1408.18,
    "ads_ventas": 14345.27
   },
@@ -39,9 +39,9 @@
    "ventas": 31095.58
   },
   "mtd": {
-   "ventas": 33992.11,
-   "lineas": 105,
-   "uds": 111,
+   "ventas": 33600.63,
+   "lineas": 104,
+   "uds": 110,
    "ads_inv": 1008.74,
    "ads_ventas": 8264.93
   }
@@ -232,33 +232,33 @@
    "aviso": null
   },
   "duermete-mv": {
-   "fecha": "2026-10-05",
+   "fecha": "2026-10-06",
    "d7": [
-    1351.36,
-    15
+    1896.72,
+    20
    ],
    "p7": [
-    1639.62,
+    1443.62,
     14
    ],
    "mtd": [
-    1149.09,
-    10
+    1806.1,
+    17
    ],
    "d30": [
-    8297.92,
+    8119.97,
     76
    ],
-   "ae_d30": 4276.74,
-   "uv_d30": 4771,
+   "ae_d30": 4035.72,
+   "uv_d30": 4766,
    "ads_d7": {
     "inv": 0,
     "ventas": 0,
-    "periodo": "28 sep – 4 oct"
+    "periodo": "29 sep – 5 oct"
    },
-   "pendientes": 13,
+   "pendientes": 5,
    "sin_stock": 3,
-   "sin_stock_nota": "10 de los más vendidos en 7 días están sin stock",
+   "sin_stock_nota": "Inicio del Seller Center",
    "aviso": "Miravia: todos los productos de esta tienda están bloqueados en España (restricción de AliExpress por pedidos no recibidos)"
   }
  }
