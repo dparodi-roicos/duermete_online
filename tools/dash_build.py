@@ -1,8 +1,8 @@
-import re, html
-import json
-P = r'C:\Users\Daniela\Downloads\duermete_online\index.html'
-import os; src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "base_1oct.html"), encoding="utf-8").read()   # versión del 1-oct
-H = json.load(open(r'C:\Users\Daniela\Downloads\duermete_online\cierres.json', encoding='utf-8'))      # histórico de cierres de mes
+import re, html, json, os
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+P = os.path.join(ROOT, 'index.html')
+src = open(os.path.join(ROOT, 'tools', 'base_1oct.html'), encoding='utf-8').read()   # plantilla base (versión del 1-oct)
+H = json.load(open(os.path.join(ROOT, 'cierres.json'), encoding='utf-8'))             # histórico de cierres de mes
 
 # ---------------- formato ----------------
 def e(n, d=0):
@@ -130,129 +130,124 @@ def cierre(pid):
             f"<div class='mtabs' role='tablist'>{tabs}</div></div>{''.join(bodies)}</section>")
 
 # =====================================================================
-# AMAZON
+# DATOS: diario.json (bloques de arriba) + cierres.json (gráficos e histórico)
 # =====================================================================
-amz_sales = [0, 0, 0, 22866.09, 71361.20, 178069.94, 222311.02, 218230.62, 162360.81]
-amz_spend = [None, None, None, 2021.54, 3876.70, 9521.66, 8798.57, 7385.75, 6284.15]
-amz_adsal = [None, None, None, 9830.20, 26862.45, 91026.60, 119832.07, 97224.34, 70561.68]
-A7, A7p, AM = 46045.02, 32943.57, 20115.64
-amz_status = status([('Estado de la cuenta', '282 · En buen estado', 'ok'), ('Listings activos', '312', ''), ('Buy Box', '312 / 312', 'ok'),
-                     ('Agotados con ventas sept.', '6', 'crit'), ('Inactivos otros', '2', '')])
+import datetime as _dt
+D = json.load(open(os.path.join(ROOT, 'diario.json'), encoding='utf-8'))
+_MC = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
+def fd(s): d = _dt.date.fromisoformat(s); return f'{d.day} {_MC[d.month - 1]}'
+def rango(k): a, b = D['periodo'][k]; return f'{fd(a)} – {fd(b)}'
+P7, PMTD, P30 = rango('d7'), rango('mtd'), rango('d30')
+MES_ACTUAL = MESES[_dt.date.fromisoformat(D['periodo']['mtd'][0]).month - 1]
+ACT = fd(D['actualizado'])
+
+def serie(pid, campo, alt=None):
+    ms = sorted(H[pid]['meses']); vals = []
+    for m in ms:
+        v = H[pid]['meses'][m].get(campo)
+        if v is None and alt: v = H[pid]['meses'][m].get(alt)
+        vals.append(v)
+    return vals, [MESES[int(m[5:]) - 1][:3] for m in ms]
+def titulo_evol(pid, txt='Evolución de ventas'):
+    ms = sorted(H[pid]['meses'])
+    return f"{txt} · {MESES[int(ms[0][5:]) - 1].lower()} a {MESES[int(ms[-1][5:]) - 1].lower()} {ms[-1][:4]}"
+
+# ---------------- AMAZON ----------------
+A = D['amazon']; ES = A['estado']
+amz_status = status([('Estado de la cuenta', f"{ES['nivel']} · {ES['texto']}", 'ok'), ('Listings activos', e(ES['listings_activos']), ''),
+                     ('Buy Box', ES['buybox'], 'ok'), ('Agotados con ventas', e(ES['agotados_con_ventas']), 'crit' if ES['agotados_con_ventas'] else ''),
+                     ('Inactivos otros', e(ES['inactivos_otros']), '')])
+a7, am = A['d7'], A['mtd']
+def acos(i, v): return f"ACOS {e(i / v * 100, 1)}%" if i and v else ''
+amz_sin, LB = serie('amazon', 'sin'); amz_inv, _ = serie('amazon', 'inv'); amz_vp, _ = serie('amazon', 'vpub')
 amz_top = (
     amz_status
     + "<div class='blk-row'>"
-    + block('Últimos 7 días', '27 sep – 3 oct', [
-        tile('Ventas', eur(A7), delta(A7, A7p) + ' · 152 líneas · 158 uds', 'v-ok'),
-        tile('Inversión Ads', eur(1366.98), 'Sponsored Products', 'v-warn'),
-        tile('Ventas por Ads', eur(15197.95), 'ACOS 9,0% · TACOS 3,0%')])
-    + block('Octubre hasta la fecha', '1 – 3 oct', [
-        tile('Ventas', eur(AM), '57 líneas · 63 uds', 'v-ok'),
-        tile('Inversión Ads', eur(534.22), '', 'v-warn'),
-        tile('Ventas por Ads', eur(3949.97), 'ACOS 13,5% · aún sube: Amazon atribuye ventas hasta 14 días después del clic')])
+    + block('Últimos 7 días', P7, [
+        tile('Ventas', eur(a7['ventas']), delta(a7['ventas'], A['p7']['ventas']) + f" · {e(a7['lineas'])} líneas · {e(a7['uds'])} uds", 'v-ok'),
+        tile('Inversión Ads', eur(a7['ads_inv']), 'Sponsored Products', 'v-warn'),
+        tile('Ventas por Ads', eur(a7['ads_ventas']), ' · '.join(x for x in [acos(a7['ads_inv'], a7['ads_ventas']), f"TACOS {e(a7['ads_inv'] / a7['ventas'] * 100, 1)}%" if a7['ventas'] else ''] if x))])
+    + block(f'{MES_ACTUAL} hasta la fecha', PMTD, [
+        tile('Ventas', eur(am['ventas']), f"{e(am['lineas'])} líneas · {e(am['uds'])} uds", 'v-ok'),
+        tile('Inversión Ads', eur(am['ads_inv']), '', 'v-warn'),
+        tile('Ventas por Ads', eur(am['ads_ventas']), acos(am['ads_inv'], am['ads_ventas']) + ' · aún sube: Amazon atribuye ventas hasta 14 días después del clic')])
     + "</div>"
     + "<div class='chart-row'>"
-    + chart_card('Evolución de ventas · enero a septiembre 2026', bar_chart(amz_sales),
-                 'Sin IVA · MerchantSpring · sin ventas registradas de enero a marzo. Septiembre: 162.361€ en MerchantSpring frente a 156.211€ del informe de pedidos tras promociones (resumen de abajo).')
-    + chart_card('Inversión en Ads y ventas por Ads', ads_chart(amz_spend, amz_adsal),
-                 'Epinium · sin datos de publicidad antes de abril. ACOS: abr 20,6% · may 14,4% · jun 10,5% · jul 7,3% · ago 7,6% · sep 8,9%.', LEG_ADS)
+    + chart_card(titulo_evol('amazon'), bar_chart(amz_sin, LB),
+                 'Sin IVA · MerchantSpring (septiembre: informe «Todos los pedidos» tras promociones) · sin ventas registradas de enero a marzo')
+    + chart_card('Inversión en Ads y ventas por Ads', ads_chart(amz_inv, amz_vp, LB),
+                 'API de Amazon Ads · sin datos de publicidad antes de abril', LEG_ADS)
     + "</div>" + cierre('amazon') + sub_sep('Estado de la cuenta')
 )
 
-# =====================================================================
-# MIRAKL
-# =====================================================================
-def mk_data(raw, div=1.0):
-    return {k: (None if v is None else v / div) for k, v in raw.items()}
+# ---------------- MIRAKL ----------------
 MK = {
- 'cfe':  dict(name='Carrefour ES', div=1.21, m=[153959,169919,191077,209592,245220,280532,303385,305414,233724], d7=(53213,354), p7=(53935,354), d30=(229191,1538), mtd=(25196,165),
-             ads='No gestionamos su publicidad', iva='Carrefour no desglosa impuestos: su panel va con IVA y aquí se muestra ÷1,21'),
- 'cfr':  dict(name='Carrefour FR', div=1.20, m=[0,0,0,0,147,0,0,0,130], d7=(0,0), p7=(0,0), d30=(130,1), mtd=(0,0),
-             ads='No gestionamos su publicidad', iva='Carrefour no desglosa impuestos: su panel va con IVA y aquí se muestra ÷1,20'),
- 'adeo': dict(name='Leroy Merlin', div=1, m=[62992,35826,50705,50924,66006,73699,103400,166997,134020], d7=(35355,176), p7=(23669,138), d30=(127269,701), mtd=(10188,59),
-             ads='Lo gestiona Valiuz (externo) · sin informe de gasto'),
- 'cfib': dict(name='Conforama ES', div=1, m=[59456,42966,42912,35129,38840,35695,67666,91011,61634], d7=(12821,138), p7=(13134,140), d30=(57368,610), mtd=(4471,51),
-             ads='El panel no tiene módulo de publicidad'),
- 'conforama': dict(name='Conforama FR', div=1, m=[1489,1150,276,465,0,0,0,0,0], d7=(0,0), p7=(0,0), d30=(0,0), mtd=(0,0), ads='Sin campañas'),
- 'worten': dict(name='Worten PT', div=1, m=[4593,4939,5979,7312,6196,20563,36511,66742,32971], d7=(7081,56), p7=(6516,58), d30=(32536,243), mtd=(2685,26),
-             ads='Mirakl Ads', lisboa=True,
-             spend=[None,None,None,None,None,None,1639.03,2200.50,957.47], adsal=[None,None,None,None,None,None,22783.28,35896.27,18822.52]),
- 'mdm':  dict(name='Maisons du Monde', div=1, m=[3965,3971,5445,2580,8688,4244,10534,7390,0], d7=(0,0), p7=(0,0), d30=(0,0), mtd=(0,0), ads='Sin campañas',
-             iva='el panel no desglosa impuestos (misma cifra con y sin IVA)'),
- 'brico': dict(name='Brico Dépôt', div=1, m=[5059,1878,0,236,290,1229,889,0,0], d7=(0,None), p7=(0,None), d30=(0,None), mtd=(0,None), ads='El panel no tiene módulo de publicidad'),
+ 'cfe':  dict(name='Carrefour ES', div=1.21, ads='No gestionamos su publicidad', iva='Carrefour no desglosa impuestos: su panel va con IVA y aquí se muestra ÷1,21'),
+ 'cfr':  dict(name='Carrefour FR', div=1.20, ads='No gestionamos su publicidad', iva='Carrefour no desglosa impuestos: su panel va con IVA y aquí se muestra ÷1,20'),
+ 'adeo': dict(name='Leroy Merlin', div=1, ads='Lo gestiona Valiuz (externo) · sin informe de gasto'),
+ 'cfib': dict(name='Conforama ES', div=1, ads='El panel no tiene módulo de publicidad'),
+ 'conforama': dict(name='Conforama FR', div=1, ads='Sin campañas'),
+ 'worten': dict(name='Worten PT', div=1, ads='Mirakl Ads', lisboa=True, con_ads=True),
+ 'mdm':  dict(name='Maisons du Monde', div=1, ads='Sin campañas', iva='el panel no desglosa impuestos (misma cifra con y sin IVA)'),
+ 'brico': dict(name='Brico Dépôt', div=1, ads='El panel no tiene módulo de publicidad'),
 }
+for k in MK: MK[k].update(D['mirakl'][k])
 def mk_top(key):
     d = MK[key]; dv = d['div']
     s7, o7 = d['d7']; sp, op = d['p7']; s30, o30 = d['d30']; sm, om = d['mtd']
     ped = lambda o: '' if o is None else f' · {e(o)} pedidos'
-    has_ads = 'spend' in d
-    ads7 = tile('Inversión Ads', '-', 'Mirakl Ads · pendiente de consultar el panel de publicidad', 'v-muted') if has_ads else tile('Publicidad', '-', d['ads'], 'v-muted')
+    ads7 = tile('Inversión Ads', '-', 'Mirakl Ads · pendiente de consultar el panel de publicidad', 'v-muted') if d.get('con_ads') else tile('Publicidad', '-', d['ads'], 'v-muted')
     tz = 'hora de Lisboa' if d.get('lisboa') else 'hora de Madrid'
+    stale = f" · datos del {fd(d['fecha'])}" if d.get('fecha') and d['fecha'] != D['actualizado'] else ''
     blocks = ("<div class='blk-row'>"
-        + block('Últimos 7 días', '27 sep – 3 oct', [tile('Ventas', eur(s7 / dv), (delta(s7, sp) or 'sin ventas') + ped(o7), 'v-ok' if s7 else 'v-muted'), ads7])
-        + block('Últimos 30 días', '4 sep – 3 oct', [tile('Ventas', eur(s30 / dv), ped(o30).lstrip(' ·'), 'v-ok' if s30 else 'v-muted'),
-                                                    tile('Octubre hasta la fecha', eur(sm / dv), '1–3 oct' + ped(om), '')])
+        + block('Últimos 7 días', P7 + stale, [tile('Ventas', eur(s7 / dv), (delta(s7, sp) or 'sin ventas') + ped(o7), 'v-ok' if s7 else 'v-muted'), ads7])
+        + block('Últimos 30 días', P30 + stale, [tile('Ventas', eur(s30 / dv), ped(o30).lstrip(' ·'), 'v-ok' if s30 else 'v-muted'),
+                                         tile(f'{MES_ACTUAL} hasta la fecha', eur(sm / dv), PMTD + ped(om), '')])
         + "</div>")
-    vals = [v / dv for v in d['m']]
-    charts = "<div class='chart-row'>" + chart_card('Evolución de ventas · enero a septiembre 2026', bar_chart(vals),
-        f"Ingresos por ventas del panel a 4-oct, portes incluidos, {tz} · " + (d['iva'] if 'iva' in d else 'sin impuestos') + ' · 7 días, 30 días y octubre: días cerrados, hoy no cuenta')
-    if has_ads:
-        charts += chart_card('Inversión en Ads y ventas por Ads', ads_chart(d['spend'], d['adsal']),
-            'Mirakl Ads · julio y agosto del export de producto; septiembre del panel (1-oct) · sin datos de publicidad antes de julio', LEG_ADS)
+    vals, lb = serie(key, 'sin', 'con')
+    charts = "<div class='chart-row'>" + chart_card(titulo_evol(key), bar_chart(vals, lb),
+        f"Ingresos por ventas del panel, portes incluidos, {tz} · " + (d['iva'] if 'iva' in d else 'sin impuestos') + ' · 7 días, 30 días y mes en curso: días cerrados, hoy no cuenta')
+    inv, lb = serie(key, 'inv'); vp, _ = serie(key, 'vpub')
+    if any(v for v in inv):
+        charts += chart_card('Inversión en Ads y ventas por Ads', ads_chart(inv, vp, lb), 'Mirakl Ads · sin datos de publicidad antes de julio', LEG_ADS)
     else:
         charts += chart_card('Inversión en Ads y ventas por Ads', "<div class='empty'>Sin datos de publicidad</div>", d['ads'])
     charts += "</div>"
     return blocks + charts + cierre(key) + sub_sep('Estado de la tienda')
 
-# =====================================================================
-# MIRAVIA
-# =====================================================================
-som_m = [9954.07, 5989.61, 2882.49, 3130.68, 5756.12, 16769.98, 27351.52, 48371.91, 27823.58]
-som_top = (
-    "<div class='blk-row'>"
-    + block('Últimos 7 días', '27 sep – 3 oct', [
-        tile('Ventas Miravia', eur(4129.35, 2), delta(4129.35, 4139.61) + ' · 41 pedidos', 'v-ok'),
-        tile('Ventas AliExpress', '-', 'Sin desglose de 7 días en el panel', 'v-muted'),
-        tile('Anuncios Miravia', eur(160.25, 2), 'Sponsored Discovery · ingresos 789,99€ · ROAS 4,93', 'v-warn'),
-        tile('AliExpress Ads', '-', 'Pendiente de consultar el panel de AliExpress Ads', 'v-muted')])
-    + block('Mes en curso y 30 días', '1–3 oct · 4 sep–3 oct', [
-        tile('Octubre hasta la fecha · Miravia', eur(1680.61, 2), '1–3 oct · 22 pedidos', ''),
-        tile('Revenue 30d Miravia', eur(25263.22, 2), '240 pedidos', 'v-ok'),
-        tile('Revenue 30d AliExpress', eur(12742.78, 2), 'Inicio del Seller Center', 'v-ok'),
-        tile('Tráfico 30d', e(10633), 'Visitantes únicos · canal Miravia', ''),
-        tile('Pedidos pendientes', '59', 'Aviso del inicio del Seller Center (4-oct)', 'v-warn'),
-        tile('SKUs sin stock', '32', 'Dato del 1-oct', 'v-warn')])
-    + "</div><div class='chart-row'>"
-    + chart_card('Evolución de ventas Miravia · enero a septiembre 2026', bar_chart(som_m),
-                 'Canal Miravia · importe pagado con IVA (Business Advisor) · AliExpress: el panel solo publica los ingresos de los últimos 30 días, sin histórico mensual')
-    + chart_card('Anuncios Miravia · inversión y ventas', ads_chart([None]*6 + [1052.66, 1202.61, 819.32], [None]*6 + [9584.68, 15693.38, 7911.52]),
-                 'Sponsored Discovery · julio y agosto del informe de anuncios; septiembre del panel (1-oct) · sin datos antes de julio', LEG_ADS)
-    + chart_card('AliExpress Ads · inversión y ventas', ads_chart([None]*6 + [1005.55, 775.09, 500.58], [None]*6 + [8498.32, 12393.68, 3594.64]),
-                 'Panel de AliExpress Ads · septiembre hasta el 29 · sin datos antes de julio', LEG_ADS)
-    + "</div>" + cierre('somnia-mv') + sub_sep('Estado de la tienda')
-)
-do_m = [7763.44, 5295.01, 4492.07, 5092.82, 4363.49, 15950.69, 14920.70, 17641.15, 7975.30]
-do_top = (
-    "<div class='banner b-crit'><span class='banner-icon'>⛔</span><div><span class='banner-title'>Miravia: todos los productos de esta tienda están bloqueados en España</span>"
-    "<span class='banner-sub'>Aviso del inicio del Seller Center (5-oct) · AliExpress restringe las ventas en España desde el 1-oct</span></div></div>"
-    + "<div class='blk-row'>"
-    + block('Últimos 7 días', '27 sep – 3 oct', [
-        tile('Ventas Miravia', eur(1351.36, 2), delta(1351.36, 1639.62) + ' · 15 pedidos', 'v-warn'),
-        tile('Ventas AliExpress', '-', 'Sin desglose de 7 días en el panel', 'v-muted'),
-        tile('Anuncios Miravia', '0€', 'Sponsored Discovery sin gasto (28 sep–4 oct)', 'v-muted')])
-    + block('Mes en curso y 30 días', '1–3 oct · 4 sep–3 oct', [
-        tile('Octubre hasta la fecha · Miravia', eur(1149.09, 2), '1–3 oct · 10 pedidos', ''),
-        tile('Revenue 30d Miravia', eur(8297.92, 2), '76 pedidos', 'v-warn'),
-        tile('Revenue 30d AliExpress', eur(4276.74, 2), 'Inicio del Seller Center', 'v-crit'),
-        tile('Tráfico 30d', e(4771), 'Visitantes únicos · canal Miravia', 'v-warn'),
-        tile('Pedidos pendientes', '13', 'Aviso del inicio del Seller Center (5-oct)', 'v-warn'),
-        tile('Sin stock', '3', '10 de los más vendidos en 7 días están sin stock', 'v-crit')])
-    + "</div><div class='chart-row'>"
-    + chart_card('Evolución de ventas Miravia · enero a septiembre 2026', bar_chart(do_m),
-                 'Canal Miravia · importe pagado con IVA (Business Advisor) · AliExpress: el panel solo publica los ingresos de los últimos 30 días, sin histórico mensual')
-    + chart_card('Anuncios Miravia · inversión y ventas', "<div class='empty'>Sin gasto en anuncios</div>",
-                 'Sponsored Discovery sin gasto en septiembre ni del 28 sep al 4 oct · la tienda no tiene módulo de AliExpress Ads')
-    + "</div>" + cierre('duermete-mv') + sub_sep('Estado de la tienda')
-)
+# ---------------- MIRAVIA ----------------
+def mv_top(pid):
+    m = D['miravia'][pid]; act = fd(m['fecha'])
+    banner = (f"<div class='banner b-crit'><span class='banner-icon'>⛔</span><div><span class='banner-title'>{html.escape(m['aviso'])}</span>"
+              f"<span class='banner-sub'>Aviso del Seller Center ({act})</span></div></div>") if m.get('aviso') else ''
+    ad = m['ads_d7']
+    ads_tile = (tile('Anuncios Miravia', eur(ad['inv'], 2), f"Sponsored Discovery · {ad['periodo']} · ingresos {eur(ad['ventas'], 2)}" + (f" · ROAS {e(ad['ventas'] / ad['inv'], 2)}" if ad['inv'] else ''), 'v-warn' if ad['inv'] else 'v-muted')
+                if ad.get('inv') is not None else tile('Anuncios Miravia', '-', 'Pendiente', 'v-muted'))
+    stale = '' if m['fecha'] == D['actualizado'] else f" · datos del {act}"
+    t7 = [tile('Ventas Miravia', eur(m['d7'][0], 2), delta(m['d7'][0], m['p7'][0]) + f" · {e(m['d7'][1])} pedidos", 'v-ok'),
+          tile('Ventas AliExpress', '-', 'Sin desglose de 7 días en el panel', 'v-muted'), ads_tile]
+    if pid == 'somnia-mv': t7.append(tile('AliExpress Ads', '-', 'Pendiente de consultar el panel de AliExpress Ads', 'v-muted'))
+    top = (banner + "<div class='blk-row'>"
+        + block('Últimos 7 días', P7 + stale, t7)
+        + block('Mes en curso y 30 días', f'{PMTD} · {P30}{stale}', [
+            tile(f'{MES_ACTUAL} hasta la fecha · Miravia', eur(m['mtd'][0], 2), f"{PMTD} · {e(m['mtd'][1])} pedidos", ''),
+            tile('Revenue 30d Miravia', eur(m['d30'][0], 2), f"{e(m['d30'][1])} pedidos", 'v-ok'),
+            tile('Revenue 30d AliExpress', eur(m['ae_d30'], 2), 'Inicio del Seller Center', 'v-ok'),
+            tile('Tráfico 30d', e(m['uv_d30']), 'Visitantes únicos · canal Miravia', ''),
+            tile('Pedidos pendientes', e(m['pendientes']), f'Aviso del inicio del Seller Center ({act})', 'v-warn' if m['pendientes'] else ''),
+            tile('Sin stock', e(m['sin_stock']), m.get('sin_stock_nota', ''), 'v-warn' if m['sin_stock'] else '')])
+        + "</div>")
+    vals, lb = serie(pid, 'mv_con')
+    charts = "<div class='chart-row'>" + chart_card(titulo_evol(pid, 'Evolución de ventas Miravia'), bar_chart(vals, lb),
+        'Canal Miravia · con IVA (Business Advisor; septiembre: pedidos creados sin cancelados) · AliExpress: el panel solo publica los ingresos de los últimos 30 días, sin histórico mensual')
+    for camp, tit, nota in (('mv', 'Anuncios Miravia · inversión y ventas', 'Sponsored Discovery · sin datos antes de julio'),
+                            ('ae', 'AliExpress Ads · inversión y ventas', 'Panel de AliExpress Ads · sin datos antes de julio')):
+        inv, lb = serie(pid, 'inv_' + camp); vp, _ = serie(pid, 'vpub_' + camp)
+        if any(v for v in inv): charts += chart_card(tit, ads_chart(inv, vp, lb), nota, LEG_ADS)
+        elif camp == 'mv': charts += chart_card(tit, "<div class='empty'>Sin gasto en anuncios</div>", 'Sponsored Discovery sin gasto')
+    charts += "</div>"
+    return top + charts + cierre(pid) + sub_sep('Estado de la tienda')
+som_top, do_top = mv_top('somnia-mv'), mv_top('duermete-mv')
 
 # =====================================================================
 # MONTAJE
@@ -301,20 +296,21 @@ out = out.replace('</style>', css + '</style>', 1)
 # Header
 hdr = re.search(r'<div class="header">.*?\n</div>\n', out, re.S)
 mk7 = sum(MK[k]['d7'][0] / MK[k]['div'] for k in MK)
+som7 = D['miravia']['somnia-mv']['d7'][0]
 new_hdr = f"""<div class="header">
   <div class="header-top">
     <div>
       <div class="client-eyebrow">Roicos · Duérmete Online</div>
       <h1 class="report-title">Amazon · Miravia · Mirakl</h1>
-      <div class="report-meta">4 oct 2026 · últimos 7 días = 27 sep–3 oct · mes en curso = 1–3 oct · ventas sin IVA salvo Miravia (con IVA)</div>
+      <div class="report-meta">Actualizado {ACT} · últimos 7 días = {P7} · mes en curso = {PMTD} · ventas sin IVA salvo Miravia (con IVA)</div>
     </div>
     <div class="summary-pills">
       <span class="pill-group-label">Amazon</span>
-      <div class="pill"><span class="pill-num c-blue">{eur(A7)}</span><span class="pill-label">Ventas 7d</span></div>
-      <div class="pill"><span class="pill-num c-amber">{eur(1366.98)}</span><span class="pill-label">Ads 7d</span></div>
+      <div class="pill"><span class="pill-num c-blue">{eur(a7['ventas'])}</span><span class="pill-label">Ventas 7d</span></div>
+      <div class="pill"><span class="pill-num c-amber">{eur(a7['ads_inv'])}</span><span class="pill-label">Ads 7d</span></div>
       <div class="pill-vsep"></div>
       <span class="pill-group-label">Miravia</span>
-      <div class="pill"><span class="pill-num c-blue">{eur(4129.35)}</span><span class="pill-label">Somnia 7d</span></div>
+      <div class="pill"><span class="pill-num c-blue">{eur(som7)}</span><span class="pill-label">Somnia 7d</span></div>
       <div class="pill-vsep"></div>
       <span class="pill-group-label">Mirakl</span>
       <div class="pill"><span class="pill-num c-blue">{eur(mk7)}</span><span class="pill-label">Ventas 7d</span></div>
@@ -387,7 +383,7 @@ for pid, top in TOPS.items():
     out = out[:ps] + body + out[pe:]
 
 # Pie
-out = re.sub(r'<footer>.*?</footer>', '<footer>Duérmete Online · 4 oct 2026 · Roicos · Amazon ES: ventas sin IVA de MerchantSpring y publicidad de Epinium (API de Amazon Ads); resumen de septiembre del informe "Todos los pedidos"; listings, Buy Box y estado de la cuenta a 1-oct · Mirakl: ingresos por ventas del panel (portes incluidos; sin impuestos salvo Carrefour, que va con IVA y se muestra ÷1,21 / ÷1,20; Worten en hora de Lisboa) · Miravia: Somnia a 4-oct (canal Miravia con IVA; AliExpress solo 30 días), Duérmete Online a 1-oct · «-» = sin dato</footer>', out, flags=re.S)
+out = re.sub(r'<footer>.*?</footer>', f'<footer>Duérmete Online · actualizado {ACT} · Roicos · Amazon ES: ventas sin IVA de MerchantSpring y publicidad de la API de Amazon Ads; listings, Buy Box y estado de la cuenta a {fd(ES["fecha"])} · Mirakl: ingresos por ventas del panel (portes incluidos; sin impuestos salvo Carrefour, que va con IVA y se muestra ÷1,21 / ÷1,20; Worten en hora de Lisboa) · Miravia: canal Miravia con IVA; AliExpress solo 30 días · «-» = sin dato</footer>', out, flags=re.S)
 out = out.replace('</script>', '''
 function selMes(pid, m) {
   var c = document.getElementById('cierre-' + pid);
