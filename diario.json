@@ -202,31 +202,31 @@
  },
  "miravia": {
   "somnia-mv": {
-   "fecha": "2026-10-06",
+   "fecha": "2026-10-07",
    "d7": [
-    5312.05,
-    64
+    4716.51,
+    66
    ],
    "p7": [
-    4094.92,
+    4034.41,
     39
    ],
    "mtd": [
-    3831.29,
-    53
+    4524.15,
+    64
    ],
    "d30": [
-    25607.58,
-    257
+    24834.23,
+    254
    ],
-   "ae_d30": 12441.14,
-   "uv_d30": 10517,
+   "ae_d30": 10936.83,
+   "uv_d30": 10462,
    "ads_d7": {
-    "inv": 181.33,
-    "ventas": 947.39,
-    "periodo": "29 sep – 5 oct"
+    "inv": 219.29,
+    "ventas": 1022.25,
+    "periodo": "30 sep – 6 oct"
    },
-   "pendientes": 17,
+   "pendientes": 9,
    "sin_stock": 3,
    "sin_stock_nota": "Inicio del Seller Center",
    "aviso": null
