@@ -12,7 +12,7 @@
   const rng = (t, a, b) => `dateType=${t}&dateRange=${a}%7C${b}`;
   const out = { fecha: day(0) };
   const txt = document.body.innerText;
-  out.tienda = (txt.match(/Mi cuenta\s*\n[^\n]*\n([^\n]+)\nIngresos de los últimos 30 días/) || [])[1] || null;
+  out.tienda = (txt.match(/Mi cuenta\s*\n(?:[^\n]*\n)?([^\n]+)\nIngresos de los últimos 30 días/) || [])[1] || null;
   out.d7 = await g(rng('recent7', day(-7), ayer));
   out.p7 = await g(rng('recent7', day(-14), day(-8)));
   out.d30 = await g(rng('recent30', day(-30), ayer));
