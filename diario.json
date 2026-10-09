@@ -232,31 +232,31 @@
    "aviso": null
   },
   "duermete-mv": {
-   "fecha": "2026-10-08",
+   "fecha": "2026-10-09",
    "d7": [
-    2314.92,
-    19
+    2960.83,
+    18
    ],
    "p7": [
-    708.01,
+    796.27,
     11
    ],
    "mtd": [
-    2314.92,
-    19
+    3210.8,
+    21
    ],
    "d30": [
-    7829.55,
-    70
+    7811.86,
+    64
    ],
-   "ae_d30": 2457.25,
-   "uv_d30": 4663,
+   "ae_d30": 2298.81,
+   "uv_d30": 4584,
    "ads_d7": {
     "inv": 0,
     "ventas": 0,
-    "periodo": "1 oct – 7 oct"
+    "periodo": "2 oct – 8 oct"
    },
-   "pendientes": 5,
+   "pendientes": 4,
    "sin_stock": 3,
    "sin_stock_nota": "Inicio del Seller Center",
    "aviso": "Miravia: todos los productos de esta tienda están bloqueados en España (restricción de AliExpress por pedidos no recibidos)"
