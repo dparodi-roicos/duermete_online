@@ -213,7 +213,39 @@ def mk_top(key):
     else:
         charts += chart_card('Inversión en Ads y ventas por Ads', "<div class='empty'>Sin datos de publicidad</div>", d['ads'])
     charts += "</div>"
-    return blocks + charts + cierre(key) + sub_sep('Estado de la tienda')
+    return blocks + mk_estado(d) + charts + cierre(key) + sub_sep('Auditoría de calidad · 1 oct 2026 (foto fija, no se actualiza)')
+
+def mk_estado(d):
+    st = d.get('estado')
+    if not st:
+        return "<div class='blk-row'>" + block('Estado de la tienda', '-', [tile('Sin datos', '-', 'Se rellena en la próxima actualización diaria', 'v-muted')]) + "</div>"
+    num = lambda v: '-' if v is None else e(v)
+    warn = lambda v, crit=False: 'v-muted' if v is None else ('v-ok' if v == 0 else ('v-crit' if crit else 'v-warn'))
+    al = st.get('alerta') or {}
+    banner = ''
+    if al.get('k') and al['k'] not in ('NONE', 'OK'):
+        reglas = ' · '.join(al.get('r') or []) or al['k']
+        cls, ico = ('b-crit', '⛔') if al['k'] in ('ALERT', 'SUSPENSION') else ('b-warn', '⚠️')
+        if al['k'] == 'SUSPENSION': reglas = 'tienda suspendida · ' + reglas
+        banner = (f"<div class='banner {cls}'><span class='banner-icon'>{ico}</span><div><span class='banner-title'>Alerta del panel: {html.escape(reglas)}</span>"
+                  f"<span class='banner-sub'>Aviso de la portada de Mirakl ({fd(d['fecha'])} a las {st.get('hora', '-')})</span></div></div>")
+    prox = f"Próxima facturación {fd(st['prox_fact'])}" if st.get('prox_fact') else ''
+    ult = f"Pagado el {fd(st['ult_pago_f'])}" if st.get('ult_pago_f') else 'Sin pagos registrados en el panel'
+    tiles = [
+        tile('Pdte envío', num(st.get('envio')), 'Pedidos en preparación', warn(st.get('envio'))),
+        tile('Tardíos', num(st.get('tardios')), 'Fuera de plazo de envío', warn(st.get('tardios'), True)),
+        tile('Incid. en curso', num(st.get('incid')), '', warn(st.get('incid'))),
+        tile('Nuevas incid.', num(st.get('incid_new')), '', warn(st.get('incid_new'), True)),
+        tile('Msgs no leídos', num(st.get('msgs')), 'Conversaciones sin leer', warn(st.get('msgs'))),
+        tile('Pdte aceptación', num(st.get('acept')), '', warn(st.get('acept'))),
+        tile('Devoluciones en curso', num(st.get('devol')), '', warn(st.get('devol'))),
+        tile('Ofertas activas', num(st.get('ofertas')), '', ''),
+        tile('Media carrito 30d', eur(st.get('carrito') or None), 'Ingresos ÷ pedidos del panel' if st.get('carrito') else 'Sin pedidos en 30 días', ''),
+        tile('Saldo pendiente', eur(st.get('pend'), 2), 'Pendiente de liberar', ''),
+        tile('Saldo a pagar', eur(st.get('pagar'), 2), prox, ''),
+        tile('Último pago', eur(st.get('ult_pago'), 2), ult, '')]
+    return banner + "<div class='blk-row'>" + block('Estado de la tienda', f"hoy {fd(d['fecha'])} a las {st.get('hora', '-')}", tiles,
+                                                   'Portada del panel de Mirakl en el momento de la actualización diaria') + "</div>"
 
 # ---------------- MIRAVIA ----------------
 def mv_top(pid):
@@ -353,6 +385,7 @@ def keep_sep(grid):
     for it in items:
         lab = re.search(r'mtr-label">([^<]*)', it).group(1)
         if lab in ('Facturación sept.', 'Publicidad sept.', 'Anuncios sept.', 'Ventas 7 días', 'Revenue 30d', 'Revenue 30d total', 'Revenue Miravia', 'Revenue AliExpress', 'Tráfico 30d', 'Pdte de envío', 'SKUs sin stock'): continue
+        if lab in ('Media carrito', 'Saldo pendiente', 'Saldo a pagar', 'Saldo pagado', 'Incidencias en curso', 'Pedidos totales'): continue  # Mirakl: ya van en vivo en «Estado de la tienda»
         keep.append(it)
     return '<div class="mtr-grid">\n    ' + '\n    '.join(keep) + '\n  </div>'
 
@@ -379,7 +412,10 @@ for pid, top in TOPS.items():
     s_, ps, pe = panel_span(pid)
     body = out[ps:pe]
     g = re.search(r'<div class="mtr-grid">.*?\n\s*</div>\n', body, re.S)
-    body = body[:g.start()].rstrip() + '\n' + top + '\n  ' + keep_sep(g.group(0)) + '\n' + body[g.end():]
+    rest = body[g.end():]
+    if pid in MK:  # contadores fijos del 1-oct: sustituidos por «Estado de la tienda» en vivo
+        rest = re.sub(r'\s*<div class="counters">.*?\n  </div>\n', '\n', rest, count=1, flags=re.S)
+    body = body[:g.start()].rstrip() + '\n' + top + '\n  ' + keep_sep(g.group(0)) + '\n' + rest
     out = out[:ps] + body + out[pe:]
 
 # Pie

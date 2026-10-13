@@ -64,7 +64,30 @@
     89525,
     595
    ],
-   "fecha": "2026-10-13"
+   "fecha": "2026-10-13",
+   "estado": {
+    "carrito": 152,
+    "envio": 59,
+    "tardios": 9,
+    "incid": 56,
+    "incid_new": 0,
+    "acept": 2,
+    "devol": 0,
+    "msgs": 31,
+    "pend": 76079.51,
+    "pagar": 46387.32,
+    "ult_pago": 43551.24,
+    "ult_pago_f": "2026-10-06",
+    "prox_fact": "2026-10-16",
+    "alerta": {
+     "k": "ALERT",
+     "r": [
+      "Porcentaje de incidencias (desde hace 3 meses) ≥ 10 %"
+     ]
+    },
+    "ofertas": 1742,
+    "hora": "15:15"
+   }
   },
   "cfr": {
    "d7": [
@@ -83,7 +106,25 @@
     0,
     0
    ],
-   "fecha": "2026-10-13"
+   "fecha": "2026-10-13",
+   "estado": {
+    "carrito": 130,
+    "envio": 0,
+    "tardios": 0,
+    "incid": 0,
+    "incid_new": 0,
+    "acept": 0,
+    "devol": 0,
+    "msgs": 0,
+    "pend": 0,
+    "pagar": 0,
+    "ult_pago": 67.5,
+    "ult_pago_f": "2026-10-11",
+    "prox_fact": "2026-10-21",
+    "alerta": null,
+    "ofertas": 674,
+    "hora": "15:23"
+   }
   },
   "adeo": {
    "d7": [
@@ -102,7 +143,25 @@
     43604,
     254
    ],
-   "fecha": "2026-10-13"
+   "fecha": "2026-10-13",
+   "estado": {
+    "carrito": 183,
+    "envio": 48,
+    "tardios": 0,
+    "incid": 45,
+    "incid_new": 3,
+    "acept": 0,
+    "devol": 0,
+    "msgs": 22,
+    "pend": 105757.74,
+    "pagar": 21487.31,
+    "ult_pago": 27341.21,
+    "ult_pago_f": "2026-10-08",
+    "prox_fact": "2026-10-16",
+    "alerta": null,
+    "ofertas": 2425,
+    "hora": "15:16"
+   }
   },
   "cfib": {
    "d7": [
@@ -121,7 +180,30 @@
     24216,
     221
    ],
-   "fecha": "2026-10-13"
+   "fecha": "2026-10-13",
+   "estado": {
+    "carrito": 160,
+    "envio": 26,
+    "tardios": 0,
+    "incid": 12,
+    "incid_new": 0,
+    "acept": 1,
+    "devol": 0,
+    "msgs": 4,
+    "pend": 59843.88,
+    "pagar": 33305.02,
+    "ult_pago": 35452.86,
+    "ult_pago_f": "2026-09-30",
+    "prox_fact": "2026-10-15",
+    "alerta": {
+     "k": "ALERT",
+     "r": [
+      "Porcentaje de incidencias ≥ 10 %"
+     ]
+    },
+    "ofertas": 922,
+    "hora": "15:22"
+   }
   },
   "conforama": {
    "d7": [
@@ -140,7 +222,25 @@
     0,
     0
    ],
-   "fecha": "2026-10-13"
+   "fecha": "2026-10-13",
+   "estado": {
+    "carrito": 0,
+    "envio": 0,
+    "tardios": 0,
+    "incid": 0,
+    "incid_new": 0,
+    "acept": 0,
+    "devol": 0,
+    "msgs": 0,
+    "pend": 0,
+    "pagar": 0,
+    "ult_pago": 422.98,
+    "ult_pago_f": "2026-05-25",
+    "prox_fact": "2026-10-15",
+    "alerta": null,
+    "ofertas": 0,
+    "hora": "15:24"
+   }
   },
   "worten": {
    "d7": [
@@ -159,7 +259,25 @@
     15416,
     142
    ],
-   "fecha": "2026-10-13"
+   "fecha": "2026-10-13",
+   "estado": {
+    "carrito": 134,
+    "envio": 21,
+    "tardios": 0,
+    "incid": 1,
+    "incid_new": 0,
+    "acept": 0,
+    "devol": 0,
+    "msgs": 3,
+    "pend": 12615.03,
+    "pagar": 633637.01,
+    "ult_pago": 0,
+    "ult_pago_f": null,
+    "prox_fact": "2026-10-20",
+    "alerta": null,
+    "ofertas": 1210,
+    "hora": "15:19"
+   }
   },
   "mdm": {
    "d7": [
@@ -178,7 +296,30 @@
     0,
     0
    ],
-   "fecha": "2026-10-13"
+   "fecha": "2026-10-13",
+   "estado": {
+    "carrito": 0,
+    "envio": 0,
+    "tardios": 0,
+    "incid": 0,
+    "incid_new": 0,
+    "acept": 0,
+    "devol": 0,
+    "msgs": 0,
+    "pend": 0,
+    "pagar": 0,
+    "ult_pago": 169.45,
+    "ult_pago_f": "2026-09-30",
+    "prox_fact": "2026-10-20",
+    "alerta": {
+     "k": "SUSPENSION",
+     "r": [
+      "Tasa de envíos tardíos (desde hace 3 meses) ≥ 15 %"
+     ]
+    },
+    "ofertas": 0,
+    "hora": "15:25"
+   }
   },
   "brico": {
    "d7": [
@@ -197,7 +338,25 @@
     0,
     0
    ],
-   "fecha": "2026-10-13"
+   "fecha": "2026-10-13",
+   "estado": {
+    "carrito": 0,
+    "envio": 0,
+    "tardios": 0,
+    "incid": 0,
+    "incid_new": 0,
+    "acept": 0,
+    "devol": 0,
+    "msgs": 0,
+    "pend": 0,
+    "pagar": 0,
+    "ult_pago": 25.28,
+    "ult_pago_f": "2026-08-28",
+    "prox_fact": "2026-10-14",
+    "alerta": null,
+    "ofertas": 0,
+    "hora": "15:26"
+   }
   }
  },
  "miravia": {
