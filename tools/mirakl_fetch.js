@@ -30,7 +30,8 @@
   const cta = await get('/marketplace-dashboard/private/call-to-action');
   Object.assign(st, { envio: cta.orderInShippingCount ?? null, tardios: cta.lateOrderCount ?? null, incid: cta.inProgressIncidentCount ?? null,
     incid_new: cta.newIncidentCount ?? null, acept: cta.orderInWaitingAcceptance ?? null, devol: cta.returnInProgressCount ?? null });
-  st.msgs = (await get('/inbox/threads/stats')).unreadThreadCount ?? null;
+  const ib = await get('/inbox/threads/stats?computeTotalMessageCount=false&critical=COUNT&maxToCount=1001&operatorInbox=false'); // misma consulta que la portada
+  st.msgs = ib.unreadThreadCount ?? null; st.msgs_crit = ib.criticalThreads ? ib.criticalThreads.count : null;
   const bal = await get('/marketplace-dashboard/private/balance');
   Object.assign(st, { pend: bal.pending ?? null, pagar: bal.payable ?? null, ult_pago: bal.lastPayment ?? null, ult_pago_f: bal.lastPaymentDate ?? null, prox_fact: bal.nextBillingDate ?? null });
   const al = await get('/marketplace-dashboard/private/shop-alerting');

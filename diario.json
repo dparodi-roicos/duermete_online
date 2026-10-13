@@ -67,15 +67,15 @@
    "fecha": "2026-10-13",
    "estado": {
     "carrito": 152,
-    "envio": 59,
-    "tardios": 9,
+    "envio": 60,
+    "tardios": 8,
     "incid": 56,
     "incid_new": 0,
-    "acept": 2,
+    "acept": 4,
     "devol": 0,
-    "msgs": 31,
-    "pend": 76079.51,
-    "pagar": 46387.32,
+    "msgs": 22,
+    "pend": 74431.35,
+    "pagar": 48200.51,
     "ult_pago": 43551.24,
     "ult_pago_f": "2026-10-06",
     "prox_fact": "2026-10-16",
@@ -86,7 +86,8 @@
      ]
     },
     "ofertas": 1742,
-    "hora": "15:15"
+    "hora": "16:43",
+    "msgs_crit": 0
    }
   },
   "cfr": {
@@ -123,7 +124,8 @@
     "prox_fact": "2026-10-21",
     "alerta": null,
     "ofertas": 674,
-    "hora": "15:23"
+    "hora": "16:46",
+    "msgs_crit": 0
    }
   },
   "adeo": {
@@ -146,21 +148,22 @@
    "fecha": "2026-10-13",
    "estado": {
     "carrito": 183,
-    "envio": 48,
+    "envio": 43,
     "tardios": 0,
-    "incid": 45,
-    "incid_new": 3,
-    "acept": 0,
+    "incid": 46,
+    "incid_new": 1,
+    "acept": 1,
     "devol": 0,
-    "msgs": 22,
-    "pend": 105757.74,
+    "msgs": 16,
+    "pend": 105952.36,
     "pagar": 21487.31,
     "ult_pago": 27341.21,
     "ult_pago_f": "2026-10-08",
     "prox_fact": "2026-10-16",
     "alerta": null,
     "ofertas": 2425,
-    "hora": "15:16"
+    "hora": "16:43",
+    "msgs_crit": 0
    }
   },
   "cfib": {
@@ -183,15 +186,15 @@
    "fecha": "2026-10-13",
    "estado": {
     "carrito": 160,
-    "envio": 26,
+    "envio": 28,
     "tardios": 0,
     "incid": 12,
     "incid_new": 0,
     "acept": 1,
     "devol": 0,
     "msgs": 4,
-    "pend": 59843.88,
-    "pagar": 33305.02,
+    "pend": 59976.52,
+    "pagar": 33522.54,
     "ult_pago": 35452.86,
     "ult_pago_f": "2026-09-30",
     "prox_fact": "2026-10-15",
@@ -202,7 +205,8 @@
      ]
     },
     "ofertas": 922,
-    "hora": "15:22"
+    "hora": "16:45",
+    "msgs_crit": 0
    }
   },
   "conforama": {
@@ -239,7 +243,8 @@
     "prox_fact": "2026-10-15",
     "alerta": null,
     "ofertas": 0,
-    "hora": "15:24"
+    "hora": "16:49",
+    "msgs_crit": 0
    }
   },
   "worten": {
@@ -266,9 +271,9 @@
     "tardios": 0,
     "incid": 1,
     "incid_new": 0,
-    "acept": 0,
+    "acept": 1,
     "devol": 0,
-    "msgs": 3,
+    "msgs": 2,
     "pend": 12615.03,
     "pagar": 633637.01,
     "ult_pago": 0,
@@ -276,7 +281,8 @@
     "prox_fact": "2026-10-20",
     "alerta": null,
     "ofertas": 1210,
-    "hora": "15:19"
+    "hora": "16:45",
+    "msgs_crit": 0
    }
   },
   "mdm": {
@@ -318,7 +324,8 @@
      ]
     },
     "ofertas": 0,
-    "hora": "15:25"
+    "hora": "16:49",
+    "msgs_crit": 0
    }
   },
   "brico": {
@@ -355,7 +362,8 @@
     "prox_fact": "2026-10-14",
     "alerta": null,
     "ofertas": 0,
-    "hora": "15:26"
+    "hora": "16:49",
+    "msgs_crit": 0
    }
   }
  },

@@ -236,7 +236,7 @@ def mk_estado(d):
         tile('Tardíos', num(st.get('tardios')), 'Fuera de plazo de envío', warn(st.get('tardios'), True)),
         tile('Incid. en curso', num(st.get('incid')), '', warn(st.get('incid'))),
         tile('Nuevas incid.', num(st.get('incid_new')), '', warn(st.get('incid_new'), True)),
-        tile('Msgs no leídos', num(st.get('msgs')), 'Conversaciones sin leer', warn(st.get('msgs'))),
+        tile('Msgs no leídos', num(st.get('msgs')), f"{num(st.get('msgs_crit'))} críticos" if st.get('msgs_crit') is not None else 'Conversaciones sin leer', warn(st.get('msgs'))),
         tile('Pdte aceptación', num(st.get('acept')), '', warn(st.get('acept'))),
         tile('Devoluciones en curso', num(st.get('devol')), '', warn(st.get('devol'))),
         tile('Ofertas activas', num(st.get('ofertas')), '', ''),
