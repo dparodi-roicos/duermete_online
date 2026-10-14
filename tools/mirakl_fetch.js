@@ -1,5 +1,5 @@
 // Ejecutar en una pestaña del panel de Mirakl (marketplace-dashboard) con la tienda de Duérmete abierta.
-// Devuelve ventas e ingresos de: últimos 7 días, 7 días anteriores, últimos 30 días y mes en curso, INCLUYENDO HOY (igual que el panel),
+// Devuelve ventas CON IVA (impuestos y portes incluidos) de: últimos 7 días, 7 días anteriores, últimos 30 días y mes en curso, INCLUYENDO HOY (igual que el panel),
 // y el estado actual de la tienda (pendientes de envío, tardíos, incidencias, mensajes no leídos, saldos, alertas, ofertas activas).
 // Opcional: window.__MES_CIERRE = 'YYYY-MM' antes de ejecutar para sacar también el mes cerrado (con y sin IVA).
 (async () => {
@@ -21,7 +21,7 @@
   const out = { tienda: document.title, host: location.host, rangos: { d7: R.d7, p7: R.p7, d30: R.d30, mtd: R.mtd } };
   const st = {};
   for (const [k, [a, b]] of Object.entries(R)) {
-    const s = await fetch('/marketplace-dashboard/private/sales?' + q(a, b, 'false')).then(r => r.json()).catch(() => ({}));
+    const s = await fetch('/marketplace-dashboard/private/sales?' + q(a, b, k === 'mes' ? 'false' : 'true')).then(r => r.json()).catch(() => ({}));   // con IVA, como el panel con «Con impuestos incluidos»
     const c = await fetch('/marketplace-dashboard/private/order-count?' + new URLSearchParams({ startDate: `${a}T00:00:00.000${off(a)}`, endDate: `${b}T23:59:59.999${off(b)}` })).then(r => r.json()).catch(() => ({}));
     out[k] = [s.saleRevenue ?? null, c.ordersCount ? c.ordersCount.reduce((x, y) => x + y.value, 0) : null];
     if (k === 'd30') st.carrito = s.averageBasket ?? null;

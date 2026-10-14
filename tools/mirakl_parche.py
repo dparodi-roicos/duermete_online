@@ -15,7 +15,7 @@ for f in sorted(os.listdir(DIR)):
     k = HOST.get(o.get('host'))
     if not k: print('host desconocido', f, o.get('host')); continue
     patch[k] = {x: o[x] for x in ('d7', 'p7', 'd30', 'mtd', 'rangos', 'estado', 'calidad') if x in o}
-    patch[k]['fecha'] = hoy; hechos.append(k)
+    patch[k]['fecha'] = hoy; patch[k]['hora_ventas'] = (o.get('estado') or {}).get('hora'); hechos.append(k)
 ads = os.path.join(DIR, 'worten_ads.json')
 if os.path.exists(ads):
     a = json.load(open(ads, encoding='utf-8')); a['fecha'] = hoy

@@ -106,21 +106,20 @@ def cierre(pid):
     for m in ms:
         d = h['meses'][m]
         if h['tipo'] == 'mk':
-            ts = [tile('Ventas con IVA', eur(d['con'], 2) if d['con'] is not None else '-', d.get('det_con', ''), 'v-ok' if d['con'] else 'v-muted'),
-                  tile('Ventas sin IVA', eur(d['sin'], 2) if d['sin'] is not None else '-', d.get('det_sin', ''), 'v-ok' if d['sin'] else 'v-muted'),
+            ped = re.search(r'(\d[\d.]*) (pedidos|líneas)', d.get('det_sin') or '')   # nº de pedidos/líneas guardado en el detalle
+            ts = [tile('Ventas con IVA', eur(d['con'], 2) if d['con'] is not None else '-', ' · '.join(x for x in [d.get('det_con', ''), ped.group(0) if ped else ''] if x), 'v-ok' if d['con'] else 'v-muted'),
                   tile('Inversión en publicidad', eur(d['inv'], 2) if d['inv'] is not None else '-', d.get('det_inv', ''), 'v-warn' if d['inv'] else 'v-muted'),
                   tile('Ventas por publicidad', eur(d['vpub'], 2) if d['vpub'] is not None else '-',
-                       ' · '.join(x for x in [ratio(d['inv'], d['vpub'], 'ACOS'), ratio(d['inv'], d['sin'], 'TACOS')] if x), '' if d['vpub'] else 'v-muted')]
+                       ' · '.join(x for x in [ratio(d['inv'], d['vpub'], 'ACOS'), ratio(d['inv'], d['con'], 'TACOS')] if x), '' if d['vpub'] else 'v-muted')]
         else:
             inv = None if d['inv_mv'] is None and d['inv_ae'] is None else (d['inv_mv'] or 0) + (d['inv_ae'] or 0)
             vp = None if d['vpub_mv'] is None and d['vpub_ae'] is None else (d['vpub_mv'] or 0) + (d['vpub_ae'] or 0)
             sub = lambda a, b, la, lb: ' · '.join(f'{l} {eur(v, 2)}' for l, v in ((la, a), (lb, b)) if v is not None)
-            ts = [tile('Facturación total', eur(d['tot_con'], 2) if d['tot_con'] is not None else '-',
-                       (f"Con IVA · sin IVA {eur(d['tot_sin'], 2)}" if d['tot_sin'] is not None else 'Miravia + AliExpress'), 'v-ok' if d['tot_con'] else 'v-muted'),
+            ts = [tile('Facturación total', eur(d['tot_con'], 2) if d['tot_con'] is not None else '-', 'Con IVA · Miravia + AliExpress', 'v-ok' if d['tot_con'] else 'v-muted'),
                   tile('Miravia', eur(d['mv_con'], 2) if d['mv_con'] is not None else '-',
-                       'Con IVA' + (f" · sin IVA {eur(d['mv_sin'], 2)}" if d['mv_sin'] is not None else '') + (' · ' + d['det_mv'] if d.get('det_mv') else ''), 'v-ok' if d['mv_con'] else 'v-muted'),
+                       'Con IVA' + (' · ' + re.sub(r'^Con IVA · ', '', d['det_mv']) if d.get('det_mv') else ''), 'v-ok' if d['mv_con'] else 'v-muted'),
                   tile('AliExpress', eur(d['ae_con'], 2) if d['ae_con'] is not None else '-',
-                       ('Con IVA' + (f" · sin IVA {eur(d['ae_sin'], 2)}" if d['ae_sin'] is not None else '') + ' · ' if d['ae_con'] is not None else '') + d.get('det_ae', ''), 'v-ok' if d['ae_con'] else 'v-muted'),
+                       ('Con IVA · ' if d['ae_con'] is not None else '') + d.get('det_ae', ''), 'v-ok' if d['ae_con'] else 'v-muted'),
                   tile('Inversión total en anuncios', eur(inv, 2) if inv is not None else '-',
                        sub(d['inv_mv'], d['inv_ae'], 'Miravia', 'AliExpress') + (' · ' + d['det_inv'] if d.get('det_inv') else ''), 'v-warn' if inv else 'v-muted'),
                   tile('Ventas por anuncios', eur(vp, 2) if vp is not None else '-',
@@ -159,22 +158,31 @@ amz_status = status([('Estado de la cuenta', f"{ES['nivel']} · {ES['texto']}", 
                      ('Inactivos otros', e(ES['inactivos_otros']), '')])
 a7, am = A['d7'], A['mtd']
 def acos(i, v): return f"ACOS {e(i / v * 100, 1)}%" if i and v else ''
-amz_sin, LB = serie('amazon', 'sin'); amz_inv, _ = serie('amazon', 'inv'); amz_vp, _ = serie('amazon', 'vpub')
+def tacos(i, v): return f"TACOS {e(i / v * 100, 1)}%" if i and v else ''
+AR = A.get('rangos') or {}   # periodos de Seller Central (incluyen hoy, como el Panel de ventas)
+def arango(k, base):
+    if k not in AR: return base
+    a, b = AR[k]; t = f'{fd(a)} – {fd(b)}'
+    return t + (f" · hoy hasta las {A['hora']}" if b == D['actualizado'] and A.get('hora') else '')
+AP7, APMTD = arango('d7', P7), arango('mtd', PMTD)
+ADS7, ADSMTD = (f"{fd(AR['ads_d7'][0])} – {fd(AR['ads_d7'][1])}", f"{fd(AR['ads_mtd'][0])} – {fd(AR['ads_mtd'][1])}") if 'ads_d7' in AR else (P7, PMTD)
+amz_con, LB = serie('amazon', 'con'); amz_inv, _ = serie('amazon', 'inv'); amz_vp, _ = serie('amazon', 'vpub')
 amz_top = (
     amz_status
     + "<div class='blk-row'>"
-    + block('Últimos 7 días', P7, [
-        tile('Ventas', eur(a7['ventas']), delta(a7['ventas'], A['p7']['ventas']) + f" · {e(a7['lineas'])} líneas · {e(a7['uds'])} uds", 'v-ok'),
-        tile('Inversión Ads', eur(a7['ads_inv']), 'Sponsored Products', 'v-warn'),
-        tile('Ventas por Ads', eur(a7['ads_ventas']), ' · '.join(x for x in [acos(a7['ads_inv'], a7['ads_ventas']), f"TACOS {e(a7['ads_inv'] / a7['ventas'] * 100, 1)}%" if a7['ventas'] else ''] if x))])
-    + block(f'{MES_ACTUAL} hasta la fecha', PMTD, [
-        tile('Ventas', eur(am['ventas']), f"{e(am['lineas'])} líneas · {e(am['uds'])} uds", 'v-ok'),
-        tile('Inversión Ads', eur(am['ads_inv']), '', 'v-warn'),
-        tile('Ventas por Ads', eur(am['ads_ventas']), acos(am['ads_inv'], am['ads_ventas']) + ' · aún sube: Amazon atribuye ventas hasta 14 días después del clic')])
+    + block('Últimos 7 días', AP7, [
+        tile('Ventas', eur(a7['ventas'], 2), delta(a7['ventas'], A['p7']['ventas']) + f" · {e(a7['lineas'])} líneas · {e(a7['uds'])} uds", 'v-ok'),
+        tile('Inversión Ads', eur(a7['ads_inv'], 2), f'Sponsored Products · {ADS7} (días cerrados)', 'v-warn'),
+        tile('Ventas por Ads', eur(a7['ads_ventas'], 2), ' · '.join(x for x in [acos(a7['ads_inv'], a7['ads_ventas']), tacos(a7['ads_inv'], a7.get('ventas_cerr', a7['ventas']))] if x) + f' · {ADS7}')])
+    + block(f'{MES_ACTUAL} hasta la fecha', APMTD, [
+        tile('Ventas', eur(am['ventas'], 2), f"{e(am['lineas'])} líneas · {e(am['uds'])} uds", 'v-ok'),
+        tile('Inversión Ads', eur(am['ads_inv'], 2), f'{ADSMTD} (días cerrados)', 'v-warn'),
+        tile('Ventas por Ads', eur(am['ads_ventas'], 2), ' · '.join(x for x in [acos(am['ads_inv'], am['ads_ventas']), tacos(am['ads_inv'], am.get('ventas_cerr', am['ventas']))] if x) + ' · aún sube: Amazon atribuye ventas hasta 14 días después del clic')],
+        'Ventas con IVA: «Ventas de productos pedidos» del Panel de ventas de Seller Central (mismas fechas) · publicidad de la API de Amazon Ads hasta ayer')
     + "</div>"
     + "<div class='chart-row'>"
-    + chart_card(titulo_evol('amazon'), bar_chart(amz_sin, LB),
-                 'Sin IVA · MerchantSpring (septiembre: informe «Todos los pedidos» tras promociones) · sin ventas registradas de enero a marzo')
+    + chart_card(titulo_evol('amazon'), bar_chart(amz_con, LB),
+                 'Con IVA · Seller Central, Panel de ventas («Ventas de productos pedidos») · sin ventas de enero a marzo')
     + chart_card('Inversión en Ads y ventas por Ads', ads_chart(amz_inv, amz_vp, LB),
                  'API de Amazon Ads · sin datos de publicidad antes de abril', LEG_ADS)
     + "</div>" + cierre('amazon') + sub_sep('Estado de la cuenta')
@@ -182,13 +190,13 @@ amz_top = (
 
 # ---------------- MIRAKL ----------------
 MK = {
- 'cfe':  dict(name='Carrefour ES', div=1.21, ads='No gestionamos su publicidad', iva='Carrefour no desglosa impuestos: su panel va con IVA y aquí se muestra ÷1,21'),
- 'cfr':  dict(name='Carrefour FR', div=1.20, ads='No gestionamos su publicidad', iva='Carrefour no desglosa impuestos: su panel va con IVA y aquí se muestra ÷1,20'),
+ 'cfe':  dict(name='Carrefour ES', div=1, ads='No gestionamos su publicidad', iva='con IVA (Carrefour no desglosa impuestos)'),
+ 'cfr':  dict(name='Carrefour FR', div=1, ads='No gestionamos su publicidad', iva='con IVA (Carrefour no desglosa impuestos)'),
  'adeo': dict(name='Leroy Merlin', div=1, ads='Lo gestiona Valiuz (externo) · sin informe de gasto'),
  'cfib': dict(name='Conforama ES', div=1, ads='El panel no tiene módulo de publicidad'),
  'conforama': dict(name='Conforama FR', div=1, ads='Sin campañas'),
  'worten': dict(name='Worten PT', div=1, ads='Mirakl Ads', lisboa=True, con_ads=True),
- 'mdm':  dict(name='Maisons du Monde', div=1, ads='Sin campañas', iva='el panel no desglosa impuestos (misma cifra con y sin IVA)'),
+ 'mdm':  dict(name='Maisons du Monde', div=1, ads='Sin campañas', iva='con IVA (el panel no desglosa impuestos)'),
  'brico': dict(name='Brico Dépôt', div=1, ads='El panel no tiene módulo de publicidad'),
 }
 for k in MK: MK[k].update(D['mirakl'][k])
@@ -197,7 +205,7 @@ def mk_top(key):
     s7, o7 = d['d7']; sp, op = d['p7']; s30, o30 = d['d30']; sm, om = d['mtd']
     ped = lambda o: '' if o is None else f' · {e(o)} pedidos'
     rg = d.get('rangos')
-    hora = (d.get('estado') or {}).get('hora')
+    hora = d.get('hora_ventas') or (d.get('estado') or {}).get('hora')   # hora a la que se leyeron las ventas
     def per(k, base):
         if not rg or k not in rg: return base
         a, b = rg[k]; txt = f'{fd(a)} – {fd(b)}'
@@ -215,9 +223,9 @@ def mk_top(key):
         + block('Últimos 30 días', P30 + stale, [tile('Ventas', eur(s30 / dv), ped(o30).lstrip(' ·'), 'v-ok' if s30 else 'v-muted'),
                                          tile(f'{MES_ACTUAL} hasta la fecha', eur(sm / dv), PMTD + ped(om), '')])
         + "</div>")
-    vals, lb = serie(key, 'sin', 'con')
+    vals, lb = serie(key, 'con', 'sin')
     charts = "<div class='chart-row'>" + chart_card(titulo_evol(key), bar_chart(vals, lb),
-        f"Ingresos por ventas del panel, portes incluidos, {tz} · " + (d['iva'] if 'iva' in d else 'sin impuestos') + ' · 7 días, 30 días y mes en curso: igual que el panel de Mirakl, incluyen el día de hoy hasta la hora de la actualización' if d.get('rangos') else ' · 7 días, 30 días y mes en curso: días cerrados, hoy no cuenta')
+        f"Ingresos por ventas del panel, con IVA y portes incluidos, {tz} · " + (d['iva'] if 'iva' in d else 'en el panel: «Configuración del valor bruto de mercancías» → «Con impuestos incluidos»') + ' · 7 días, 30 días y mes en curso: igual que el panel de Mirakl, incluyen el día de hoy hasta la hora de la actualización' if d.get('rangos') else ' · 7 días, 30 días y mes en curso: días cerrados, hoy no cuenta')
     inv, lb = serie(key, 'inv'); vp, _ = serie(key, 'vpub')
     if any(v for v in inv):
         charts += chart_card('Inversión en Ads y ventas por Ads', ads_chart(inv, vp, lb), 'Mirakl Ads · sin datos de publicidad antes de julio', LEG_ADS)
@@ -459,7 +467,7 @@ new_hdr = f"""<div class="header">
     <div>
       <div class="client-eyebrow">Roicos · Duérmete Online</div>
       <h1 class="report-title">Amazon · Miravia · Mirakl</h1>
-      <div class="report-meta">Actualizado {ACT} · últimos 7 días = {P7} · mes en curso = {PMTD} · ventas sin IVA salvo Miravia (con IVA)</div>
+      <div class="report-meta">Actualizado {ACT} · todas las ventas con IVA, tal cual los paneles · cada bloque indica sus fechas (Amazon y Mirakl incluyen hoy hasta la hora de la actualización)</div>
     </div>
     <div class="summary-pills">
       <span class="pill-group-label">Amazon</span>
@@ -588,7 +596,7 @@ for pid, top in TOPS.items():
     out = out[:ps] + body + out[pe:]
 
 # Pie
-out = re.sub(r'<footer>.*?</footer>', f'<footer>Duérmete Online · actualizado {ACT} · Roicos · Amazon ES: ventas sin IVA de MerchantSpring y publicidad de la API de Amazon Ads; listings, Buy Box y estado de la cuenta a {fd(ES["fecha"])} · Mirakl: ingresos por ventas del panel (portes incluidos; sin impuestos salvo Carrefour, que va con IVA y se muestra ÷1,21 / ÷1,20; Worten en hora de Lisboa) · Miravia: canal Miravia con IVA; AliExpress solo 30 días · «-» = sin dato</footer>', out, flags=re.S)
+out = re.sub(r'<footer>.*?</footer>', f'<footer>Duérmete Online · actualizado {ACT} · Roicos · Ventas con IVA, tal cual los paneles · Amazon ES: «Ventas de productos pedidos» del Panel de ventas de Seller Central y publicidad de la API de Amazon Ads; listings, Buy Box y estado de la cuenta a {fd(ES["fecha"])} · Mirakl: ingresos por ventas del panel con impuestos y portes incluidos (Carrefour, Maisons du Monde y Brico no desglosan impuestos; Worten en hora de Lisboa) · Miravia: importe pagado del canal Miravia con IVA; AliExpress solo 30 días · «-» = sin dato</footer>', out, flags=re.S)
 out = out.replace('</script>', '''
 function selMes(pid, m) {
   var c = document.getElementById('cierre-' + pid);
