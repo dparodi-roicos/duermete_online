@@ -516,7 +516,7 @@ def tb(k, label, active=False):
 new_tabs = ('<div class="tabs-bar">\n  <div class="tabs">\n    <span class="tab-section-label">Amazon</span>\n' + tb('amazon', 'Amazon ES', True)
     + '    <span class="tab-sep"></span>\n    <span class="tab-section-label">Miravia</span>\n' + tb('duermete-mv', 'Duérmete Online') + tb('somnia-mv', 'Somnia Descanso')
     + '    <span class="tab-sep"></span>\n    <span class="tab-section-label">Mirakl</span>\n'
-    + ''.join(tb(k, MK[k]['name']) for k in ['cfe', 'cfr', 'adeo', 'cfib', 'conforama', 'worten', 'mdm', 'brico'])
+    + ''.join(tb(k, MK[k]['name']) for k in ['cfe', 'adeo', 'cfib', 'worten', 'cfr', 'conforama', 'mdm', 'brico'])
     + '  </div>\n</div>\n')
 out = out[:tabs.start()] + new_tabs + out[tabs.end():]
 
