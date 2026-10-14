@@ -1,5 +1,5 @@
 // Ejecutar en una pestaña del panel de Mirakl (marketplace-dashboard) con la tienda de Duérmete abierta.
-// Devuelve ventas e ingresos de: últimos 7 días cerrados, 7 días anteriores, últimos 30 días y mes en curso (hasta ayer),
+// Devuelve ventas e ingresos de: últimos 7 días, 7 días anteriores, últimos 30 días y mes en curso, INCLUYENDO HOY (igual que el panel),
 // y el estado actual de la tienda (pendientes de envío, tardíos, incidencias, mensajes no leídos, saldos, alertas, ofertas activas).
 // Opcional: window.__MES_CIERRE = 'YYYY-MM' antes de ejecutar para sacar también el mes cerrado (con y sin IVA).
 (async () => {
@@ -13,10 +13,12 @@
   const today = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));
   const day = (n) => { const d = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())); d.setUTCDate(d.getUTCDate() + n); return ymd(d); };
   const ayer = day(-1);
-  const R = { d7: [day(-7), ayer], p7: [day(-14), day(-8)], d30: [day(-30), ayer], mtd: [ayer.slice(0, 8) + '01', ayer] };
+  const hoy = day(0);
+  // Igual que el panel de Mirakl: «Últimos 7/30 días» incluyen hoy
+  const R = { d7: [day(-6), hoy], p7: [day(-13), day(-7)], d30: [day(-29), hoy], mtd: [hoy.slice(0, 8) + '01', hoy] };
   if (window.__MES_CIERRE) { const [y, m] = window.__MES_CIERRE.split('-').map(Number); const last = new Date(Date.UTC(y, m, 0)); R.mes = [`${window.__MES_CIERRE}-01`, ymd(last)]; }
   const q = (a, b, tax) => new URLSearchParams({ startDate: `${a}T00:00:00.000${off(a)}`, endDate: `${b}T23:59:59.999${off(b)}`, includeShippingCharges: 'true', includeTaxes: tax, showDebited: 'YES', showShipped: 'ALL' });
-  const out = { tienda: document.title, host: location.host };
+  const out = { tienda: document.title, host: location.host, rangos: { d7: R.d7, p7: R.p7, d30: R.d30, mtd: R.mtd } };
   const st = {};
   for (const [k, [a, b]] of Object.entries(R)) {
     const s = await fetch('/marketplace-dashboard/private/sales?' + q(a, b, 'false')).then(r => r.json()).catch(() => ({}));

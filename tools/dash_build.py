@@ -196,6 +196,13 @@ def mk_top(key):
     d = MK[key]; dv = d['div']
     s7, o7 = d['d7']; sp, op = d['p7']; s30, o30 = d['d30']; sm, om = d['mtd']
     ped = lambda o: '' if o is None else f' · {e(o)} pedidos'
+    rg = d.get('rangos')
+    hora = (d.get('estado') or {}).get('hora')
+    def per(k, base):
+        if not rg or k not in rg: return base
+        a, b = rg[k]; txt = f'{fd(a)} – {fd(b)}'
+        return txt + (f' · hoy hasta las {hora}' if b == d.get('fecha') and hora else ' · incluye hoy')
+    P7, P30, PMTD = per('d7', globals()['P7']), per('d30', globals()['P30']), per('mtd', globals()['PMTD'])
     ads7 = tile('Inversión Ads', '-', 'Mirakl Ads · pendiente de consultar el panel de publicidad', 'v-muted') if d.get('con_ads') else tile('Publicidad', '-', d['ads'], 'v-muted')
     tz = 'hora de Lisboa' if d.get('lisboa') else 'hora de Madrid'
     stale = f" · datos del {fd(d['fecha'])}" if d.get('fecha') and d['fecha'] != D['actualizado'] else ''
@@ -206,7 +213,7 @@ def mk_top(key):
         + "</div>")
     vals, lb = serie(key, 'sin', 'con')
     charts = "<div class='chart-row'>" + chart_card(titulo_evol(key), bar_chart(vals, lb),
-        f"Ingresos por ventas del panel, portes incluidos, {tz} · " + (d['iva'] if 'iva' in d else 'sin impuestos') + ' · 7 días, 30 días y mes en curso: días cerrados, hoy no cuenta')
+        f"Ingresos por ventas del panel, portes incluidos, {tz} · " + (d['iva'] if 'iva' in d else 'sin impuestos') + ' · 7 días, 30 días y mes en curso: igual que el panel de Mirakl, incluyen el día de hoy hasta la hora de la actualización' if d.get('rangos') else ' · 7 días, 30 días y mes en curso: días cerrados, hoy no cuenta')
     inv, lb = serie(key, 'inv'); vp, _ = serie(key, 'vpub')
     if any(v for v in inv):
         charts += chart_card('Inversión en Ads y ventas por Ads', ads_chart(inv, vp, lb), 'Mirakl Ads · sin datos de publicidad antes de julio', LEG_ADS)
