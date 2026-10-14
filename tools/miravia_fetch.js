@@ -24,7 +24,8 @@
   out.ae_d30 = num(/AliExpress\s*\nIngresos de los últimos 30 días:\s*([\d.,]+)/);
   out.mv_d30_inicio = num(/Miravia\s*\nIngresos de los últimos 30 días:\s*([\d.,]+)/);
   out.pendientes = num(/Pedidos\s*\n(\d+)\s*\nPedidos pendientes/);
-  out.sin_stock = num(/Sin stock\s*\n(\d+)/);
+  out.sin_stock = num(/(\d+)\s*\nSin stock/);   // en la portada el número va ANTES de la etiqueta («32 | Sin stock | 3 | Categoría incorrecta»)
+  out.agotados_vendidos7 = num(/artículos agotados, mientras que solo (\d+) artículos tuvieron ventas en los últimos 7 días/);
   out.top_sin_stock = num(/Tiene (\d+) productos más vendidos de los últimos 7 días actualmente sin stock/);
   out.aviso_bloqueo = /bloqueados en España/.test(txt) ? 'Todos los productos de esta tienda están bloqueados en España' : null;
   return JSON.stringify(out);

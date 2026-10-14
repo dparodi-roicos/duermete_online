@@ -680,9 +680,148 @@
     "periodo": "7 oct – 13 oct"
    },
    "pendientes": 33,
-   "sin_stock": 3,
-   "sin_stock_nota": "Inicio del Seller Center",
-   "aviso": null
+   "sin_stock": 32,
+   "sin_stock_nota": "32 artículos agotados · solo 12 artículos con ventas en 7 días (inicio del Seller Center)",
+   "aviso": null,
+   "salud": {
+    "tienda": "Somnia Descanso",
+    "revision": "2026-10-13 21:11:39",
+    "pen_mv": 4,
+    "pen_ae": 170,
+    "impacto_gmv": "8438,68",
+    "mv": {
+     "envio_plazo": {
+      "v": "99.14%",
+      "obj": "≥97%"
+     },
+     "sin_preparar": {
+      "v": null,
+      "obj": "≤2%"
+     },
+     "entrega_tiempo": {
+      "v": "79.67%",
+      "obj": "≥90%"
+     },
+     "cancelaciones": {
+      "v": "0%",
+      "obj": "≤1%"
+     },
+     "devoluciones": {
+      "v": "0%",
+      "obj": "≤1%"
+     },
+     "valoraciones": {
+      "v": "90%",
+      "obj": "≥97%"
+     },
+     "chat": {
+      "v": "88.57%",
+      "obj": "≥90%"
+     }
+    },
+    "ae": {
+     "no_verificados": {
+      "v": "27.03%",
+      "obj": "<1%"
+     },
+     "envio_plazo": {
+      "v": "98.23%",
+      "obj": "≥95%"
+     },
+     "escaneo72": {
+      "v": null,
+      "obj": ">95%"
+     },
+     "entrega_tiempo": {
+      "v": "85.59%",
+      "obj": "≥90%"
+     },
+     "omision": {
+      "v": "0%",
+      "obj": "<5%"
+     },
+     "nr": {
+      "v": "11.39%",
+      "obj": "<5%"
+     }
+    },
+    "politicas_mv": [],
+    "puntos_ae": {
+     "transaccion": 12,
+     "producto": 0,
+     "pi": 0
+    },
+    "pen_lista_mv": [
+     {
+      "fecha": "2026-10-12",
+      "tipo": "Retención de pagos",
+      "estado": "Pendiente de apelación",
+      "desde": "2026-10-12",
+      "hasta": "2026-11-11",
+      "motivo": "Fraude de Cumplimiento – Bajo investigación"
+     },
+     {
+      "fecha": "2026-10-11",
+      "tipo": "Retención de pagos",
+      "estado": "Pendiente de apelación",
+      "desde": "2026-10-11",
+      "hasta": "2026-11-10",
+      "motivo": "Fraude de Cumplimiento – Bajo investigación"
+     },
+     {
+      "fecha": "2025-06-25",
+      "tipo": "Desactivación de productos",
+      "estado": "Apelación rechazada",
+      "desde": "2025-06-25",
+      "hasta": null,
+      "motivo": "mala calidad de imagen según las normas de la plataforma"
+     },
+     {
+      "fecha": "2025-06-23",
+      "tipo": "Desactivación de productos",
+      "estado": "Apelación rechazada",
+      "desde": "2025-06-23",
+      "hasta": null,
+      "motivo": "mala calidad de imagen según las normas de la plataforma"
+     }
+    ],
+    "pen_lista_ae": [
+     {
+      "fecha": "2026-10-12",
+      "tipo": "Política de transacciones y otros",
+      "estado": "Pendiente de apelación",
+      "desde": "2026-10-12",
+      "hasta": "2026-10-26",
+      "motivo": "Item Not Received (NR) of your store’s overseas fulfillment orders has exceeded the platform’s assessment standard"
+     },
+     {
+      "fecha": "2026-01-05",
+      "tipo": "Política de transacciones y otros",
+      "estado": "No requiere apelación",
+      "desde": "2026-01-05",
+      "hasta": "2026-01-12",
+      "motivo": null
+     },
+     {
+      "fecha": "2026-01-05",
+      "tipo": "Política de transacciones y otros",
+      "estado": "Apelación rechazada",
+      "desde": "2026-01-05",
+      "hasta": null,
+      "motivo": null
+     }
+    ],
+    "pen_ae_pi": 167,
+    "hora": "09:16",
+    "fecha": "2026-10-14"
+   },
+   "ae_ads_d7": {
+    "inv": 267.35,
+    "ventas": 1137.19,
+    "pedidos": 11,
+    "periodo": "6 oct – 12 oct",
+    "roas": 1.87
+   }
   },
   "duermete-mv": {
    "fecha": "2026-10-13",
@@ -710,8 +849,8 @@
     "periodo": "6 oct – 12 oct"
    },
    "pendientes": 9,
-   "sin_stock": 3,
-   "sin_stock_nota": "Inicio del Seller Center",
+   "sin_stock": null,
+   "sin_stock_nota": "Dato anterior mal leído (era «Categoría incorrecta»); se corrige al abrir la tienda",
    "aviso": "Miravia: todos los productos de esta tienda están bloqueados en España (restricción de AliExpress por pedidos no recibidos)"
   }
  }

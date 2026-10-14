@@ -265,7 +265,10 @@ def mv_top(pid):
     stale = '' if m['fecha'] == D['actualizado'] else f" · datos del {act}"
     t7 = [tile('Ventas Miravia', eur(m['d7'][0], 2), delta(m['d7'][0], m['p7'][0]) + f" · {e(m['d7'][1])} pedidos", 'v-ok'),
           tile('Ventas AliExpress', '-', 'Sin desglose de 7 días en el panel', 'v-muted'), ads_tile]
-    if pid == 'somnia-mv': t7.append(tile('AliExpress Ads', '-', 'Pendiente de consultar el panel de AliExpress Ads', 'v-muted'))
+    if pid == 'somnia-mv':
+        aa = m.get('ae_ads_d7')
+        t7.append(tile('AliExpress Ads', eur(aa['inv'], 2), f"{aa['periodo']} · ventas {eur(aa['ventas'], 2)} · {e(aa.get('pedidos'))} pedidos" + (f" · ROAS {e(aa['roas'], 2)} (panel)" if aa.get('roas') is not None else ''), 'v-warn')
+                  if aa else tile('AliExpress Ads', '-', 'Pendiente de consultar el panel de AliExpress Ads', 'v-muted'))
     top = (banner + "<div class='blk-row'>"
         + block('Últimos 7 días', P7 + stale, t7)
         + block('Últimos 30 días', f'{P30}{stale}', [
@@ -287,6 +290,55 @@ def mv_top(pid):
     charts += "</div>"
     return top + charts + cierre(pid) + sub_sep('Estado de la tienda')
 som_top, do_top = mv_top('somnia-mv'), mv_top('duermete-mv')
+
+def mv_salud(pid):
+    """Estado de la tienda de Miravia (canal Miravia + AliExpress) a partir de miravia.<pid>.salud."""
+    S = D['miravia'][pid]['salud']; F = fd(S['fecha']) + (f" · {S['hora']}" if S.get('hora') else '')
+    def pv(x): return float(x.rstrip('%')) if x else None
+    def okm(v, obj):   # cumple el objetivo
+        if v is None or not obj: return None
+        o = float(re.sub(r'[^\d.]', '', obj)); return v >= o if obj[0] in '≥>' else v <= o if obj[0] == '≤' else v < o
+    def mrow(lab, m, extra=''):
+        if not m: return ''
+        v = pv(m['v']); ok = okm(v, m['obj'])
+        cls = '' if ok is None else 'k-ok' if ok else 'k-crit'
+        return f"<tr><td>{lab}</td><td class=\"{cls}\">{m['v'] or '-'}</td><td>Objetivo {html.escape(m['obj'] or '-')} · {'✓ OK' if ok else '❌ KO' if ok is False else 'sin datos'}{extra}</td></tr>"
+    def kcard(t, rows): return f"<div class=\"kpi-card\">\n    <div class=\"kpi-head\">{t}</div>\n    <table class=\"kpi-table\">\n      " + '\n      '.join(r for r in rows if r) + "\n    </table>\n  </div>"
+    TRAD = {'Item Not Received (NR) of your store’s overseas fulfillment orders has exceeded the platform’s assessment standard':
+            'pedidos no recibidos (NR) de envíos internacionales por encima del estándar: AliExpress restringe las líneas 3PL a países de alto riesgo'}
+    def fpen(p):
+        p = dict(p, motivo=TRAD.get(p.get('motivo'), p.get('motivo')))
+        per = (f"del {fd(p['desde'])} al {fd(p['hasta'])}" if p.get('hasta') else f"desde {fd(p['desde'])}") if p.get('desde') else ''
+        return ' · '.join(x for x in [per, html.escape(p.get('motivo') or ''), html.escape(p.get('estado') or '')] if x)
+    hoy = D['actualizado']
+    activa = lambda p: p.get('hasta') and p['hasta'] >= hoy
+    pen = [f"<tr><td>Miravia · {html.escape(p['tipo'] or '-')} ({fd(p['fecha'])})</td><td class=\"{'k-crit' if activa(p) else 'k-warn'}\">{'En curso' if activa(p) else 'Histórica'}</td><td>{fpen(p)}</td></tr>" for p in S['pen_lista_mv']]
+    pen += [f"<tr><td>AliExpress · {html.escape(p['tipo'] or '-')} ({fd(p['fecha'])})</td><td class=\"{'k-crit' if activa(p) else 'k-warn'}\">{'En curso' if activa(p) else 'Histórica'}</td><td>{fpen(p)}</td></tr>" for p in S['pen_lista_ae']]
+    if S.get('pen_ae_pi'): pen.append(f"<tr><td>AliExpress · propiedad intelectual / prohibidos</td><td class=\"k-warn\">{e(S['pen_ae_pi'])}</td><td>0 puntos · bloqueos de producto (las revisadas, en Alemania por RAP/EPR)</td></tr>")
+    P = S.get('puntos_ae') or {}
+    pen.append(f"<tr><td>Puntos AE · infracciones de transacción</td><td class=\"{'k-crit' if (P.get('transaccion') or 0) >= 12 else 'k-ok'}\">{e(P.get('transaccion'))} puntos</td><td>Con 12 puntos la cuenta se congela 7 días · información de producto {e(P.get('producto'))} · PI {e(P.get('pi'))}</td></tr>")
+    mv, ae = S['mv'], S['ae']
+    cards = [kcard(f"Penalizaciones · {e(S.get('pen_mv'))} Miravia · {e(S.get('pen_ae'))} AliExpress · {F}", pen),
+             kcard(f"Calidad de servicio — Canal Miravia · revisión del panel {S.get('revision') or '-'}", [
+                 mrow('Envíos en plazo', mv.get('envio_plazo')), mrow('Paquetes sin preparar', mv.get('sin_preparar')), mrow('Entrega a tiempo', mv.get('entrega_tiempo')),
+                 mrow('Cancelaciones', mv.get('cancelaciones')), mrow('Devoluciones', mv.get('devoluciones')), mrow('Valoraciones del vendedor', mv.get('valoraciones')),
+                 mrow('Respuesta del chat de tienda', mv.get('chat'))]
+                 + [f"<tr><td>{html.escape(p)}</td><td class=\"k-warn\">{html.escape(v)}</td><td>Catálogo y conducta</td></tr>" for p, v in S.get('politicas_mv', [])]),
+             kcard('Calidad de servicio — Canal AliExpress', [
+                 mrow('Envíos no verificados', ae.get('no_verificados')), mrow('Envíos en plazo (2 días hábiles)', ae.get('envio_plazo')), mrow('Escaneo en 72 horas', ae.get('escaneo72')),
+                 mrow('Entrega a tiempo', ae.get('entrega_tiempo')), mrow('Omisión del envío', ae.get('omision')),
+                 mrow('Pedidos no recibidos (NR)', ae.get('nr'), ' · a partir del 10% AliExpress resta 12 puntos y congela la cuenta 7 días' if (pv((ae.get('nr') or {}).get('v')) or 0) >= 10 else '')])]
+    acts = []
+    for p in S['pen_lista_mv'] + S['pen_lista_ae']:
+        if activa(p): acts.append(('p-urg', 'Urgente', f"{html.escape(p['tipo'])} en curso desde el {fd(p['desde'])} hasta el {fd(p['hasta'])} ({html.escape(p.get('estado') or '-')})" + (f" — {html.escape(TRAD.get(p['motivo'], p['motivo']))}" if p.get('motivo') else '')))
+    nr = pv((ae.get('nr') or {}).get('v'))
+    if nr is not None and nr >= 10: acts.append(('p-urg', 'Urgente', f"Pedidos no recibidos en AliExpress {ae['nr']['v']}: por encima del 10% (en enero de 2026 supuso 12 puntos y 7 días de congelación)"))
+    for lab, m in (('Envíos no verificados AE', ae.get('no_verificados')), ('Entrega a tiempo Miravia', mv.get('entrega_tiempo')), ('Entrega a tiempo AE', ae.get('entrega_tiempo')),
+                   ('Valoraciones del vendedor', mv.get('valoraciones')), ('Chat de tienda', mv.get('chat'))):
+        if m and okm(pv(m['v']), m['obj']) is False: acts.append(('p-hi', 'Alta', f"{lab} {m['v']} (objetivo {html.escape(m['obj'])})"))
+    acc = ('\n  <div class="actions">\n    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Puntos de atención</div>\n'
+           + '\n'.join(f'    <div class="action"><span class="pri {c}">{p}</span><span class="action-txt">{t}</span></div>' for c, p, t in acts) + '\n  </div>') if acts else ''
+    return '  ' + '\n  '.join(cards) + acc
 
 # =====================================================================
 # MONTAJE
@@ -459,6 +511,8 @@ for pid, top in TOPS.items():
     rest = body[g.end():]
     if pid in MK:  # contadores fijos del 1-oct: sustituidos por «Estado de la tienda» en vivo
         rest = re.sub(r'\s*<div class="counters">.*?\n  </div>\n', '\n', rest, count=1, flags=re.S)
+    if pid in D.get('miravia', {}) and D['miravia'][pid].get('salud'):   # estado de la tienda en vivo (tools/miravia_salud.js)
+        rest = mv_salud(pid) + '\n' + rest[rest.rfind('</div>'):]
     body = body[:g.start()].rstrip() + '\n' + top + '\n  ' + keep_sep(g.group(0)) + '\n' + rest
     out = out[:ps] + body + out[pe:]
 
