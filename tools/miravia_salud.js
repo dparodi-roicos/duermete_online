@@ -47,12 +47,12 @@
     const fecha = (r.match(/^(\d{4}-\d{2}-\d{2})/) || [])[1];
     const desde = (r.match(/Desde (\d{4}-\d{2}-\d{2})(?: hasta (\d{4}-\d{2}-\d{2}))?/) || []);
     const estado = (r.match(/(Pendiente de apelación|Apelación rechazada|Apelación aprobada|En apelación|No requiere apelación)/) || [])[1] || null;
-    const tipo = (r.match(/(Retención de pagos|Desactivación de productos|Política de transacciones y otros|Política de propiedad intelectual[^0-9]*?restringidos|Política de calidad del contenido del producto|Penalizaciones de Cuenta)/) || [])[1] || null;
-    const motivo = (r.match(/(Fraude de Cumplimiento[^.]*|NR\)[^.]*|Item Not Received[^.]*|mala calidad de[^.]*|congel[^.]*)/i) || [])[1] || null;
+    const tipo = (r.match(/(Retención de pagos|Desactivación de productos|Política de transacciones y otros|Política de propiedad intelectual[^0-9]*?restringidos|Política de calidad del contenido del producto|Penalizaciones de Cuenta|Restricción de ventas[^0-9]*)/) || [])[1] || null;
+    const motivo = (r.match(/(Fraude de Cumplimiento[^.]*|NR\)[^.]*|Item Not Received[^.]*|mala calidad de[^.]*|congel[^.]*|bloquea[^.]*)/i) || [])[1] || null;
     return { fecha, tipo, estado, desde: desde[1] || null, hasta: desde[2] || null, motivo: motivo ? motivo.slice(0, 160) : null };
   };
-  out.pen_lista_mv = pm.rows.map(fila);
-  const ae = pa.rows.map(fila);
+  out.pen_lista_mv = pm.rows.map(fila).filter(x => x.fecha);   // sin penalizaciones la tabla trae una fila vacía
+  const ae = pa.rows.map(fila).filter(x => x.fecha);
   out.pen_lista_ae = ae.filter(x => !/propiedad intelectual/i.test(x.tipo || ''));
   out.pen_ae_pi = out.pen_ae != null ? out.pen_ae - out.pen_lista_ae.length : null;   // la tabla está paginada: el resto son de PI / prohibidos
   out.hora = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit' }).format(new Date());

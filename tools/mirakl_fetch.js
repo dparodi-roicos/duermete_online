@@ -1,5 +1,5 @@
 // Ejecutar en una pestaña del panel de Mirakl (marketplace-dashboard) con la tienda de Duérmete abierta.
-// Devuelve ventas CON IVA (impuestos y portes incluidos) de: últimos 7 días, 7 días anteriores, últimos 30 días y mes en curso, INCLUYENDO HOY (igual que el panel),
+// Devuelve ventas como la portada del panel («Impuestos no incluidos» = sin IVA, portes incluidos; Carrefour, MdM y Brico van con IVA porque no lo separan) de: últimos 7 días, 7 días anteriores, últimos 30 días y mes en curso, INCLUYENDO HOY (igual que el panel),
 // y el estado actual de la tienda (pendientes de envío, tardíos, incidencias, mensajes no leídos, saldos, alertas, ofertas activas).
 // Opcional: window.__MES_CIERRE = 'YYYY-MM' antes de ejecutar para sacar también el mes cerrado (con y sin IVA).
 (async () => {
@@ -21,17 +21,18 @@
   const out = { tienda: document.title, host: location.host, rangos: { d7: R.d7, p7: R.p7, d30: R.d30, mtd: R.mtd } };
   const st = {};
   for (const [k, [a, b]] of Object.entries(R)) {
-    const s = await fetch('/marketplace-dashboard/private/sales?' + q(a, b, k === 'mes' ? 'false' : 'true')).then(r => r.json()).catch(() => ({}));   // con IVA, como el panel con «Con impuestos incluidos»
+    const s = await fetch('/marketplace-dashboard/private/sales?' + q(a, b, 'false')).then(r => r.json()).catch(() => ({}));   // «Impuestos no incluidos» (= sin IVA), como la portada del panel; Carrefour, MdM y Brico no separan el IVA
     const c = await fetch('/marketplace-dashboard/private/order-count?' + new URLSearchParams({ startDate: `${a}T00:00:00.000${off(a)}`, endDate: `${b}T23:59:59.999${off(b)}` })).then(r => r.json()).catch(() => ({}));
     out[k] = [s.saleRevenue ?? null, c.ordersCount ? c.ordersCount.reduce((x, y) => x + y.value, 0) : null];
-    if (k === 'd30') st.carrito = s.averageBasket ?? null;
+    if (k === 'd7') st.carrito = s.averageBasket ?? null;   // «Media Carr.» de la portada con el filtro «Últimos 7 días»
     if (k === 'mes') { const t = await fetch('/marketplace-dashboard/private/sales?' + q(a, b, 'true')).then(r => r.json()).catch(() => ({})); out.mes_con_iva = t.saleRevenue ?? null; }
   }
   // Estado de la tienda en este momento (lo que enseña la portada del panel)
   const get = (u) => fetch(u).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const cta = await get('/marketplace-dashboard/private/call-to-action');
   Object.assign(st, { envio: cta.orderInShippingCount ?? null, tardios: cta.lateOrderCount ?? null, incid: cta.inProgressIncidentCount ?? null,
-    incid_new: cta.newIncidentCount ?? null, acept: cta.orderInWaitingAcceptance ?? null, devol: cta.returnInProgressCount ?? null });
+    incid_new: cta.newIncidentCount ?? null, acept: cta.orderInWaitingAcceptance ?? null, devol: cta.returnInProgressCount ?? null,
+    incid_disp: cta.disputedIncidentEnabled ? (cta.disputedIncidentCount ?? null) : null, devol_sol: cta.returnsEnabled ? (cta.returnWaitingAcceptanceCount ?? null) : null });
   const ib = await get('/inbox/threads/stats?computeTotalMessageCount=false&critical=COUNT&maxToCount=1001&operatorInbox=false'); // misma consulta que la portada
   st.msgs = ib.unreadThreadCount ?? null; st.msgs_crit = ib.criticalThreads ? ib.criticalThreads.count : null;
   const bal = await get('/marketplace-dashboard/private/balance');
@@ -47,10 +48,11 @@
   const sd = await get('/marketplace-dashboard/private/shop-detail');
   const pr = await get('/marketplace-dashboard/private/platform-rules');
   const reglas = (l) => (l || []).map(x => [x.criterion, x.currentValue, x.threshold, x.satisfyRule, x.period]);
-  const r1 = (v) => v == null ? null : Math.round(v * 10) / 10;
+  const r2 = (v) => v == null ? null : Math.round(v * 100) / 100;   // el panel enseña las tasas con 2 decimales y los tiempos en d/h/min
   const stats = async ([a, b]) => { const s = await get('/marketplace-dashboard/private/quality-control/statistics?' + new URLSearchParams({ startDate: `${a}T00:00:00.000${off(a)}`, endDate: `${b}T23:59:59.999${off(b)}` }));
-    return s.totalOrders == null ? null : { ped: s.totalOrders, tard: r1(s.lateShipmentRate), incid: r1(s.incidentRate), acept: r1(s.acceptanceRate), t_acept: r1(s.acceptanceTimeInSeconds / 3600),
-      resp: r1(s.responseTimeInSeconds / 3600), envio: r1(s.timeToShipInSeconds / 3600), reemb: r1(s.refundRate), devol: r1(s.returnRate), cancel: r1(s.cancelationRate), rech: r1(s.autoRefusedRate), track: r1(s.trackingRate) }; };
+    return s.totalOrders == null ? null : { ped: s.totalOrders, rech: r2(s.autoRefusedRate), t_acept_s: s.acceptanceTimeInSeconds ?? null, acept: r2(s.acceptanceRate), cancel: r2(s.cancelationRate),
+      incid: r2(s.incidentRate), resp_s: s.responseTimeInSeconds ?? null, tard: r2(s.lateShipmentRate), reemb: r2(s.refundRate), devol: s.isReturnsEnabledForPlatformModel ? r2(s.returnRate) : 'off',
+      envio_s: s.timeToShipInSeconds ?? null, track: r2(s.trackingRate) }; };
   const kycTxt = String(sd.shopKyc?.reason || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
   out.calidad = { nota: sd.grade ?? null, valoraciones: sd.evaluationsCount ?? null, premium: pr.premium ?? sd.premium ?? null, suspendida: pr.suspended ?? null, estado: sd.state ?? null,
     kyc: sd.shopKyc?.status ?? null, falta_2fa: /two-factor|dos factores|2FA/i.test(kycTxt),

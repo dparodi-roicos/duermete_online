@@ -107,10 +107,13 @@ def cierre(pid):
         d = h['meses'][m]
         if h['tipo'] == 'mk':
             ped = re.search(r'(\d[\d.]*) (pedidos|líneas)', d.get('det_sin') or '')   # nº de pedidos/líneas guardado en el detalle
-            ts = [tile('Ventas con IVA', eur(d['con'], 2) if d['con'] is not None else '-', ' · '.join(x for x in [d.get('det_con', ''), ped.group(0) if ped else ''] if x), 'v-ok' if d['con'] else 'v-muted'),
+            cm = globals().get('MK', {}).get(pid, {}).get('campo', 'con')
+            v = d.get(cm) if d.get(cm) is not None else d.get('con')
+            ts = [tile('Ventas sin IVA' if cm == 'sin' else 'Ventas con IVA', eur(v, 2) if v is not None else '-',
+                       ' · '.join(x for x in [('Impuestos no incluidos, como la portada' if cm == 'sin' else d.get('det_con', '')), ped.group(0) if ped else ''] if x), 'v-ok' if v else 'v-muted'),
                   tile('Inversión en publicidad', eur(d['inv'], 2) if d['inv'] is not None else '-', d.get('det_inv', ''), 'v-warn' if d['inv'] else 'v-muted'),
                   tile('Ventas por publicidad', eur(d['vpub'], 2) if d['vpub'] is not None else '-',
-                       ' · '.join(x for x in [ratio(d['inv'], d['vpub'], 'ACOS'), ratio(d['inv'], d['con'], 'TACOS')] if x), '' if d['vpub'] else 'v-muted')]
+                       ' · '.join(x for x in [ratio(d['inv'], d['vpub'], 'ACOS'), ratio(d['inv'], v, 'TACOS')] if x), '' if d['vpub'] else 'v-muted')]
         else:
             inv = None if d['inv_mv'] is None and d['inv_ae'] is None else (d['inv_mv'] or 0) + (d['inv_ae'] or 0)
             vp = None if d['vpub_mv'] is None and d['vpub_ae'] is None else (d['vpub_mv'] or 0) + (d['vpub_ae'] or 0)
@@ -171,11 +174,11 @@ amz_top = (
     amz_status
     + "<div class='blk-row'>"
     + block('Últimos 7 días', AP7, [
-        tile('Ventas', eur(a7['ventas'], 2), delta(a7['ventas'], A['p7']['ventas']) + f" · {e(a7['lineas'])} líneas · {e(a7['uds'])} uds", 'v-ok'),
+        tile('Ventas con IVA', eur(a7['ventas'], 2), delta(a7['ventas'], A['p7']['ventas']) + f" · {e(a7['lineas'])} líneas · {e(a7['uds'])} uds", 'v-ok'),
         tile('Inversión Ads', eur(a7['ads_inv'], 2), f'Sponsored Products · {ADS7} (días cerrados)', 'v-warn'),
         tile('Ventas por Ads', eur(a7['ads_ventas'], 2), ' · '.join(x for x in [acos(a7['ads_inv'], a7['ads_ventas']), tacos(a7['ads_inv'], a7.get('ventas_cerr', a7['ventas']))] if x) + f' · {ADS7}')])
     + block(f'{MES_ACTUAL} hasta la fecha', APMTD, [
-        tile('Ventas', eur(am['ventas'], 2), f"{e(am['lineas'])} líneas · {e(am['uds'])} uds", 'v-ok'),
+        tile('Ventas con IVA', eur(am['ventas'], 2), f"{e(am['lineas'])} líneas · {e(am['uds'])} uds", 'v-ok'),
         tile('Inversión Ads', eur(am['ads_inv'], 2), f'{ADSMTD} (días cerrados)', 'v-warn'),
         tile('Ventas por Ads', eur(am['ads_ventas'], 2), ' · '.join(x for x in [acos(am['ads_inv'], am['ads_ventas']), tacos(am['ads_inv'], am.get('ventas_cerr', am['ventas']))] if x) + ' · aún sube: Amazon atribuye ventas hasta 14 días después del clic')],
         'Ventas con IVA: «Ventas de productos pedidos» del Panel de ventas de Seller Central (mismas fechas) · publicidad de la API de Amazon Ads hasta ayer')
@@ -189,15 +192,15 @@ amz_top = (
 )
 
 # ---------------- MIRAKL ----------------
-MK = {
- 'cfe':  dict(name='Carrefour ES', div=1, ads='No gestionamos su publicidad', iva='con IVA (Carrefour no desglosa impuestos)'),
- 'cfr':  dict(name='Carrefour FR', div=1, ads='No gestionamos su publicidad', iva='con IVA (Carrefour no desglosa impuestos)'),
- 'adeo': dict(name='Leroy Merlin', div=1, ads='Lo gestiona Valiuz (externo) · sin informe de gasto'),
- 'cfib': dict(name='Conforama ES', div=1, ads='El panel no tiene módulo de publicidad'),
- 'conforama': dict(name='Conforama FR', div=1, ads='Sin campañas'),
- 'worten': dict(name='Worten PT', div=1, ads='Mirakl Ads', lisboa=True, con_ads=True),
- 'mdm':  dict(name='Maisons du Monde', div=1, ads='Sin campañas', iva='con IVA (el panel no desglosa impuestos)'),
- 'brico': dict(name='Brico Dépôt', div=1, ads='El panel no tiene módulo de publicidad'),
+MK = {   # campo = cifra que enseña la portada de cada panel: 'sin' (impuestos no incluidos = sin IVA) o 'con' (el panel no separa el IVA)
+ 'cfe':  dict(name='Carrefour ES', div=1, campo='con', ads='No gestionamos su publicidad', iva='CON IVA · Carrefour no separa el IVA: su panel enseña la venta con IVA'),
+ 'cfr':  dict(name='Carrefour FR', div=1, campo='con', ads='No gestionamos su publicidad', iva='CON IVA · Carrefour no separa el IVA: su panel enseña la venta con IVA'),
+ 'adeo': dict(name='Leroy Merlin', div=1, campo='sin', ads='Lo gestiona Valiuz (externo) · sin informe de gasto', iva='SIN IVA · «Impuestos no incluidos», igual que la portada del panel (los impuestos de Mirakl son el IVA)'),
+ 'cfib': dict(name='Conforama ES', div=1, campo='sin', ads='El panel no tiene módulo de publicidad', iva='SIN IVA · «Impuestos no incluidos», igual que la portada del panel (los impuestos de Mirakl son el IVA)'),
+ 'conforama': dict(name='Conforama FR', div=1, campo='sin', ads='Sin campañas', iva='SIN IVA · «Impuestos no incluidos», igual que la portada del panel (los impuestos de Mirakl son el IVA)'),
+ 'worten': dict(name='Worten PT', div=1, campo='sin', ads='Mirakl Ads', lisboa=True, con_ads=True, iva='SIN IVA · «Impuestos no incluidos», igual que la portada del panel (los impuestos de Mirakl son el IVA) (IVA de Portugal, 23 %)'),
+ 'mdm':  dict(name='Maisons du Monde', div=1, campo='con', ads='Sin campañas', iva='CON IVA · Maisons du Monde no separa el IVA: su panel enseña la venta con IVA'),
+ 'brico': dict(name='Brico Dépôt', div=1, campo='con', ads='El panel no tiene módulo de publicidad', iva='CON IVA · Brico Dépôt no separa el IVA: su panel enseña la venta con IVA'),
 }
 for k in MK: MK[k].update(D['mirakl'][k])
 def mk_top(key):
@@ -219,13 +222,13 @@ def mk_top(key):
     tz = 'hora de Lisboa' if d.get('lisboa') else 'hora de Madrid'
     stale = f" · datos del {fd(d['fecha'])}" if d.get('fecha') and d['fecha'] != D['actualizado'] else ''
     blocks = ("<div class='blk-row'>"
-        + block('Últimos 7 días', P7 + stale, [tile('Ventas', eur(s7 / dv), (delta(s7, sp) or 'sin ventas') + ped(o7), 'v-ok' if s7 else 'v-muted'), ads7])
-        + block('Últimos 30 días', P30 + stale, [tile('Ventas', eur(s30 / dv), ped(o30).lstrip(' ·'), 'v-ok' if s30 else 'v-muted'),
-                                         tile(f'{MES_ACTUAL} hasta la fecha', eur(sm / dv), PMTD + ped(om), '')])
+        + block('Últimos 7 días', P7 + stale, [tile(f"Ventas {'sin' if d['campo'] == 'sin' else 'con'} IVA", eur(s7 / dv), (delta(s7, sp) or 'sin ventas') + ped(o7), 'v-ok' if s7 else 'v-muted'), ads7])
+        + block('Últimos 30 días', P30 + stale, [tile(f"Ventas {'sin' if d['campo'] == 'sin' else 'con'} IVA", eur(s30 / dv), ped(o30).lstrip(' ·'), 'v-ok' if s30 else 'v-muted'),
+                                         tile(f'{MES_ACTUAL} hasta la fecha', eur(sm / dv), ('Sin IVA · ' if d['campo'] == 'sin' else 'Con IVA · ') + PMTD + ped(om), '')])
         + "</div>")
-    vals, lb = serie(key, 'con', 'sin')
+    vals, lb = serie(key, d['campo'], 'con')
     charts = "<div class='chart-row'>" + chart_card(titulo_evol(key), bar_chart(vals, lb),
-        f"Ingresos por ventas del panel, con IVA y portes incluidos, {tz} · " + (d['iva'] if 'iva' in d else 'en el panel: «Configuración del valor bruto de mercancías» → «Con impuestos incluidos»') + ' · 7 días, 30 días y mes en curso: igual que el panel de Mirakl, incluyen el día de hoy hasta la hora de la actualización' if d.get('rangos') else ' · 7 días, 30 días y mes en curso: días cerrados, hoy no cuenta')
+        f"{d['iva']} · ingresos por ventas del panel, portes incluidos, {tz}" + ' · 7 días, 30 días y mes en curso: igual que el panel de Mirakl, incluyen el día de hoy hasta la hora de la actualización' if d.get('rangos') else ' · 7 días, 30 días y mes en curso: días cerrados, hoy no cuenta')
     inv, lb = serie(key, 'inv'); vp, _ = serie(key, 'vpub')
     if any(v for v in inv):
         charts += chart_card('Inversión en Ads y ventas por Ads', ads_chart(inv, vp, lb), 'Mirakl Ads · sin datos de publicidad antes de julio', LEG_ADS)
@@ -272,14 +275,28 @@ def mk_calidad(key):
     if C.get('suspension_reglas'): cards.append(kcard('Reglas de suspensión', [regla(r, 'susp') for r in C['suspension_reglas']]))
     s7, s30 = C.get('s7') or {}, C.get('s30') or {}
     if s30.get('ped') or s7.get('ped'):
-        def srow(lab, k, u):
-            a, b = s30.get(k), s7.get(k)
-            if a is None and b is None: return None
-            return tr(lab, val(a, u), f"Últimos 7 días: {val(b, u)}", 'k-crit' if k == 'tard' and (a or 0) >= 10 else '')
-        st = [srow('Envíos tardíos', 'tard', '%'), srow('Tasa de incidencias', 'incid', '%'), srow('Porcentaje de aceptación', 'acept', '%'), srow('Tiempo de aceptación', 't_acept', 'h'),
-              srow('Tiempo de respuesta', 'resp', 'h'), srow('Plazo de envío', 'envio', 'h'), srow('Tasa de reembolsos', 'reemb', '%'), srow('Tasa de devoluciones', 'devol', '%'),
-              srow('Tasa de cancelación', 'cancel', '%'), srow('Rechazos automáticos', 'rech', '%'), srow('Seguimiento', 'track', '%')]
-        cards.append(kcard(f"Estadísticas · últimos 30 días ({e(s30.get('ped'))} pedidos) · 7 días ({e(s7.get('ped'))} pedidos)", [r for r in st if r]))
+        # mismo bloque, orden, nombres y formato que «Control de calidad» de la portada de Mirakl con el filtro «Últimos 7 días»
+        def pct(v): return 'n/c' if v is None else e(v, 0 if float(v) == int(float(v)) else 2) + ' %'
+        def dur(sg, horas=None):
+            if sg is None and horas is not None: sg = horas * 3600
+            if sg is None: return 'n/c'
+            m = int(round(sg / 60)); dd, m = divmod(m, 1440); hh, m = divmod(m, 60)
+            return ' '.join(x for x in [f'{dd}d' if dd else '', f'{hh}h' if hh or dd else '', f'{m}min' if m or not (hh or dd) else ''] if x)
+        def srow(lab, k, kind):
+            a, b = s7.get(k), s30.get(k)
+            if k == 'devol' and 'off' in (a, b): return None   # el panel solo enseña la tasa de devolución si el marketplace gestiona devoluciones
+            f = pct if kind == '%' else (lambda v, k=k: dur(v, None))
+            if kind == 't':
+                a, b = s7.get(k + '_s'), s30.get(k + '_s')
+                if a is None and b is None: a, b = dur(None, s7.get(k)), dur(None, s30.get(k))   # datos antiguos en horas
+                else: a, b = dur(a), dur(b)
+            else: a, b = f(a), f(b)
+            return tr(lab, a, f"Últimos 30 días: {b}", 'k-crit' if k == 'tard' and (s7.get('tard') or 0) >= 10 else '')
+        st = [srow('Tasa de rechazos automáticos', 'rech', '%'), srow('Plazo de aceptación', 't_acept', 't'), srow('Tasa de aceptaciones', 'acept', '%'), srow('Tasa de cancelación', 'cancel', '%'),
+              srow('Tasa de incidencias', 'incid', '%'), srow('Tiempo de respuesta', 'resp', 't'), srow('Tasa de envíos tardíos', 'tard', '%'), srow('Tasa de reembolso', 'reemb', '%'),
+              srow('Tasa de devolución', 'devol', '%'), srow('Plazo envío', 'envio', 't'), srow('Tasa de seguimiento', 'track', '%')]
+        rg7 = (d.get('rangos') or {}).get('d7')
+        cards.append(kcard(f"Control de calidad del panel · últimos 7 días{f' ({fd(rg7[0])} – {fd(rg7[1])})' if rg7 else ''} · {e(s7.get('ped'))} pedidos · 30 días: {e(s30.get('ped'))} pedidos", [r for r in st if r]))
     acts = []
     al = (d.get('estado') or {}).get('alerta') or {}
     if estado == 'Suspendida': acts.append(('p-urg', 'Urgente', 'Tienda suspendida' + (' — ' + html.escape(' · '.join(al.get('r') or [])) if al.get('r') else '')))
@@ -313,18 +330,20 @@ def mk_estado(d):
     prox = f"Próxima facturación {fd(st['prox_fact'])}" if st.get('prox_fact') else ''
     ult = f"Pagado el {fd(st['ult_pago_f'])}" if st.get('ult_pago_f') else 'Sin pagos registrados en el panel'
     tiles = [
-        tile('Pdte envío', num(st.get('envio')), 'Pedidos en preparación', warn(st.get('envio'))),
-        tile('Tardíos', num(st.get('tardios')), 'Fuera de plazo de envío', warn(st.get('tardios'), True)),
-        tile('Incid. en curso', num(st.get('incid')), '', warn(st.get('incid'))),
-        tile('Nuevas incid.', num(st.get('incid_new')), '', warn(st.get('incid_new'), True)),
-        tile('Msgs no leídos', num(st.get('msgs')), f"{num(st.get('msgs_crit'))} críticos" if st.get('msgs_crit') is not None else 'Conversaciones sin leer', warn(st.get('msgs'))),
-        tile('Pdte aceptación', num(st.get('acept')), '', warn(st.get('acept'))),
+        tile('Pedidos en espera de envío', num(st.get('envio')), '', warn(st.get('envio'))),
+        tile('Pedidos tardíos', num(st.get('tardios')), '', warn(st.get('tardios'), True)),
+        tile('Incidencias en curso', num(st.get('incid')), '', warn(st.get('incid'))),
+        tile('Nueva incidencia', num(st.get('incid_new')), '', warn(st.get('incid_new'), True)),
+        *([tile('Incidencias en disputa', num(st.get('incid_disp')), '', warn(st.get('incid_disp'), True))] if st.get('incid_disp') is not None else []),
+        *([tile('Solicitudes de devolución', num(st.get('devol_sol')), '', warn(st.get('devol_sol')))] if st.get('devol_sol') is not None else []),
+        tile('Mensajes no leídos', num(st.get('msgs')), f"Mensajes críticos: {num(st.get('msgs_crit'))}" if st.get('msgs_crit') is not None else '', warn(st.get('msgs'))),
+        tile('Pedidos en espera de aceptación', num(st.get('acept')), '', warn(st.get('acept'))),
         tile('Devoluciones en curso', num(st.get('devol')), '', warn(st.get('devol'))),
         tile('Ofertas activas', num(st.get('ofertas')), '', ''),
-        tile('Media carrito 30d', eur(st.get('carrito') or None), 'Ingresos ÷ pedidos del panel' if st.get('carrito') else 'Sin pedidos en 30 días', ''),
+        tile('Media Carr.', eur(st.get('carrito') or None), 'Últimos 7 días · ' + ('sin IVA' if d.get('campo') == 'sin' else 'con IVA') if st.get('carrito') else 'Sin pedidos en 7 días', ''),
         tile('Saldo pendiente', eur(st.get('pend'), 2), 'Pendiente de liberar', ''),
         tile('Saldo a pagar', eur(st.get('pagar'), 2), prox, ''),
-        tile('Último pago', eur(st.get('ult_pago'), 2), ult, '')]
+        tile('Saldo pagado', eur(st.get('ult_pago'), 2), ult, '')]
     return banner + "<div class='blk-row'>" + block('Estado de la tienda', f"hoy {fd(d['fecha'])} a las {st.get('hora', '-')}", tiles,
                                                    'Portada del panel de Mirakl en el momento de la actualización diaria') + "</div>"
 
@@ -337,7 +356,7 @@ def mv_top(pid):
     ads_tile = (tile('Anuncios Miravia', eur(ad['inv'], 2), f"Sponsored Discovery · {ad['periodo']} · ingresos {eur(ad['ventas'], 2)}" + (f" · ROAS {e(ad['ventas'] / ad['inv'], 2)}" if ad['inv'] else ''), 'v-warn' if ad['inv'] else 'v-muted')
                 if ad.get('inv') is not None else tile('Anuncios Miravia', '-', 'Pendiente', 'v-muted'))
     stale = '' if m['fecha'] == D['actualizado'] else f" · datos del {act}"
-    t7 = [tile('Ventas Miravia', eur(m['d7'][0], 2), delta(m['d7'][0], m['p7'][0]) + f" · {e(m['d7'][1])} pedidos", 'v-ok'),
+    t7 = [tile('Ventas Miravia con IVA', eur(m['d7'][0], 2), delta(m['d7'][0], m['p7'][0]) + f" · {e(m['d7'][1])} pedidos", 'v-ok'),
           tile('Ventas AliExpress', '-', 'Sin desglose de 7 días en el panel', 'v-muted'), ads_tile]
     if pid == 'somnia-mv':
         aa = m.get('ae_ads_d7')
@@ -347,8 +366,8 @@ def mv_top(pid):
         + block('Últimos 7 días', P7 + stale, t7)
         + block('Últimos 30 días', f'{P30}{stale}', [
             tile('Total 30d Miravia + AliExpress', eur((m['d30'][0] or 0) + (m['ae_d30'] or 0), 2) if m['d30'][0] is not None and m['ae_d30'] is not None else '-', 'Con IVA · suma de los dos canales', 'v-ok'),
-            tile('Revenue 30d Miravia', eur(m['d30'][0], 2), f"{e(m['d30'][1])} pedidos", 'v-ok'),
-            tile('Revenue 30d AliExpress', eur(m['ae_d30'], 2), 'Inicio del Seller Center', 'v-ok'),
+            tile('Revenue 30d Miravia', eur(m['d30'][0], 2), f"Con IVA · {e(m['d30'][1])} pedidos", 'v-ok'),
+            tile('Revenue 30d AliExpress', eur(m['ae_d30'], 2), 'Con IVA · inicio del Seller Center', 'v-ok'),
             tile('Tráfico 30d', e(m['uv_d30']), 'Visitantes únicos · canal Miravia', ''),
             tile('Pedidos pendientes', e(m['pendientes']), f'Aviso del inicio del Seller Center ({act})', 'v-warn' if m['pendientes'] else ''),
             tile('Sin stock', e(m['sin_stock']), m.get('sin_stock_nota', ''), 'v-warn' if m['sin_stock'] else '')])
@@ -379,13 +398,15 @@ def mv_salud(pid):
         return f"<tr><td>{lab}</td><td class=\"{cls}\">{m['v'] or '-'}</td><td>Objetivo {html.escape(m['obj'] or '-')} · {'✓ OK' if ok else '❌ KO' if ok is False else 'sin datos'}{extra}</td></tr>"
     def kcard(t, rows): return f"<div class=\"kpi-card\">\n    <div class=\"kpi-head\">{t}</div>\n    <table class=\"kpi-table\">\n      " + '\n      '.join(r for r in rows if r) + "\n    </table>\n  </div>"
     TRAD = {'Item Not Received (NR) of your store’s overseas fulfillment orders has exceeded the platform’s assessment standard':
-            'pedidos no recibidos (NR) de envíos internacionales por encima del estándar: AliExpress restringe las líneas 3PL a países de alto riesgo'}
+            'pedidos no recibidos (NR) de envíos internacionales por encima del estándar: AliExpress restringe las líneas 3PL a países de alto riesgo',
+            'Item Not Received (NR) has significantly exceeded the platform’s assessment standard':
+            'pedidos no recibidos (NR) muy por encima del estándar: AliExpress bloquea las ventas de la tienda en España'}
     def fpen(p):
         p = dict(p, motivo=TRAD.get(p.get('motivo'), p.get('motivo')))
         per = (f"del {fd(p['desde'])} al {fd(p['hasta'])}" if p.get('hasta') else f"desde {fd(p['desde'])}") if p.get('desde') else ''
         return ' · '.join(x for x in [per, html.escape(p.get('motivo') or ''), html.escape(p.get('estado') or '')] if x)
     hoy = D['actualizado']
-    activa = lambda p: p.get('hasta') and p['hasta'] >= hoy
+    activa = lambda p: (p.get('hasta') and p['hasta'] >= hoy) or (not p.get('hasta') and p.get('estado') == 'Pendiente de apelación')   # sin fecha de fin y sin resolver = sigue en curso
     pen = [f"<tr><td>Miravia · {html.escape(p['tipo'] or '-')} ({fd(p['fecha'])})</td><td class=\"{'k-crit' if activa(p) else 'k-warn'}\">{'En curso' if activa(p) else 'Histórica'}</td><td>{fpen(p)}</td></tr>" for p in S['pen_lista_mv']]
     pen += [f"<tr><td>AliExpress · {html.escape(p['tipo'] or '-')} ({fd(p['fecha'])})</td><td class=\"{'k-crit' if activa(p) else 'k-warn'}\">{'En curso' if activa(p) else 'Histórica'}</td><td>{fpen(p)}</td></tr>" for p in S['pen_lista_ae']]
     if S.get('pen_ae_pi'): pen.append(f"<tr><td>AliExpress · propiedad intelectual / prohibidos</td><td class=\"k-warn\">{e(S['pen_ae_pi'])}</td><td>0 puntos · bloqueos de producto (las revisadas, en Alemania por RAP/EPR)</td></tr>")
@@ -404,7 +425,7 @@ def mv_salud(pid):
                  mrow('Pedidos no recibidos (NR)', ae.get('nr'), ' · a partir del 10% AliExpress resta 12 puntos y congela la cuenta 7 días' if (pv((ae.get('nr') or {}).get('v')) or 0) >= 10 else '')])]
     acts = []
     for p in S['pen_lista_mv'] + S['pen_lista_ae']:
-        if activa(p): acts.append(('p-urg', 'Urgente', f"{html.escape(p['tipo'])} en curso desde el {fd(p['desde'])} hasta el {fd(p['hasta'])} ({html.escape(p.get('estado') or '-')})" + (f" — {html.escape(TRAD.get(p['motivo'], p['motivo']))}" if p.get('motivo') else '')))
+        if activa(p): acts.append(('p-urg', 'Urgente', f"{html.escape(p['tipo'])} en curso desde el {fd(p['desde'])}" + (f" hasta el {fd(p['hasta'])}" if p.get('hasta') else ' (sin fecha de fin)') + f" ({html.escape(p.get('estado') or '-')})" + (f" — {html.escape(TRAD.get(p['motivo'], p['motivo']))}" if p.get('motivo') else '')))
     nr = pv((ae.get('nr') or {}).get('v'))
     if nr is not None and nr >= 10: acts.append(('p-urg', 'Urgente', f"Pedidos no recibidos en AliExpress {ae['nr']['v']}: por encima del 10% (en enero de 2026 supuso 12 puntos y 7 días de congelación)"))
     for lab, m in (('Envíos no verificados AE', ae.get('no_verificados')), ('Entrega a tiempo Miravia', mv.get('entrega_tiempo')), ('Entrega a tiempo AE', ae.get('entrega_tiempo')),
@@ -467,7 +488,7 @@ new_hdr = f"""<div class="header">
     <div>
       <div class="client-eyebrow">Roicos · Duérmete Online</div>
       <h1 class="report-title">Amazon · Miravia · Mirakl</h1>
-      <div class="report-meta">Actualizado {ACT} · todas las ventas con IVA, tal cual los paneles · cada bloque indica sus fechas (Amazon y Mirakl incluyen hoy hasta la hora de la actualización)</div>
+      <div class="report-meta">Actualizado {ACT} · ventas tal cual cada panel: Amazon y Miravia CON IVA · Mirakl SIN IVA («impuestos no incluidos»), salvo Carrefour, Maisons du Monde y Brico, que no separan el IVA y van CON IVA · cada bloque indica sus fechas (Amazon y Mirakl incluyen hoy hasta la hora de la actualización)</div>
     </div>
     <div class="summary-pills">
       <span class="pill-group-label">Amazon</span>
@@ -478,7 +499,7 @@ new_hdr = f"""<div class="header">
       <div class="pill"><span class="pill-num c-blue">{eur(som7)}</span><span class="pill-label">Somnia 7d</span></div>
       <div class="pill-vsep"></div>
       <span class="pill-group-label">Mirakl</span>
-      <div class="pill"><span class="pill-num c-blue">{eur(mk7)}</span><span class="pill-label">Ventas 7d</span></div>
+      <div class="pill"><span class="pill-num c-blue">{eur(mk7)}</span><span class="pill-label">Ventas 7d · como cada panel</span></div>
     </div>
   </div>
 </div>
@@ -596,7 +617,7 @@ for pid, top in TOPS.items():
     out = out[:ps] + body + out[pe:]
 
 # Pie
-out = re.sub(r'<footer>.*?</footer>', f'<footer>Duérmete Online · actualizado {ACT} · Roicos · Ventas con IVA, tal cual los paneles · Amazon ES: «Ventas de productos pedidos» del Panel de ventas de Seller Central y publicidad de la API de Amazon Ads; listings, Buy Box y estado de la cuenta a {fd(ES["fecha"])} · Mirakl: ingresos por ventas del panel con impuestos y portes incluidos (Carrefour, Maisons du Monde y Brico no desglosan impuestos; Worten en hora de Lisboa) · Miravia: importe pagado del canal Miravia con IVA; AliExpress solo 30 días · «-» = sin dato</footer>', out, flags=re.S)
+out = re.sub(r'<footer>.*?</footer>', f'<footer>Duérmete Online · actualizado {ACT} · Roicos · Ventas tal cual cada panel · Amazon ES (CON IVA): «Ventas de productos pedidos» del Panel de ventas de Seller Central y publicidad de la API de Amazon Ads; listings, Buy Box y estado de la cuenta a {fd(ES["fecha"])} · Mirakl: ingresos por ventas de la portada, SIN IVA («impuestos no incluidos») y portes incluidos; Carrefour, Maisons du Monde y Brico no separan el IVA y van CON IVA; Worten en hora de Lisboa · Miravia (CON IVA): importe pagado del canal Miravia; AliExpress solo 30 días · «-» = sin dato</footer>', out, flags=re.S)
 out = out.replace('</script>', '''
 function selMes(pid, m) {
   var c = document.getElementById('cierre-' + pid);
