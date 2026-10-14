@@ -43,5 +43,17 @@
   st.ofertas = pe.length ? pe[pe.length - 1].activeOffersCount : null;
   st.hora = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit' }).format(new Date());
   out.estado = st;
+  // Control de calidad (bloque «Control de calidad» de la portada): valoración, KYC, reglas de premium/suspensión y estadísticas de 7 y 30 días
+  const sd = await get('/marketplace-dashboard/private/shop-detail');
+  const pr = await get('/marketplace-dashboard/private/platform-rules');
+  const reglas = (l) => (l || []).map(x => [x.criterion, x.currentValue, x.threshold, x.satisfyRule, x.period]);
+  const r1 = (v) => v == null ? null : Math.round(v * 10) / 10;
+  const stats = async ([a, b]) => { const s = await get('/marketplace-dashboard/private/quality-control/statistics?' + new URLSearchParams({ startDate: `${a}T00:00:00.000${off(a)}`, endDate: `${b}T23:59:59.999${off(b)}` }));
+    return s.totalOrders == null ? null : { ped: s.totalOrders, tard: r1(s.lateShipmentRate), incid: r1(s.incidentRate), acept: r1(s.acceptanceRate), t_acept: r1(s.acceptanceTimeInSeconds / 3600),
+      resp: r1(s.responseTimeInSeconds / 3600), envio: r1(s.timeToShipInSeconds / 3600), reemb: r1(s.refundRate), devol: r1(s.returnRate), cancel: r1(s.cancelationRate), rech: r1(s.autoRefusedRate), track: r1(s.trackingRate) }; };
+  const kycTxt = String(sd.shopKyc?.reason || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  out.calidad = { nota: sd.grade ?? null, valoraciones: sd.evaluationsCount ?? null, premium: pr.premium ?? sd.premium ?? null, suspendida: pr.suspended ?? null, estado: sd.state ?? null,
+    kyc: sd.shopKyc?.status ?? null, falta_2fa: /two-factor|dos factores|2FA/i.test(kycTxt),
+    premium_reglas: reglas(pr.premiumRules), suspension_reglas: reglas(pr.suspensionRules), s7: await stats(R.d7), s30: await stats(R.d30) };
   return JSON.stringify(out);
 })()

@@ -191,33 +191,33 @@
  "mirakl": {
   "cfe": {
    "d7": [
-    38918,
-    275
+    39989,
+    280
    ],
    "p7": [
     61789,
     399
    ],
    "d30": [
-    211048,
-    1443
+    212120,
+    1448
    ],
    "mtd": [
-    100707,
-    674
+    101779,
+    679
    ],
    "fecha": "2026-10-14",
    "estado": {
     "carrito": 151,
-    "envio": 105,
-    "tardios": 98,
-    "incid": 56,
+    "envio": 107,
+    "tardios": 95,
+    "incid": 58,
     "incid_new": 3,
     "acept": 2,
     "devol": 0,
-    "msgs": 28,
-    "pend": 76139.16,
-    "pagar": 52157.68,
+    "msgs": 27,
+    "pend": 76383.19,
+    "pagar": 52790.81,
     "ult_pago": 43551.24,
     "ult_pago_f": "2026-10-06",
     "prox_fact": "2026-10-16",
@@ -228,7 +228,7 @@
      ]
     },
     "ofertas": 1742,
-    "hora": "08:37",
+    "hora": "10:18",
     "msgs_crit": 1
    },
    "rangos": {
@@ -248,6 +248,110 @@
      "2026-10-01",
      "2026-10-14"
     ]
+   },
+   "calidad": {
+    "nota": 3.81,
+    "valoraciones": 957,
+    "premium": false,
+    "suspendida": false,
+    "estado": "OPEN",
+    "kyc": "APPROVED",
+    "falta_2fa": true,
+    "premium_reglas": [
+     [
+      "EVALUATION_GRADE",
+      "3.76",
+      "4",
+      false,
+      "LAST_SIX_MONTHS"
+     ],
+     [
+      "INCIDENT_RATE",
+      "12",
+      "15",
+      true,
+      "LAST_SIX_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      "4",
+      "24",
+      true,
+      "LAST_SIX_MONTHS"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "100",
+      "92",
+      true,
+      "LAST_SIX_MONTHS"
+     ]
+    ],
+    "suspension_reglas": [
+     [
+      "INCIDENT_RATE",
+      "12",
+      "20",
+      true,
+      "LAST_SIX_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      "5",
+      "48",
+      true,
+      "LAST_YEAR"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "100",
+      "95",
+      true,
+      "LAST_SIX_MONTHS"
+     ],
+     [
+      "ABORTED_COUNT",
+      "0",
+      "3",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "REFUND_RATE",
+      "2",
+      "25",
+      true,
+      "LAST_SIX_MONTHS"
+     ]
+    ],
+    "s7": {
+     "ped": 280,
+     "tard": 21.8,
+     "incid": 1.1,
+     "acept": 100,
+     "t_acept": 3.8,
+     "resp": 6.8,
+     "envio": 13.1,
+     "reemb": 0,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": 100
+    },
+    "s30": {
+     "ped": 1448,
+     "tard": 68.6,
+     "incid": 5.4,
+     "acept": 100,
+     "t_acept": 5.1,
+     "resp": 8.8,
+     "envio": 23.8,
+     "reemb": 0.4,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": 98
+    }
    }
   },
   "cfr": {
@@ -284,7 +388,7 @@
     "prox_fact": "2026-10-21",
     "alerta": null,
     "ofertas": 674,
-    "hora": "08:38",
+    "hora": "10:19",
     "msgs_crit": 0
    },
    "rangos": {
@@ -304,43 +408,189 @@
      "2026-10-01",
      "2026-10-14"
     ]
+   },
+   "calidad": {
+    "nota": null,
+    "valoraciones": 0,
+    "premium": false,
+    "suspendida": false,
+    "estado": "OPEN",
+    "kyc": "APPROVED",
+    "falta_2fa": false,
+    "premium_reglas": [
+     [
+      "EVALUATION_GRADE",
+      null,
+      "4",
+      false,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "INCIDENT_RATE",
+      "0",
+      "10",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      "41",
+      "10",
+      false,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "73",
+      "85",
+      false,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "REFUND_RATE",
+      "0",
+      "5",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "MESSAGE_RESPONSE_TIME",
+      "0",
+      "48",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "ORDERS_SHIPPED_LATE_RATE",
+      "36",
+      "2",
+      false,
+      "ALL_SINCE_BEGINNING"
+     ]
+    ],
+    "suspension_reglas": [
+     [
+      "EVALUATION_GRADE",
+      null,
+      "3",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "INCIDENT_RATE",
+      "0",
+      "15",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      "107",
+      "48",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "25",
+      "90",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ABORTED_COUNT",
+      "0",
+      "2",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "REFUND_RATE",
+      "0",
+      "15",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "MESSAGE_RESPONSE_TIME",
+      "0",
+      "48",
+      true,
+      "LAST_MONTH"
+     ],
+     [
+      "VALID_TRACKING_RATE",
+      "0.00",
+      "50",
+      true,
+      "LAST_THREE_MONTHS"
+     ]
+    ],
+    "s7": {
+     "ped": 0,
+     "tard": null,
+     "incid": null,
+     "acept": null,
+     "t_acept": null,
+     "resp": null,
+     "envio": null,
+     "reemb": null,
+     "devol": null,
+     "cancel": null,
+     "rech": null,
+     "track": null
+    },
+    "s30": {
+     "ped": 1,
+     "tard": 100,
+     "incid": 0,
+     "acept": 100,
+     "t_acept": 66.5,
+     "resp": 0,
+     "envio": 87.1,
+     "reemb": 0,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": 0
+    }
    }
   },
   "adeo": {
    "d7": [
-    22527,
-    126
+    22982,
+    128
    ],
    "p7": [
     25648,
     151
    ],
    "d30": [
-    114922,
-    632
+    115376,
+    634
    ],
    "mtd": [
-    48175,
-    277
+    48630,
+    279
    ],
    "fecha": "2026-10-14",
    "estado": {
-    "carrito": 185,
-    "envio": 59,
+    "carrito": 186,
+    "envio": 61,
     "tardios": 0,
     "incid": 44,
-    "incid_new": 0,
+    "incid_new": 1,
     "acept": 0,
     "devol": 0,
-    "msgs": 20,
-    "pend": 107888.96,
-    "pagar": 23008.48,
+    "msgs": 16,
+    "pend": 106808.03,
+    "pagar": 24556.88,
     "ult_pago": 27341.21,
     "ult_pago_f": "2026-10-08",
     "prox_fact": "2026-10-16",
     "alerta": null,
     "ofertas": 2424,
-    "hora": "08:38",
+    "hora": "10:19",
     "msgs_crit": 0
    },
    "rangos": {
@@ -360,37 +610,76 @@
      "2026-10-01",
      "2026-10-14"
     ]
+   },
+   "calidad": {
+    "nota": null,
+    "valoraciones": 0,
+    "premium": false,
+    "suspendida": false,
+    "estado": "OPEN",
+    "kyc": "APPROVED",
+    "falta_2fa": false,
+    "premium_reglas": [],
+    "suspension_reglas": [],
+    "s7": {
+     "ped": 128,
+     "tard": 0,
+     "incid": 0,
+     "acept": 100,
+     "t_acept": 4.9,
+     "resp": 4.5,
+     "envio": 28.9,
+     "reemb": 0.8,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": null
+    },
+    "s30": {
+     "ped": 634,
+     "tard": 0.3,
+     "incid": 5.2,
+     "acept": 100,
+     "t_acept": 5.4,
+     "resp": 7.1,
+     "envio": 36.2,
+     "reemb": 2.5,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": null
+    }
    }
   },
   "cfib": {
    "d7": [
-    13340,
-    129
+    13438,
+    130
    ],
    "p7": [
     12272,
     105
    ],
    "d30": [
-    55185,
-    540
+    55284,
+    541
    ],
    "mtd": [
-    25612,
-    234
+    25710,
+    235
    ],
    "fecha": "2026-10-14",
    "estado": {
-    "carrito": 162,
-    "envio": 34,
+    "carrito": 161,
+    "envio": 35,
     "tardios": 0,
     "incid": 12,
     "incid_new": 0,
     "acept": 0,
     "devol": 0,
     "msgs": 8,
-    "pend": 60544.6,
-    "pagar": 33762.86,
+    "pend": 58706.55,
+    "pagar": 35698.79,
     "ult_pago": 35452.86,
     "ult_pago_f": "2026-09-30",
     "prox_fact": "2026-10-15",
@@ -401,7 +690,7 @@
      ]
     },
     "ofertas": 922,
-    "hora": "08:38",
+    "hora": "10:20",
     "msgs_crit": 0
    },
    "rangos": {
@@ -421,6 +710,117 @@
      "2026-10-01",
      "2026-10-14"
     ]
+   },
+   "calidad": {
+    "nota": null,
+    "valoraciones": 0,
+    "premium": false,
+    "suspendida": false,
+    "estado": "OPEN",
+    "kyc": "APPROVED",
+    "falta_2fa": false,
+    "premium_reglas": [
+     [
+      "INCIDENT_RATE",
+      "6",
+      "5",
+      false,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      "4",
+      "24",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "100",
+      "95",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "REFUND_RATE",
+      "5",
+      "1",
+      false,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "MESSAGE_RESPONSE_TIME",
+      "21",
+      "24",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ORDERS_SHIPPED_LATE_RATE",
+      "0",
+      "10",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ]
+    ],
+    "suspension_reglas": [
+     [
+      "ACCEPTATION_DELAY",
+      "5",
+      "72",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "REFUND_RATE",
+      "5",
+      "25",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "MESSAGE_RESPONSE_TIME",
+      "15",
+      "96",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "ORDERS_SHIPPED_LATE_RATE",
+      "0",
+      "15",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ]
+    ],
+    "s7": {
+     "ped": 130,
+     "tard": 0,
+     "incid": 0,
+     "acept": 100,
+     "t_acept": 4.3,
+     "resp": null,
+     "envio": 11.5,
+     "reemb": 0,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": null
+    },
+    "s30": {
+     "ped": 541,
+     "tard": 0,
+     "incid": 1.7,
+     "acept": 100,
+     "t_acept": 5.3,
+     "resp": 11.3,
+     "envio": 23.7,
+     "reemb": 1.7,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": null
+    }
    }
   },
   "conforama": {
@@ -457,7 +857,7 @@
     "prox_fact": "2026-10-15",
     "alerta": null,
     "ofertas": 0,
-    "hora": "08:38",
+    "hora": "10:21",
     "msgs_crit": 0
    },
    "rangos": {
@@ -477,11 +877,136 @@
      "2026-10-01",
      "2026-10-14"
     ]
+   },
+   "calidad": {
+    "nota": 4.61,
+    "valoraciones": 36,
+    "premium": false,
+    "suspendida": true,
+    "estado": "SUSPENDED",
+    "kyc": "PENDING_SUBMISSION",
+    "falta_2fa": false,
+    "premium_reglas": [
+     [
+      "EVALUATION_GRADE",
+      null,
+      "4.5",
+      false,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "INCIDENT_RATE",
+      null,
+      "3",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      null,
+      "12",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      null,
+      "98",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "REFUND_RATE",
+      null,
+      "5",
+      true,
+      "LAST_THREE_MONTHS"
+     ]
+    ],
+    "suspension_reglas": [
+     [
+      "INCIDENT_RATE",
+      null,
+      "11",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      null,
+      "75",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      null,
+      "79",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ABORTED_COUNT",
+      "0",
+      "3",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "REFUND_RATE",
+      null,
+      "15",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "MESSAGE_RESPONSE_TIME",
+      null,
+      "48",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ORDERS_SHIPPED_LATE_RATE",
+      null,
+      "15",
+      true,
+      "LAST_THREE_MONTHS"
+     ]
+    ],
+    "s7": {
+     "ped": 0,
+     "tard": null,
+     "incid": null,
+     "acept": null,
+     "t_acept": null,
+     "resp": null,
+     "envio": null,
+     "reemb": null,
+     "devol": null,
+     "cancel": null,
+     "rech": null,
+     "track": null
+    },
+    "s30": {
+     "ped": 0,
+     "tard": null,
+     "incid": null,
+     "acept": null,
+     "t_acept": null,
+     "resp": null,
+     "envio": null,
+     "reemb": null,
+     "devol": null,
+     "cancel": null,
+     "rech": null,
+     "track": null
+    }
    }
   },
   "worten": {
    "d7": [
-    8937,
+    9062,
     75
    ],
    "p7": [
@@ -489,32 +1014,32 @@
     81
    ],
    "d30": [
-    34565,
+    34689,
     278
    ],
    "mtd": [
-    17788,
+    17912,
     156
    ],
    "fecha": "2026-10-14",
    "estado": {
     "carrito": 135,
-    "envio": 27,
+    "envio": 28,
     "tardios": 0,
     "incid": 1,
     "incid_new": 1,
     "acept": 0,
     "devol": 0,
-    "msgs": 7,
-    "pend": 13170.97,
+    "msgs": 6,
+    "pend": 13300.93,
     "pagar": 634216.16,
     "ult_pago": 0,
     "ult_pago_f": null,
     "prox_fact": "2026-10-20",
     "alerta": null,
     "ofertas": 1210,
-    "hora": "08:39",
-    "msgs_crit": 1
+    "hora": "10:22",
+    "msgs_crit": 0
    },
    "rangos": {
     "d7": [
@@ -533,6 +1058,96 @@
      "2026-10-01",
      "2026-10-14"
     ]
+   },
+   "calidad": {
+    "nota": 4.29,
+    "valoraciones": 597,
+    "premium": true,
+    "suspendida": false,
+    "estado": "OPEN",
+    "kyc": "PENDING_SUBMISSION",
+    "falta_2fa": false,
+    "premium_reglas": [],
+    "suspension_reglas": [
+     [
+      "EVALUATION_GRADE",
+      "4.17",
+      "3.5",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      "0",
+      "24",
+      true,
+      "LAST_MONTH"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "100",
+      "95",
+      true,
+      "LAST_MONTH"
+     ],
+     [
+      "ABORTED_COUNT",
+      "0",
+      "4",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "REFUND_RATE",
+      "1",
+      "20",
+      true,
+      "LAST_MONTH"
+     ],
+     [
+      "ORDERS_SHIPPED_LATE_RATE",
+      "0",
+      "5",
+      true,
+      "LAST_MONTH"
+     ]
+    ],
+    "s7": {
+     "ped": 75,
+     "tard": 0,
+     "incid": 0,
+     "acept": 100,
+     "t_acept": 0.3,
+     "resp": null,
+     "envio": 8.5,
+     "reemb": 0,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": 100
+    },
+    "s30": {
+     "ped": 278,
+     "tard": 0,
+     "incid": 0.3,
+     "acept": 100,
+     "t_acept": 0.3,
+     "resp": 2.4,
+     "envio": 7.7,
+     "reemb": 0.9,
+     "devol": 0,
+     "cancel": 0,
+     "rech": 0,
+     "track": 99
+    }
+   },
+   "ads_d7": {
+    "inv": 570.69,
+    "ventas": 6196.56,
+    "pedidos": 47,
+    "roas": 11.4,
+    "acos": 8.76,
+    "fecha": "2026-10-14"
    }
   },
   "mdm": {
@@ -574,7 +1189,7 @@
      ]
     },
     "ofertas": 0,
-    "hora": "08:39",
+    "hora": "10:22",
     "msgs_crit": 0
    },
    "rangos": {
@@ -594,6 +1209,145 @@
      "2026-10-01",
      "2026-10-14"
     ]
+   },
+   "calidad": {
+    "nota": 2.71,
+    "valoraciones": 31,
+    "premium": false,
+    "suspendida": true,
+    "estado": "SUSPENDED",
+    "kyc": "APPROVED",
+    "falta_2fa": false,
+    "premium_reglas": [
+     [
+      "EVALUATION_GRADE",
+      "3",
+      "4",
+      false,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "INCIDENT_RATE",
+      "6",
+      "4",
+      false,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      "10",
+      "10",
+      false,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "100",
+      "99",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "REFUND_RATE",
+      "6",
+      "4",
+      false,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "MESSAGE_RESPONSE_TIME",
+      "33",
+      "24",
+      false,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ORDERS_SHIPPED_LATE_RATE",
+      "22",
+      "4",
+      false,
+      "LAST_THREE_MONTHS"
+     ]
+    ],
+    "suspension_reglas": [
+     [
+      "EVALUATION_GRADE",
+      "3",
+      "3.5",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "INCIDENT_RATE",
+      "6",
+      "15",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_DELAY",
+      "10",
+      "48",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "100",
+      "95",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ABORTED_COUNT",
+      "0",
+      "3",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "REFUND_RATE",
+      "6",
+      "15",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ORDERS_SHIPPED_LATE_RATE",
+      "22",
+      "15",
+      false,
+      "LAST_THREE_MONTHS"
+     ]
+    ],
+    "s7": {
+     "ped": 0,
+     "tard": null,
+     "incid": null,
+     "acept": null,
+     "t_acept": null,
+     "resp": null,
+     "envio": null,
+     "reemb": null,
+     "devol": null,
+     "cancel": null,
+     "rech": null,
+     "track": null
+    },
+    "s30": {
+     "ped": 0,
+     "tard": null,
+     "incid": null,
+     "acept": null,
+     "t_acept": null,
+     "resp": null,
+     "envio": null,
+     "reemb": null,
+     "devol": null,
+     "cancel": null,
+     "rech": null,
+     "track": null
+    }
    }
   },
   "brico": {
@@ -630,7 +1384,7 @@
     "prox_fact": "2026-10-14",
     "alerta": null,
     "ofertas": 0,
-    "hora": "08:39",
+    "hora": "10:23",
     "msgs_crit": 0
    },
    "rangos": {
@@ -650,6 +1404,74 @@
      "2026-10-01",
      "2026-10-14"
     ]
+   },
+   "calidad": {
+    "nota": 3.24,
+    "valoraciones": 29,
+    "premium": false,
+    "suspendida": true,
+    "estado": "SUSPENDED",
+    "kyc": "APPROVED",
+    "falta_2fa": false,
+    "premium_reglas": [],
+    "suspension_reglas": [
+     [
+      "ACCEPTATION_DELAY",
+      "0",
+      "72",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ACCEPTATION_RATE",
+      "100",
+      "75",
+      true,
+      "LAST_THREE_MONTHS"
+     ],
+     [
+      "ABORTED_COUNT",
+      "0",
+      "2",
+      true,
+      "ALL_SINCE_BEGINNING"
+     ],
+     [
+      "MESSAGE_RESPONSE_TIME",
+      null,
+      "72",
+      true,
+      "LAST_THREE_MONTHS"
+     ]
+    ],
+    "s7": {
+     "ped": 0,
+     "tard": null,
+     "incid": null,
+     "acept": null,
+     "t_acept": null,
+     "resp": null,
+     "envio": null,
+     "reemb": null,
+     "devol": null,
+     "cancel": null,
+     "rech": null,
+     "track": null
+    },
+    "s30": {
+     "ped": 0,
+     "tard": null,
+     "incid": null,
+     "acept": null,
+     "t_acept": null,
+     "resp": null,
+     "envio": null,
+     "reemb": null,
+     "devol": null,
+     "cancel": null,
+     "rech": null,
+     "track": null
+    }
    }
   }
  },

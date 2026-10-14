@@ -203,7 +203,11 @@ def mk_top(key):
         a, b = rg[k]; txt = f'{fd(a)} – {fd(b)}'
         return txt + (f' · hoy hasta las {hora}' if b == d.get('fecha') and hora else ' · incluye hoy')
     P7, P30, PMTD = per('d7', globals()['P7']), per('d30', globals()['P30']), per('mtd', globals()['PMTD'])
-    ads7 = tile('Inversión Ads', '-', 'Mirakl Ads · pendiente de consultar el panel de publicidad', 'v-muted') if d.get('con_ads') else tile('Publicidad', '-', d['ads'], 'v-muted')
+    a7 = d.get('ads_d7')
+    if d.get('con_ads') and a7:
+        ads7 = tile('Inversión Ads', eur(a7['inv'], 2), f"Mirakl Ads · últimos 7 días · ventas {eur(a7['ventas'], 2)} · {e(a7.get('pedidos'))} pedidos · ROAS {e(a7.get('roas'), 1)} · ACoS {e(a7.get('acos'), 1)}% (datos del {fd(a7['fecha'])})", 'v-warn')
+    elif d.get('con_ads'): ads7 = tile('Inversión Ads', '-', 'Mirakl Ads · pendiente de consultar el panel de publicidad', 'v-muted')
+    else: ads7 = tile('Publicidad', '-', d['ads'], 'v-muted')
     tz = 'hora de Lisboa' if d.get('lisboa') else 'hora de Madrid'
     stale = f" · datos del {fd(d['fecha'])}" if d.get('fecha') and d['fecha'] != D['actualizado'] else ''
     blocks = ("<div class='blk-row'>"
@@ -220,7 +224,69 @@ def mk_top(key):
     else:
         charts += chart_card('Inversión en Ads y ventas por Ads', "<div class='empty'>Sin datos de publicidad</div>", d['ads'])
     charts += "</div>"
-    return blocks + mk_estado(d) + charts + cierre(key) + sub_sep('Auditoría de calidad · 1 oct 2026 (foto fija, no se actualiza)')
+    cal = f"Control de calidad · {fd(d['fecha'])} a las {(d.get('estado') or {}).get('hora', '-')}" if d.get('calidad') else 'Auditoría de calidad · 1 oct 2026 (foto fija, no se actualiza)'
+    C = d.get('calidad') or {}; al = (d.get('estado') or {}).get('alerta') or {}
+    susp = ''
+    if (C.get('suspendida') or C.get('estado') == 'SUSPENDED') and al.get('k') != 'SUSPENSION':   # si la alerta ya es de suspensión, el banner lo pone mk_estado
+        k = KYC.get(C.get('kyc'), (C.get('kyc') or '-', ''))[0]
+        susp = (f"<div class='banner b-crit'><span class='banner-icon'>🚫</span><div><span class='banner-title'>Tienda suspendida por el marketplace · KYC: {html.escape(k.lower())}</span>"
+                f"<span class='banner-sub'>Portada de Mirakl ({fd(d['fecha'])} a las {(d.get('estado') or {}).get('hora', '-')}) · el panel no indica el motivo de la suspensión</span></div></div>")
+    return susp + blocks + mk_estado(d) + charts + cierre(key) + sub_sep(cal)
+
+CRIT = {'EVALUATION_GRADE': ('Clasificación', '★', True), 'INCIDENT_RATE': ('Tasa de incidencias', '%', False), 'ACCEPTATION_DELAY': ('Tiempo de aceptación', 'h', False),
+        'ACCEPTATION_RATE': ('Porcentaje de aceptación', '%', True), 'REFUND_RATE': ('Tasa de reembolsos', '%', False), 'MESSAGE_RESPONSE_TIME': ('Tiempo de respuesta a mensajes', 'h', False),
+        'ORDERS_SHIPPED_LATE_RATE': ('Envíos tardíos', '%', False), 'ABORTED_COUNT': ('Pedidos rechazados automáticamente', '', False), 'VALID_TRACKING_RATE': ('Seguimiento válido', '%', True)}
+PERIODO = {'LAST_SIX_MONTHS': '6 meses', 'LAST_THREE_MONTHS': '3 meses', 'LAST_MONTH': 'último mes', 'LAST_YEAR': '12 meses', 'ALL_SINCE_BEGINNING': 'desde el inicio'}
+KYC = {'APPROVED': ('Aprobado', 'k-ok'), 'PENDING_SUBMISSION': ('Pendiente de enviar la documentación', 'k-crit'), 'PENDING_APPROVAL': ('En revisión', 'k-warn'), 'REFUSED': ('Rechazado', 'k-crit')}
+def mk_calidad(key):
+    """Control de calidad de la portada de Mirakl (shop-detail + platform-rules + quality-control/statistics)."""
+    d = MK[key]; C = d['calidad']
+    def kcard(t, rows): return f'<div class="kpi-card">\n    <div class="kpi-head">{t}</div>\n    <table class="kpi-table">\n      ' + '\n      '.join(rows) + '\n    </table>\n  </div>'
+    def tr(a, b, c='', cls=''): return f'<tr><td>{a}</td><td class="{cls}">{b}</td><td>{c}</td></tr>'
+    def val(v, u):
+        if v is None: return '-'
+        x = float(v); t = e(x, 2 if u == '★' else (0 if x == int(x) else 1))
+        return t + ('★' if u == '★' else (' h' if u == 'h' else u))
+    def regla(r, tipo):
+        c, v, th, ok, per = r; lab, u, mayor = CRIT.get(c, (c, '', False))
+        lim = (('Mínimo ≥ ' if mayor else 'Límite < ') + val(th, u)) if tipo == 'premium' else ('Suspende si ' + ('< ' if mayor else '≥ ') + val(th, u))
+        verd = 'sin datos' if v is None else ('✓ cumple' if ok else '❌ no cumple')
+        return tr(f"{lab} · {PERIODO.get(per, per)}", val(v, u), f"{lim} · {verd}", '' if v is None else ('k-ok' if ok else 'k-crit'))
+    estado = 'Suspendida' if C.get('suspendida') or C.get('estado') == 'SUSPENDED' else 'Abierta'
+    kyc, kcls = KYC.get(C.get('kyc'), (C.get('kyc') or '-', ''))
+    rows = [tr('Estado de la tienda', estado, 'Suspensión aplicada por el marketplace' if estado == 'Suspendida' else 'Vendiendo', 'k-crit' if estado == 'Suspendida' else 'k-ok'),
+            tr('Tienda premium', 'Sí' if C.get('premium') else 'No', 'Cumple todas las reglas de premium' if C.get('premium') else 'No cumple todas las reglas de premium', 'k-ok' if C.get('premium') else ''),
+            tr('Valoración de la tienda', val(C.get('nota'), '★'), f"{e(C.get('valoraciones'))} valoraciones" if C.get('valoraciones') else 'Sin valoraciones', ''),
+            tr('KYC', kyc, 'Verificación de la empresa', kcls)]
+    if C.get('falta_2fa'): rows.append(tr('Autenticación en dos pasos (2FA)', 'Pendiente', 'El panel pide activarla (Strong Customer Authentication)', 'k-warn'))
+    cards = [kcard('Resumen de la tienda', rows)]
+    if C.get('premium_reglas'): cards.append(kcard('Reglas de premium', [regla(r, 'premium') for r in C['premium_reglas']]))
+    if C.get('suspension_reglas'): cards.append(kcard('Reglas de suspensión', [regla(r, 'susp') for r in C['suspension_reglas']]))
+    s7, s30 = C.get('s7') or {}, C.get('s30') or {}
+    if s30.get('ped') or s7.get('ped'):
+        def srow(lab, k, u):
+            a, b = s30.get(k), s7.get(k)
+            if a is None and b is None: return None
+            return tr(lab, val(a, u), f"Últimos 7 días: {val(b, u)}", 'k-crit' if k == 'tard' and (a or 0) >= 10 else '')
+        st = [srow('Envíos tardíos', 'tard', '%'), srow('Tasa de incidencias', 'incid', '%'), srow('Porcentaje de aceptación', 'acept', '%'), srow('Tiempo de aceptación', 't_acept', 'h'),
+              srow('Tiempo de respuesta', 'resp', 'h'), srow('Plazo de envío', 'envio', 'h'), srow('Tasa de reembolsos', 'reemb', '%'), srow('Tasa de devoluciones', 'devol', '%'),
+              srow('Tasa de cancelación', 'cancel', '%'), srow('Rechazos automáticos', 'rech', '%'), srow('Seguimiento', 'track', '%')]
+        cards.append(kcard(f"Estadísticas · últimos 30 días ({e(s30.get('ped'))} pedidos) · 7 días ({e(s7.get('ped'))} pedidos)", [r for r in st if r]))
+    acts = []
+    al = (d.get('estado') or {}).get('alerta') or {}
+    if estado == 'Suspendida': acts.append(('p-urg', 'Urgente', 'Tienda suspendida' + (' — ' + html.escape(' · '.join(al.get('r') or [])) if al.get('r') else '')))
+    for r in C.get('suspension_reglas') or []:
+        if r[1] is not None and not r[3]:
+            lab, u, _ = CRIT.get(r[0], (r[0], '', False))
+            acts.append(('p-urg', 'Urgente', f"Regla de suspensión incumplida: {lab} {val(r[1], u)} ({PERIODO.get(r[4], r[4])})"))
+    if C.get('kyc') and C['kyc'] != 'APPROVED': acts.append(('p-hi', 'Alta', f"KYC: {kyc.lower()}"))
+    if (s30.get('tard') or 0) >= 10: acts.append(('p-hi', 'Alta', f"Envíos tardíos {e(s30['tard'], 1)}% en 30 días ({val(s7.get('tard'), '%')} en 7 días)"))
+    fallos = [CRIT.get(r[0], (r[0],))[0].lower() for r in C.get('premium_reglas') or [] if r[1] is not None and not r[3]]
+    if fallos: acts.append(('p-med', 'Media', 'Premium: no cumple ' + ', '.join(fallos)))
+    if C.get('falta_2fa'): acts.append(('p-lo', 'Baja', 'Activar la autenticación en dos pasos que pide el panel'))
+    acc = ('\n  <div class="actions">\n    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Puntos de atención</div>\n'
+           + '\n'.join(f'    <div class="action"><span class="pri {c}">{p}</span><span class="action-txt">{t}</span></div>' for c, p, t in acts) + '\n  </div>') if acts else ''
+    return '  ' + '\n  '.join(cards) + acc
 
 def mk_estado(d):
     st = d.get('estado')
@@ -507,13 +573,18 @@ TOPS.update({k: mk_top(k) for k in MK})
 for pid, top in TOPS.items():
     s_, ps, pe = panel_span(pid)
     body = out[ps:pe]
+    if pid in MK and MK[pid].get('calidad'):   # banner fijo del 1-oct: lo sustituye el de mk_top / mk_estado en vivo
+        body = re.sub(r'\s*<div class="banner b-susp">.*?\n  </div>\n', '\n', body, count=1, flags=re.S)
     g = re.search(r'<div class="mtr-grid">.*?\n\s*</div>\n', body, re.S)
     rest = body[g.end():]
     if pid in MK:  # contadores fijos del 1-oct: sustituidos por «Estado de la tienda» en vivo
         rest = re.sub(r'\s*<div class="counters">.*?\n  </div>\n', '\n', rest, count=1, flags=re.S)
+    if pid in MK and MK[pid].get('calidad'):   # control de calidad en vivo (tools/mirakl_fetch.js)
+        rest = mk_calidad(pid) + '\n' + rest[rest.rfind('</div>'):]
     if pid in D.get('miravia', {}) and D['miravia'][pid].get('salud'):   # estado de la tienda en vivo (tools/miravia_salud.js)
         rest = mv_salud(pid) + '\n' + rest[rest.rfind('</div>'):]
-    body = body[:g.start()].rstrip() + '\n' + top + '\n  ' + keep_sep(g.group(0)) + '\n' + rest
+    grid = '' if (pid in MK and MK[pid].get('calidad')) else keep_sep(g.group(0))   # con datos en vivo, fuera las fichas fijas del 1-oct
+    body = body[:g.start()].rstrip() + '\n' + top + '\n  ' + grid + '\n' + rest
     out = out[:ps] + body + out[pe:]
 
 # Pie
