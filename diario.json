@@ -27,7 +27,7 @@
    "buybox": "284 / 318",
    "agotados_con_ventas": 4,
    "inactivos_otros": 3,
-   "hora": "11:34",
+   "hora": "13:34",
    "cuenta": {
     "texto": "En buen estado",
     "nivel": "286",
@@ -171,23 +171,23 @@
    }
   },
   "d7": {
-   "ventas": 19904.23,
-   "lineas": 54,
-   "uds": 56,
+   "ventas": 20230.82,
+   "lineas": 55,
+   "uds": 57,
    "ads_inv": 1614.27,
    "ads_ventas": 5277.78,
    "ventas_cerr": 23747.71
   },
   "p7": {
-   "ventas": 42204.58
+   "ventas": 42193.34
   },
   "mtd": {
-   "ventas": 62108.81,
-   "lineas": 175,
-   "uds": 184,
+   "ventas": 62424.16,
+   "lineas": 176,
+   "uds": 185,
    "ads_inv": 2919.56,
    "ads_ventas": 16126.19,
-   "ventas_cerr": 61253.12
+   "ventas_cerr": 61241.88
   },
   "rangos": {
    "d7": [
@@ -211,38 +211,38 @@
     "2026-10-13"
    ]
   },
-  "hora": "11:33"
+  "hora": "13:34"
  },
  "mirakl": {
   "cfe": {
    "d7": [
-    40275,
-    281
+    40518,
+    285
    ],
    "p7": [
     61789,
     399
    ],
    "d30": [
-    212405,
-    1449
+    212649,
+    1453
    ],
    "mtd": [
-    102064,
-    680
+    102308,
+    684
    ],
    "fecha": "2026-10-14",
    "estado": {
-    "carrito": 145,
-    "envio": 110,
-    "tardios": 95,
-    "incid": 58,
-    "incid_new": 3,
-    "acept": 0,
+    "carrito": 144,
+    "envio": 76,
+    "tardios": 58,
+    "incid": 60,
+    "incid_new": 6,
+    "acept": 1,
     "devol": 0,
-    "msgs": 28,
-    "pend": 76518.98,
-    "pagar": 52888.58,
+    "msgs": 31,
+    "pend": 75393.65,
+    "pagar": 54213.29,
     "ult_pago": 43551.24,
     "ult_pago_f": "2026-10-06",
     "prox_fact": "2026-10-16",
@@ -253,7 +253,7 @@
      ]
     },
     "ofertas": 1742,
-    "hora": "11:27",
+    "hora": "13:30",
     "msgs_crit": 1,
     "incid_disp": null,
     "devol_sol": 0
@@ -352,9 +352,9 @@
      ]
     ],
     "s7": {
-     "ped": 281,
-     "tard": 21.71,
-     "incid": 1.05,
+     "ped": 285,
+     "tard": 34.39,
+     "incid": 2.08,
      "acept": 100,
      "t_acept": 3.8,
      "resp": 6.8,
@@ -364,14 +364,14 @@
      "cancel": 0,
      "rech": 0,
      "track": 100,
-     "t_acept_s": 13520,
-     "resp_s": 25535,
-     "envio_s": 46998
+     "t_acept_s": 13392,
+     "resp_s": 23829,
+     "envio_s": 53227
     },
     "s30": {
-     "ped": 1449,
-     "tard": 68.6,
-     "incid": 5.39,
+     "ped": 1453,
+     "tard": 70.96,
+     "incid": 5.71,
      "acept": 100,
      "t_acept": 5.1,
      "resp": 8.8,
@@ -380,13 +380,13 @@
      "devol": 0,
      "cancel": 0,
      "rech": 0,
-     "track": 98,
-     "t_acept_s": 18151,
-     "resp_s": 31841,
-     "envio_s": 85567
+     "track": 98.02,
+     "t_acept_s": 18116,
+     "resp_s": 31550,
+     "envio_s": 85466
     }
    },
-   "hora_ventas": "11:27"
+   "hora_ventas": "13:30"
   },
   "cfr": {
    "d7": [
@@ -422,7 +422,7 @@
     "prox_fact": "2026-10-21",
     "alerta": null,
     "ofertas": 674,
-    "hora": "11:30",
+    "hora": "13:32",
     "msgs_crit": 0,
     "incid_disp": null,
     "devol_sol": null
@@ -597,43 +597,43 @@
      "envio_s": 313422
     }
    },
-   "hora_ventas": "11:30"
+   "hora_ventas": "13:32"
   },
   "adeo": {
    "d7": [
-    23050,
-    130
+    23478,
+    131
    ],
    "p7": [
     25648,
     151
    ],
    "d30": [
-    115445,
-    636
+    115872,
+    637
    ],
    "mtd": [
-    48698,
-    281
+    49126,
+    282
    ],
    "fecha": "2026-10-14",
    "estado": {
     "carrito": 180,
-    "envio": 62,
+    "envio": 38,
     "tardios": 0,
-    "incid": 44,
-    "incid_new": 1,
-    "acept": 1,
+    "incid": 43,
+    "incid_new": 2,
+    "acept": 0,
     "devol": 0,
     "msgs": 16,
-    "pend": 106878.05,
-    "pagar": 24556.88,
+    "pend": 107084.25,
+    "pagar": 24790.79,
     "ult_pago": 27341.21,
     "ult_pago_f": "2026-10-08",
     "prox_fact": "2026-10-16",
     "alerta": null,
     "ofertas": 2424,
-    "hora": "11:28",
+    "hora": "13:29",
     "msgs_crit": 0,
     "incid_disp": null,
     "devol_sol": null
@@ -667,71 +667,71 @@
     "premium_reglas": [],
     "suspension_reglas": [],
     "s7": {
-     "ped": 130,
+     "ped": 131,
      "tard": 0,
      "incid": 0,
      "acept": 100,
      "t_acept": 4.9,
      "resp": 4.5,
      "envio": 28.9,
-     "reemb": 0.75,
+     "reemb": 0.73,
      "devol": "off",
      "cancel": 0,
      "rech": 0,
      "track": null,
-     "t_acept_s": 17677,
+     "t_acept_s": 17435,
      "resp_s": 16039,
-     "envio_s": 104164
+     "envio_s": 127662
     },
     "s30": {
-     "ped": 636,
+     "ped": 637,
      "tard": 0.31,
-     "incid": 5.2,
+     "incid": 5.33,
      "acept": 100,
      "t_acept": 5.4,
      "resp": 7.1,
      "envio": 36.2,
-     "reemb": 2.45,
+     "reemb": 2.44,
      "devol": "off",
      "cancel": 0,
      "rech": 0,
      "track": null,
-     "t_acept_s": 19270,
-     "resp_s": 25582,
-     "envio_s": 130463
+     "t_acept_s": 19216,
+     "resp_s": 25539,
+     "envio_s": 133163
     }
    },
-   "hora_ventas": "11:28"
+   "hora_ventas": "13:29"
   },
   "cfib": {
    "d7": [
-    13438,
-    130
+    13502,
+    132
    ],
    "p7": [
     12272,
     105
    ],
    "d30": [
-    55284,
-    541
+    55348,
+    543
    ],
    "mtd": [
-    25710,
-    235
+    25774,
+    237
    ],
    "fecha": "2026-10-14",
    "estado": {
-    "carrito": 166,
-    "envio": 35,
+    "carrito": 165,
+    "envio": 17,
     "tardios": 0,
     "incid": 12,
-    "incid_new": 0,
+    "incid_new": 1,
     "acept": 0,
     "devol": 0,
-    "msgs": 11,
-    "pend": 58706.55,
-    "pagar": 35698.79,
+    "msgs": 13,
+    "pend": 58605.18,
+    "pagar": 35863.38,
     "ult_pago": 35452.86,
     "ult_pago_f": "2026-09-30",
     "prox_fact": "2026-10-15",
@@ -742,7 +742,7 @@
      ]
     },
     "ofertas": 922,
-    "hora": "11:29",
+    "hora": "13:31",
     "msgs_crit": 0,
     "incid_disp": 0,
     "devol_sol": null
@@ -848,7 +848,7 @@
      ]
     ],
     "s7": {
-     "ped": 130,
+     "ped": 132,
      "tard": 0,
      "incid": 0,
      "acept": 100,
@@ -860,14 +860,14 @@
      "cancel": 0,
      "rech": 0,
      "track": null,
-     "t_acept_s": 15483,
+     "t_acept_s": 15299,
      "resp_s": null,
-     "envio_s": 41273
+     "envio_s": 66131
     },
     "s30": {
-     "ped": 541,
+     "ped": 543,
      "tard": 0,
-     "incid": 1.67,
+     "incid": 1.94,
      "acept": 100,
      "t_acept": 5.3,
      "resp": 11.3,
@@ -877,12 +877,12 @@
      "cancel": 0,
      "rech": 0,
      "track": null,
-     "t_acept_s": 19160,
-     "resp_s": 40657,
-     "envio_s": 85413
+     "t_acept_s": 19106,
+     "resp_s": 40277,
+     "envio_s": 87858
     }
    },
-   "hora_ventas": "11:29"
+   "hora_ventas": "13:31"
   },
   "conforama": {
    "d7": [
@@ -918,7 +918,7 @@
     "prox_fact": "2026-10-15",
     "alerta": null,
     "ofertas": 0,
-    "hora": "11:31",
+    "hora": "13:32",
     "msgs_crit": 0,
     "incid_disp": 0,
     "devol_sol": null
@@ -1072,43 +1072,43 @@
      "envio_s": null
     }
    },
-   "hora_ventas": "11:31"
+   "hora_ventas": "13:32"
   },
   "worten": {
    "d7": [
-    9062,
-    75
+    9223,
+    78
    ],
    "p7": [
     8851,
     81
    ],
    "d30": [
-    34689,
-    278
+    34850,
+    281
    ],
    "mtd": [
-    17912,
-    156
+    18073,
+    159
    ],
    "fecha": "2026-10-14",
    "estado": {
-    "carrito": 131,
-    "envio": 28,
+    "carrito": 132,
+    "envio": 10,
     "tardios": 0,
     "incid": 2,
     "incid_new": 0,
     "acept": 0,
     "devol": 0,
-    "msgs": 2,
-    "pend": 13300.93,
+    "msgs": 3,
+    "pend": 13469.14,
     "pagar": 634216.16,
     "ult_pago": 0,
     "ult_pago_f": null,
     "prox_fact": "2026-10-20",
     "alerta": null,
     "ofertas": 1210,
-    "hora": "11:29",
+    "hora": "13:31",
     "msgs_crit": 0,
     "incid_disp": 0,
     "devol_sol": 0
@@ -1185,7 +1185,7 @@
      ]
     ],
     "s7": {
-     "ped": 75,
+     "ped": 78,
      "tard": 0,
      "incid": 0,
      "acept": 100,
@@ -1197,12 +1197,12 @@
      "cancel": 0,
      "rech": 0,
      "track": 100,
-     "t_acept_s": 1201,
+     "t_acept_s": 1191,
      "resp_s": 4760,
-     "envio_s": 30564
+     "envio_s": 31248
     },
     "s30": {
-     "ped": 278,
+     "ped": 281,
      "tard": 0,
      "incid": 0.3,
      "acept": 100,
@@ -1213,21 +1213,21 @@
      "devol": 0,
      "cancel": 0,
      "rech": 0,
-     "track": 99.04,
-     "t_acept_s": 1096,
+     "track": 99.07,
+     "t_acept_s": 1094,
      "resp_s": 8229,
-     "envio_s": 27710
+     "envio_s": 28093
     }
    },
    "ads_d7": {
     "inv": 570.69,
-    "ventas": 6196.56,
-    "pedidos": 47,
-    "roas": 11.4,
-    "acos": 8.76,
+    "ventas": 6971.68,
+    "pedidos": 49,
+    "roas": 12.8,
+    "acos": 7.79,
     "fecha": "2026-10-14"
    },
-   "hora_ventas": "11:29"
+   "hora_ventas": "13:31"
   },
   "mdm": {
    "d7": [
@@ -1268,7 +1268,7 @@
      ]
     },
     "ofertas": 0,
-    "hora": "11:32",
+    "hora": "13:33",
     "msgs_crit": 0,
     "incid_disp": null,
     "devol_sol": null
@@ -1436,7 +1436,7 @@
      "envio_s": null
     }
    },
-   "hora_ventas": "11:32"
+   "hora_ventas": "13:33"
   },
   "brico": {
    "d7": [
@@ -1472,7 +1472,7 @@
     "prox_fact": "2026-10-14",
     "alerta": null,
     "ofertas": 0,
-    "hora": "11:32",
+    "hora": "13:33",
     "msgs_crit": 0,
     "incid_disp": 0,
     "devol_sol": null
@@ -1569,7 +1569,7 @@
      "envio_s": null
     }
    },
-   "hora_ventas": "11:32"
+   "hora_ventas": "13:33"
   }
  },
  "miravia": {
