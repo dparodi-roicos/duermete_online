@@ -268,8 +268,8 @@ def mv_top(pid):
     if pid == 'somnia-mv': t7.append(tile('AliExpress Ads', '-', 'Pendiente de consultar el panel de AliExpress Ads', 'v-muted'))
     top = (banner + "<div class='blk-row'>"
         + block('Últimos 7 días', P7 + stale, t7)
-        + block('Mes en curso y 30 días', f'{PMTD} · {P30}{stale}', [
-            tile(f'{MES_ACTUAL} hasta la fecha · Miravia', eur(m['mtd'][0], 2), f"{PMTD} · {e(m['mtd'][1])} pedidos", ''),
+        + block('Últimos 30 días', f'{P30}{stale}', [
+            tile('Total 30d Miravia + AliExpress', eur((m['d30'][0] or 0) + (m['ae_d30'] or 0), 2) if m['d30'][0] is not None and m['ae_d30'] is not None else '-', 'Con IVA · suma de los dos canales', 'v-ok'),
             tile('Revenue 30d Miravia', eur(m['d30'][0], 2), f"{e(m['d30'][1])} pedidos", 'v-ok'),
             tile('Revenue 30d AliExpress', eur(m['ae_d30'], 2), 'Inicio del Seller Center', 'v-ok'),
             tile('Tráfico 30d', e(m['uv_d30']), 'Visitantes únicos · canal Miravia', ''),
@@ -410,6 +410,43 @@ body = re.sub(r'\s*<div class="action"><span class="pri p-med">Media</span><span
 body = body.replace('<div class="kpi-head">Listings y Buy Box · 1 oct 2026</div>', '<div class="kpi-head">Listings y Buy Box · 1 oct 2026</div>', 1)
 body = re.sub(r'(<div class="kpi-head">Listings y Buy Box · 1 oct 2026</div>\s*<table class="kpi-table">\s*<tr><td>Activos</td>.*?</tr>)',
               r'\1\n      <tr><td>Agotados que vendieron en septiembre</td><td class="k-crit">6</td><td>SellerFlex · detalle en la tabla de abajo</td></tr>', body, count=1, flags=re.S)
+if ES.get('listings'):   # estado en vivo de Seller Central (tools/amazon_fetch.js): sustituye la foto fija del 1-oct
+    LI, BB, SF, EC = ES['listings'], ES['bb'], ES['sellerflex'], ES.get('cuenta') or {}
+    F = f"{fd(ES['fecha'])}" + (f" · {ES['hora']}" if ES.get('hora') else '')
+    def tr(a, b, c='', cls=''): return f"<tr><td>{a}</td><td class=\"{cls}\">{b}</td><td>{c}</td></tr>"
+    def kcard(t, rows): return f"<div class=\"kpi-card\">\n    <div class=\"kpi-head\">{t}</div>\n    <table class=\"kpi-table\">\n      " + '\n      '.join(rows) + "\n    </table>\n  </div>"
+    inc = EC.get('incidencias') or {}
+    rows = [tr('Estado de la cuenta', html.escape(EC.get('texto') or '-'), f"Nivel del estado de la cuenta {EC.get('nivel') or '-'} · cumplimiento de políticas: {(EC.get('cumplimiento') or '-').lower()}",
+               'k-ok' if (EC.get('texto') or '').startswith('En buen') else 'k-warn'),
+            tr('Ratio de pedidos defectuosos', EC.get('odr') or '-', f"Gestionado por Amazon · {EC.get('odr_det') or '-'} (60 días) · objetivo &lt; 1%", 'k-ok')]
+    rows += [tr(html.escape(k), e(v), 'Ver detalle en Estado de la cuenta de Seller Central', 'k-crit' if k == 'Cumplimiento normativo' else 'k-warn') for k, v in inc.items() if v]
+    if not any(inc.values()): rows.append(tr('Incidencias de políticas', '0', 'Sin incidencias abiertas', 'k-ok'))
+    inact_otros = (LI['inactivos'] or 0) - (LI['agotados'] or 0)
+    rows2 = [tr('Activos', e(LI['activos']), f"{e(LI['sellerflex'])} SellerFlex (gestionado por Amazon) + {e(LI['fbm'])} FBM", 'k-ok'),
+             tr('Buy Box (oferta destacada)', f"{e(BB['con'])} de {e(BB['total'])}", 'Activos con oferta destacada ahora mismo' + (f" · {e(BB['sin'])} sin oferta destacada (detalle abajo)" if BB['sin'] else ''), 'k-ok' if not BB['sin'] else 'k-warn'),
+             tr('Agotados', e(LI['agotados']), f"{e(SF['agotados'])} SellerFlex · {e(len(SF['agotados_con_ventas']))} SellerFlex con ventas en 30 días", 'k-crit' if SF['agotados_con_ventas'] else ''),
+             tr('Inactivos por otros motivos', e(inact_otros), f"Suprimidos de la búsqueda: {e(LI['suprimidos'])}"),
+             tr('Falta información', e(LI['falta_info']), 'Listings incompletos (borradores)')]
+    cards = [kcard(f'Estado de la cuenta · {F}', rows), kcard(f'Listings y Buy Box · {F}', rows2)]
+    if BB['sin_top']:
+        cards.append(kcard(f"Activos sin oferta destacada (Buy Box) · los que más venden · {F}",
+            [f"<tr><td class=\"sku\">{html.escape(x['sku'])}</td><td>{e(x['uds30'])} uds 30d</td><td>{html.escape(x['titulo'])} · {eur(x['precio'], 2)}</td></tr>" for x in BB['sin_top']]))
+    ag = SF['agotados_con_ventas']
+    cards.append(kcard(f"SellerFlex agotados que han vendido en 30 días · {F}",
+        [f"<tr><td class=\"sku\">{html.escape(x['sku'])}</td><td>{e(x['uds30'])} {'ud' if x['uds30'] == 1 else 'uds'}</td><td>{eur(x['ventas30'], 2) + ' con IVA · ' if x['ventas30'] else ''}{html.escape(x['titulo'])}" + (f" · {e(x['entrante'])} entrantes" if x['entrante'] else '') + "</td></tr>" for x in ag]
+        or [tr('Sin agotados con ventas', '0', 'Todos los SellerFlex que han vendido en 30 días tienen stock', 'k-ok')]))
+    if SF.get('stock_bajo'):
+        cards.append(kcard(f"SellerFlex activos con menos de 50 uds · {F}",
+            [f"<tr><td class=\"sku\">{html.escape(x['sku'])}</td><td>{e(x['stock'])} uds</td><td>{e(x['uds30'])} vendidas en 30 días · {html.escape(x['titulo'])}</td></tr>" for x in SF['stock_bajo'][:20]]))
+    acts = []
+    if ag: acts.append(('p-hi', 'Alta', f"Reponer en SellerFlex los {len(ag)} SKU agotados que han vendido en los últimos 30 días ({e(sum(x['uds30'] for x in ag))} uds)"))
+    if BB['sin']: acts.append(('p-hi', 'Alta', f"{e(BB['sin'])} activos sin oferta destacada (Buy Box) — el que más vende: {html.escape(BB['sin_top'][0]['titulo'])} ({e(BB['sin_top'][0]['uds30'])} uds en 30 días)"))
+    if inc.get('Cumplimiento normativo'): acts.append(('p-med', 'Media', f"Cumplimiento normativo: {e(inc['Cumplimiento normativo'])} incidencias abiertas en Estado de la cuenta"))
+    acc = ('\n  <div class="actions">\n    <div class="kpi-head" style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Puntos de atención</div>\n'
+           + '\n'.join(f'    <div class="action"><span class="pri {c}">{p}</span><span class="action-txt">{t}</span></div>' for c, p, t in acts) + '\n  </div>') if acts else ''
+    i0 = body.find('<div class="kpi-card">\n    <div class="kpi-head">Estado de la cuenta · 1 oct 2026')
+    i1 = body.rfind('</div>')   # cierre del panel
+    if i0 >= 0: body = body[:i0] + '\n  '.join(cards) + acc + '\n' + body[i1:]
 out = out[:ps] + '\n' + amz_top + body + out[pe:]
 
 # Miravia y Mirakl: bloques arriba + cuadrícula reducida como resumen de septiembre

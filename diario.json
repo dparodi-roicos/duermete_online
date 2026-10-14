@@ -20,13 +20,155 @@
  },
  "amazon": {
   "estado": {
-   "fecha": "2026-10-01",
-   "nivel": "282",
+   "fecha": "2026-10-14",
+   "nivel": "286",
    "texto": "En buen estado",
-   "listings_activos": 312,
-   "buybox": "312 / 312",
-   "agotados_con_ventas": 6,
-   "inactivos_otros": 2
+   "listings_activos": 318,
+   "buybox": "284 / 318",
+   "agotados_con_ventas": 4,
+   "inactivos_otros": 3,
+   "hora": "09:07",
+   "cuenta": {
+    "texto": "En buen estado",
+    "nivel": "286",
+    "cumplimiento": "Adecuado",
+    "odr": "0,17 %",
+    "odr_det": "3 de 1.814 pedidos",
+    "incidencias": {
+     "Supuestas infracciones de la propiedad intelectual": 0,
+     "Reclamaciones sobre propiedad intelectual": 0,
+     "Reclamaciones por autenticidad del producto": 0,
+     "Reclamaciones por estado del producto": 0,
+     "Problemas relativos a la seguridad de productos y alimentos": 0,
+     "Incumplimiento de la política de publicación": 1,
+     "Infracciones de la política de productos excluidos": 0,
+     "Incumplimiento de la política sobre reseñas de productos": 0,
+     "Otros incumplimientos de políticas": 0,
+     "Cumplimiento normativo": 2
+    }
+   },
+   "listings": {
+    "activos": 318,
+    "sellerflex": 235,
+    "fbm": 83,
+    "inactivos": 526,
+    "agotados": 525,
+    "suprimidos": 2,
+    "falta_info": 120,
+    "todos": 729
+   },
+   "bb": {
+    "con": 284,
+    "total": 318,
+    "sin": 34,
+    "sin_top": [
+     {
+      "sku": "CANNGRANCAPSOMNCAMBRIA1501900SF",
+      "asin": "B0H6Y38KWK",
+      "titulo": "Somnia Descanso - Canapé Abatible 150x190 cm Cambria con Gran Capacida",
+      "uds30": 49,
+      "precio": 316.7
+     },
+     {
+      "sku": "CANNGRANCAPSOMNCAMBRIA1351900SF",
+      "asin": "B0H6XTN27D",
+      "titulo": "Somnia Descanso - Canapé Abatible 135x190 cm Cambria con Gran Capacida",
+      "uds30": 24,
+      "precio": 306.77
+     },
+     {
+      "sku": "CANNGRANCAPSOMNBLANCO1501900SF",
+      "asin": "B0H6XS9C33",
+      "titulo": "Somnia Descanso - Canapé Abatible 150x190 cm Blanco con Gran Capacidad",
+      "uds30": 21,
+      "precio": 316.7
+     },
+     {
+      "sku": "CANNGRANCAPSOMNBLANCO1351900SF",
+      "asin": "B0H6XSF169",
+      "titulo": "Somnia Descanso - Canapé Abatible 135x190 cm Blanco con Gran Capacidad",
+      "uds30": 20,
+      "precio": 306.77
+     },
+     {
+      "sku": "CANNGRANCAPSOMNPOLAR1501900SF",
+      "asin": "B0H6XTNMBL",
+      "titulo": "Somnia Descanso - Canapé Abatible 150x190 cm Polar con Gran Capacidad",
+      "uds30": 12,
+      "precio": 316.7
+     },
+     {
+      "sku": "CANNGRANCAPSOMNWENGUE1351900SF",
+      "asin": "B0H6XY3F1G",
+      "titulo": "Somnia Descanso - Canapé Abatible 135x190 cm Wengué con Gran Capacidad",
+      "uds30": 10,
+      "precio": 306.77
+     },
+     {
+      "sku": "CANNGRANCAPSOMNPOLAR1351900SF",
+      "asin": "B0H6XZ324N",
+      "titulo": "Somnia Descanso - Canapé Abatible 135x190 cm Polar con Gran Capacidad",
+      "uds30": 6,
+      "precio": 306.77
+     },
+     {
+      "sku": "CANAPESUPERSELLERPOLAR150190V2SF",
+      "asin": "B0H5KRJCL6",
+      "titulo": "Canapé Abatible 150x190 cm Polar",
+      "uds30": 6,
+      "precio": 327.7
+     },
+     {
+      "sku": "CANAPESUPERSELLERGUADICAMBRIA150190V2SF",
+      "asin": "B0H8Q36T5J",
+      "titulo": "Canapé Abatible 150x190 cm Cambria",
+      "uds30": 5,
+      "precio": 302.4
+     },
+     {
+      "sku": "CANAPESUPERSELLERGUADIWENGUE105190SF",
+      "asin": "B0H2MNFX6X",
+      "titulo": "Canapé Abatible 105x190 cm Wengué",
+      "uds30": 3,
+      "precio": 285.12
+     }
+    ]
+   },
+   "sellerflex": {
+    "activos": 235,
+    "agotados": 37,
+    "agotados_con_ventas": [
+     {
+      "sku": "SOFACAMAARON2PLAZABEIGESF",
+      "titulo": "Homey - Sofá Cama de 2 Plazas Modelo Aron",
+      "uds30": 3,
+      "ventas30": 724,
+      "entrante": 0
+     },
+     {
+      "sku": "CANAPESUPERLATSELLERYECLACAMBRIA090190SF",
+      "titulo": "Canapé Abatible Lateral Cambria 90x190 cm",
+      "uds30": 4,
+      "ventas30": 479,
+      "entrante": 0
+     },
+     {
+      "sku": "CANAPESUPERSELLERGUADIBLANCO135190V2SF",
+      "titulo": "Canapé Abatible 135x190 cm Blanco",
+      "uds30": 1,
+      "ventas30": 264,
+      "entrante": 0
+     },
+     {
+      "sku": "CANAPESUPERSELLERGUADINOGAL150190V2SF",
+      "titulo": "Canapé Abatible 150x190 cm Nogal",
+      "uds30": 2,
+      "ventas30": 0,
+      "entrante": 0
+     }
+    ],
+    "stock_bajo": []
+   }
   },
   "d7": {
    "ventas": 22369.48,
