@@ -3,6 +3,7 @@
 // y el estado actual de la tienda (pendientes de envío, tardíos, incidencias, mensajes no leídos, saldos, alertas, ofertas activas).
 // Opcional: window.__MES_CIERRE = 'YYYY-MM' antes de ejecutar para sacar también el mes cerrado (con y sin IVA).
 (async () => {
+  if (!/du[eé]rmete|dreaming online/i.test(document.title)) return JSON.stringify({ skip: document.title, host: location.host });   // otra tienda (p. ej. TUELEKTRO) o login: no usar
   const lisboa = /worten/.test(location.host);
   const tz = lisboa ? 'Europe/Lisbon' : 'Europe/Madrid';
   const off = (ymd) => { // offset +HH:MM de la zona en esa fecha

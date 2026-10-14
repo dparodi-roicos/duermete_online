@@ -54,7 +54,8 @@
   out.pen_lista_mv = pm.rows.map(fila).filter(x => x.fecha);   // sin penalizaciones la tabla trae una fila vacía
   const ae = pa.rows.map(fila).filter(x => x.fecha);
   out.pen_lista_ae = ae.filter(x => !/propiedad intelectual/i.test(x.tipo || ''));
-  out.pen_ae_pi = out.pen_ae != null ? out.pen_ae - out.pen_lista_ae.length : null;   // la tabla está paginada: el resto son de PI / prohibidos
+  out.pen_ae_pi = out.pen_ae != null ? out.pen_ae - out.pen_lista_ae.length : null;
+  if (out.pen_mv == null && !pm.rows.some(r => /\d{4}-\d{2}-\d{2}/.test(r))) out.pen_mv = out.pen_lista_mv.length;   // tabla de Miravia vacía = 0 penalizaciones   // la tabla está paginada: el resto son de PI / prohibidos
   out.hora = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit' }).format(new Date());
   return JSON.stringify(out);
 })()
