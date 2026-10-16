@@ -1735,29 +1735,29 @@
    }
   },
   "duermete-mv": {
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "d7": [
-    2172.81,
-    14
+    1500.69,
+    15
    ],
    "p7": [
-    2314.92,
-    19
+    2960.83,
+    18
    ],
    "mtd": [
-    4487.73,
-    33
+    4711.49,
+    36
    ],
    "d30": [
-    7833.91,
-    64
+    8023.18,
+    66
    ],
-   "ae_d30": 1948.98,
-   "uv_d30": 4426,
+   "ae_d30": 1708.69,
+   "uv_d30": 4456,
    "ads_d7": {
     "inv": 0,
     "ventas": 0,
-    "periodo": "8 oct – 14 oct"
+    "periodo": "9 oct – 15 oct"
    },
    "pendientes": 3,
    "sin_stock": 109,
@@ -1765,10 +1765,10 @@
    "aviso": "Miravia: todos los productos de esta tienda están bloqueados en España (restricción de AliExpress por pedidos no recibidos)",
    "salud": {
     "tienda": "Duérmete Online",
-    "revision": "2026-10-14 21:02:05",
+    "revision": "2026-10-15 21:02:01",
     "pen_mv": 0,
     "pen_ae": 196,
-    "impacto_gmv": "1948,98",
+    "impacto_gmv": "1708,69",
     "mv": {
      "envio_plazo": {
       "v": "100%",
@@ -1791,11 +1791,11 @@
       "obj": "≤1%"
      },
      "valoraciones": {
-      "v": "83.84%",
+      "v": "84.54%",
       "obj": "≥97%"
      },
      "chat": {
-      "v": "60%",
+      "v": "63.64%",
       "obj": "≥90%"
      }
     },
@@ -1851,8 +1851,8 @@
      }
     ],
     "pen_ae_pi": 194,
-    "hora": "08:52",
-    "fecha": "2026-10-15"
+    "hora": "09:28",
+    "fecha": "2026-10-16"
    }
   }
  }
