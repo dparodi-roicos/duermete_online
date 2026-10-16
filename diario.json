@@ -1,39 +1,39 @@
 {
- "actualizado": "2026-10-15",
+ "actualizado": "2026-10-16",
  "periodo": {
   "d7": [
-   "2026-10-08",
-   "2026-10-14"
+   "2026-10-09",
+   "2026-10-15"
   ],
   "p7": [
-   "2026-10-01",
-   "2026-10-07"
+   "2026-10-02",
+   "2026-10-08"
   ],
   "mtd": [
    "2026-10-01",
-   "2026-10-14"
+   "2026-10-15"
   ],
   "d30": [
-   "2026-09-15",
-   "2026-10-14"
+   "2026-09-16",
+   "2026-10-15"
   ]
  },
  "amazon": {
   "estado": {
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "nivel": "286",
    "texto": "En buen estado",
    "listings_activos": 318,
    "buybox": "284 / 318",
    "agotados_con_ventas": 4,
    "inactivos_otros": 3,
-   "hora": "08:26",
+   "hora": "08:12",
    "cuenta": {
     "texto": "En buen estado",
     "nivel": "286",
     "cumplimiento": "Adecuado",
-    "odr": "0,17 %",
-    "odr_det": "3 de 1.810 pedidos",
+    "odr": "0,22 %",
+    "odr_det": "4 de 1.804 pedidos",
     "incidencias": {
      "Supuestas infracciones de la propiedad intelectual": 0,
      "Reclamaciones sobre propiedad intelectual": 0,
@@ -66,21 +66,21 @@
       "sku": "CANNGRANCAPSOMNCAMBRIA1501900SF",
       "asin": "B0H6Y38KWK",
       "titulo": "Somnia Descanso - Canapé Abatible 150x190 cm Cambria con Gran Capacidad",
-      "uds30": 47,
+      "uds30": 46,
       "precio": 316.7
      },
      {
       "sku": "CANNGRANCAPSOMNCAMBRIA1351900SF",
       "asin": "B0H6XTN27D",
       "titulo": "Somnia Descanso - Canapé Abatible 135x190 cm Cambria con Gran Capacidad",
-      "uds30": 24,
+      "uds30": 23,
       "precio": 306.77
      },
      {
       "sku": "CANNGRANCAPSOMNBLANCO1501900SF",
       "asin": "B0H6XS9C33",
       "titulo": "Somnia Descanso - Canapé Abatible 150x190 cm Blanco con Gran Capacidad",
-      "uds30": 21,
+      "uds30": 20,
       "precio": 316.7
      },
      {
@@ -171,80 +171,80 @@
    }
   },
   "d7": {
-   "ventas": 18678.99,
-   "lineas": 50,
-   "uds": 52,
-   "ads_inv": 1438.73,
-   "ads_ventas": 4749.76,
-   "ventas_cerr": 21138.11
+   "ventas": 18646.37,
+   "lineas": 49,
+   "uds": 51,
+   "ads_inv": 1284.43,
+   "ads_ventas": 4472.6,
+   "ventas_cerr": 20998.24
   },
   "p7": {
-   "ventas": 36403.93
+   "ventas": 33750.33
   },
   "mtd": {
-   "ventas": 63331.45,
-   "lineas": 179,
-   "uds": 188,
-   "ads_inv": 3030.05,
-   "ads_ventas": 16379.83,
-   "ventas_cerr": 63331.45
+   "ventas": 65967.4,
+   "lineas": 186,
+   "uds": 195,
+   "ads_inv": 3140.37,
+   "ads_ventas": 17096.65,
+   "ventas_cerr": 65650.7
   },
   "rangos": {
    "d7": [
-    "2026-10-09",
-    "2026-10-15"
+    "2026-10-10",
+    "2026-10-16"
    ],
    "p7": [
-    "2026-10-02",
-    "2026-10-08"
+    "2026-10-03",
+    "2026-10-09"
    ],
    "mtd": [
     "2026-10-01",
-    "2026-10-15"
+    "2026-10-16"
    ],
    "ads_d7": [
-    "2026-10-08",
-    "2026-10-14"
+    "2026-10-09",
+    "2026-10-15"
    ],
    "ads_mtd": [
     "2026-10-01",
-    "2026-10-14"
+    "2026-10-15"
    ]
   },
-  "hora": "08:25"
+  "hora": "08:11"
  },
  "mirakl": {
   "cfe": {
    "d7": [
-    39522,
-    278
+    44423,
+    305
    ],
    "p7": [
-    58617,
-    379
+    55413,
+    356
    ],
    "d30": [
-    212382,
-    1436
+    213860,
+    1433
    ],
    "mtd": [
-    108032,
-    723
+    116547,
+    776
    ],
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "estado": {
-    "carrito": 143,
-    "envio": 92,
-    "tardios": 90,
-    "incid": 63,
-    "incid_new": 10,
-    "acept": 1,
+    "carrito": 147,
+    "envio": 87,
+    "tardios": 82,
+    "incid": 65,
+    "incid_new": 2,
+    "acept": 0,
     "devol": 0,
-    "msgs": 45,
-    "pend": 76202.19,
-    "pagar": 58092.58,
-    "ult_pago": 43551.24,
-    "ult_pago_f": "2026-10-06",
+    "msgs": 33,
+    "pend": 74315.29,
+    "pagar": 1603.32,
+    "ult_pago": 64609.15,
+    "ult_pago_f": "2026-10-16",
     "prox_fact": "2026-10-16",
     "alerta": {
      "k": "ALERT",
@@ -253,32 +253,32 @@
      ]
     },
     "ofertas": 1742,
-    "hora": "08:27",
+    "hora": "08:13",
     "msgs_crit": 0,
     "incid_disp": null,
     "devol_sol": 0
    },
    "rangos": {
     "d7": [
-     "2026-10-09",
-     "2026-10-15"
+     "2026-10-10",
+     "2026-10-16"
     ],
     "p7": [
-     "2026-10-02",
-     "2026-10-08"
+     "2026-10-03",
+     "2026-10-09"
     ],
     "d30": [
-     "2026-09-16",
-     "2026-10-15"
+     "2026-09-17",
+     "2026-10-16"
     ],
     "mtd": [
      "2026-10-01",
-     "2026-10-15"
+     "2026-10-16"
     ]
    },
    "calidad": {
     "nota": 3.81,
-    "valoraciones": 958,
+    "valoraciones": 960,
     "premium": false,
     "suspendida": false,
     "estado": "OPEN",
@@ -287,7 +287,7 @@
     "premium_reglas": [
      [
       "EVALUATION_GRADE",
-      "3.77",
+      "3.78",
       "4",
       false,
       "LAST_SIX_MONTHS"
@@ -352,9 +352,9 @@
      ]
     ],
     "s7": {
-     "ped": 278,
-     "tard": 28.06,
-     "incid": 1.07,
+     "ped": 305,
+     "tard": 36.07,
+     "incid": 2.26,
      "acept": 100,
      "t_acept": 3.8,
      "resp": 6.8,
@@ -364,14 +364,14 @@
      "cancel": 0,
      "rech": 0,
      "track": 100,
-     "t_acept_s": 14594,
-     "resp_s": 18382,
-     "envio_s": 56550
+     "t_acept_s": 17129,
+     "resp_s": 22230,
+     "envio_s": 62456
     },
     "s30": {
-     "ped": 1436,
-     "tard": 69.36,
-     "incid": 5.58,
+     "ped": 1433,
+     "tard": 69.64,
+     "incid": 5.72,
      "acept": 100,
      "t_acept": 5.1,
      "resp": 8.8,
@@ -380,18 +380,18 @@
      "devol": 0,
      "cancel": 0,
      "rech": 0,
-     "track": 97.92,
-     "t_acept_s": 18210,
-     "resp_s": 31226,
-     "envio_s": 85595
+     "track": 97.5,
+     "t_acept_s": 18204,
+     "resp_s": 31656,
+     "envio_s": 85101
     }
    },
-   "hora_ventas": "08:27"
+   "hora_ventas": "08:13"
   },
   "cfr": {
    "d7": [
     0,
-    0
+    1
    ],
    "p7": [
     0,
@@ -399,20 +399,20 @@
    ],
    "d30": [
     0,
-    0
+    1
    ],
    "mtd": [
     0,
-    0
+    1
    ],
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "estado": {
     "carrito": 0,
     "envio": 0,
     "tardios": 0,
     "incid": 0,
     "incid_new": 0,
-    "acept": 0,
+    "acept": 1,
     "devol": 0,
     "msgs": 0,
     "pend": 0,
@@ -422,27 +422,27 @@
     "prox_fact": "2026-10-21",
     "alerta": null,
     "ofertas": 674,
-    "hora": "08:30",
+    "hora": "08:16",
     "msgs_crit": 0,
     "incid_disp": null,
     "devol_sol": null
    },
    "rangos": {
     "d7": [
-     "2026-10-09",
-     "2026-10-15"
+     "2026-10-10",
+     "2026-10-16"
     ],
     "p7": [
-     "2026-10-02",
-     "2026-10-08"
+     "2026-10-03",
+     "2026-10-09"
     ],
     "d30": [
-     "2026-09-16",
-     "2026-10-15"
+     "2026-09-17",
+     "2026-10-16"
     ],
     "mtd": [
      "2026-10-01",
-     "2026-10-15"
+     "2026-10-16"
     ]
    },
    "calidad": {
@@ -498,7 +498,7 @@
      ],
      [
       "ORDERS_SHIPPED_LATE_RATE",
-      "36",
+      "33",
       "2",
       false,
       "ALL_SINCE_BEGINNING"
@@ -549,7 +549,7 @@
      ],
      [
       "MESSAGE_RESPONSE_TIME",
-      "0",
+      null,
       "48",
       true,
       "LAST_MONTH"
@@ -563,8 +563,8 @@
      ]
     ],
     "s7": {
-     "ped": 0,
-     "tard": null,
+     "ped": 1,
+     "tard": 0,
      "incid": null,
      "acept": null,
      "t_acept": null,
@@ -580,8 +580,8 @@
      "envio_s": null
     },
     "s30": {
-     "ped": 0,
-     "tard": null,
+     "ped": 1,
+     "tard": 0,
      "incid": null,
      "acept": null,
      "t_acept": 66.5,
@@ -597,63 +597,63 @@
      "envio_s": null
     }
    },
-   "hora_ventas": "08:30"
+   "hora_ventas": "08:16"
   },
   "adeo": {
    "d7": [
-    23326,
-    123
+    22913,
+    127
    ],
    "p7": [
-    25422,
-    153
+    25555,
+    152
    ],
    "d30": [
-    113937,
-    624
+    114292,
+    626
    ],
    "mtd": [
-    51811,
-    294
+    55569,
+    318
    ],
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "estado": {
-    "carrito": 191,
-    "envio": 45,
+    "carrito": 181,
+    "envio": 44,
     "tardios": 0,
-    "incid": 42,
-    "incid_new": 2,
+    "incid": 47,
+    "incid_new": 3,
     "acept": 0,
     "devol": 0,
-    "msgs": 27,
-    "pend": 102224.51,
-    "pagar": 32412.48,
-    "ult_pago": 27341.21,
-    "ult_pago_f": "2026-10-08",
+    "msgs": 25,
+    "pend": 102918.35,
+    "pagar": 0,
+    "ult_pago": 34827.35,
+    "ult_pago_f": "2026-10-16",
     "prox_fact": "2026-10-16",
     "alerta": null,
     "ofertas": 2424,
-    "hora": "08:28",
-    "msgs_crit": 0,
+    "hora": "08:14",
+    "msgs_crit": 2,
     "incid_disp": null,
     "devol_sol": null
    },
    "rangos": {
     "d7": [
-     "2026-10-09",
-     "2026-10-15"
+     "2026-10-10",
+     "2026-10-16"
     ],
     "p7": [
-     "2026-10-02",
-     "2026-10-08"
+     "2026-10-03",
+     "2026-10-09"
     ],
     "d30": [
-     "2026-09-16",
-     "2026-10-15"
+     "2026-09-17",
+     "2026-10-16"
     ],
     "mtd": [
      "2026-10-01",
-     "2026-10-15"
+     "2026-10-16"
     ]
    },
    "calidad": {
@@ -667,74 +667,74 @@
     "premium_reglas": [],
     "suspension_reglas": [],
     "s7": {
-     "ped": 123,
+     "ped": 127,
      "tard": 0,
-     "incid": 0,
+     "incid": 1.5,
      "acept": 100,
      "t_acept": 4.9,
      "resp": 4.5,
      "envio": 28.9,
-     "reemb": 0.78,
+     "reemb": 0.75,
      "devol": "off",
      "cancel": 0,
      "rech": 0,
      "track": null,
-     "t_acept_s": 17696,
-     "resp_s": 15092,
-     "envio_s": 131239
+     "t_acept_s": 20013,
+     "resp_s": 26346,
+     "envio_s": 116707
     },
     "s30": {
-     "ped": 624,
+     "ped": 626,
      "tard": 0.32,
-     "incid": 4.82,
+     "incid": 5.59,
      "acept": 100,
      "t_acept": 5.4,
      "resp": 7.1,
      "envio": 36.2,
-     "reemb": 2.33,
+     "reemb": 2.64,
      "devol": "off",
      "cancel": 0,
      "rech": 0,
      "track": null,
-     "t_acept_s": 19253,
-     "resp_s": 26306,
-     "envio_s": 135262
+     "t_acept_s": 19398,
+     "resp_s": 28339,
+     "envio_s": 135178
     }
    },
-   "hora_ventas": "08:28"
+   "hora_ventas": "08:14"
   },
   "cfib": {
    "d7": [
-    11352,
-    111
+    11260,
+    109
    ],
    "p7": [
-    14115,
-    118
+    13849,
+    119
    ],
    "d30": [
-    53917,
-    535
+    53336,
+    538
    ],
    "mtd": [
-    26473,
-    250
+    28534,
+    270
    ],
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "estado": {
-    "carrito": 153,
-    "envio": 24,
+    "carrito": 148,
+    "envio": 19,
     "tardios": 0,
-    "incid": 12,
-    "incid_new": 3,
+    "incid": 14,
+    "incid_new": 1,
     "acept": 0,
     "devol": 0,
-    "msgs": 12,
-    "pend": 58530.68,
-    "pagar": 106.32,
+    "msgs": 10,
+    "pend": 58119.09,
+    "pagar": 2187.58,
     "ult_pago": 36523.83,
     "ult_pago_f": "2026-10-15",
-    "prox_fact": "2026-10-15",
+    "prox_fact": "2026-10-31",
     "alerta": {
      "k": "ALERT",
      "r": [
@@ -742,27 +742,27 @@
      ]
     },
     "ofertas": 922,
-    "hora": "08:29",
+    "hora": "08:15",
     "msgs_crit": 0,
     "incid_disp": 0,
     "devol_sol": null
    },
    "rangos": {
     "d7": [
-     "2026-10-09",
-     "2026-10-15"
+     "2026-10-10",
+     "2026-10-16"
     ],
     "p7": [
-     "2026-10-02",
-     "2026-10-08"
+     "2026-10-03",
+     "2026-10-09"
     ],
     "d30": [
-     "2026-09-16",
-     "2026-10-15"
+     "2026-09-17",
+     "2026-10-16"
     ],
     "mtd": [
      "2026-10-01",
-     "2026-10-15"
+     "2026-10-16"
     ]
    },
    "calidad": {
@@ -848,9 +848,9 @@
      ]
     ],
     "s7": {
-     "ped": 111,
+     "ped": 109,
      "tard": 0,
-     "incid": 2.67,
+     "incid": 2.6,
      "acept": 100,
      "t_acept": 4.3,
      "resp": null,
@@ -860,14 +860,14 @@
      "cancel": 0,
      "rech": 0,
      "track": null,
-     "t_acept_s": 13727,
-     "resp_s": null,
-     "envio_s": 61325
+     "t_acept_s": 15019,
+     "resp_s": 87332,
+     "envio_s": 74855
     },
     "s30": {
-     "ped": 535,
+     "ped": 538,
      "tard": 0,
-     "incid": 2.29,
+     "incid": 2.01,
      "acept": 100,
      "t_acept": 5.3,
      "resp": 11.3,
@@ -877,12 +877,12 @@
      "cancel": 0,
      "rech": 0,
      "track": null,
-     "t_acept_s": 19330,
-     "resp_s": 39033,
-     "envio_s": 87278
+     "t_acept_s": 19222,
+     "resp_s": 43910,
+     "envio_s": 87520
     }
    },
-   "hora_ventas": "08:29"
+   "hora_ventas": "08:15"
   },
   "conforama": {
    "d7": [
@@ -901,7 +901,7 @@
     0,
     0
    ],
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "estado": {
     "carrito": 0,
     "envio": 0,
@@ -915,30 +915,30 @@
     "pagar": 0,
     "ult_pago": 422.98,
     "ult_pago_f": "2026-05-25",
-    "prox_fact": "2026-10-15",
+    "prox_fact": "2026-10-25",
     "alerta": null,
     "ofertas": 0,
-    "hora": "08:31",
+    "hora": "08:17",
     "msgs_crit": 0,
     "incid_disp": 0,
     "devol_sol": null
    },
    "rangos": {
     "d7": [
-     "2026-10-09",
-     "2026-10-15"
+     "2026-10-10",
+     "2026-10-16"
     ],
     "p7": [
-     "2026-10-02",
-     "2026-10-08"
+     "2026-10-03",
+     "2026-10-09"
     ],
     "d30": [
-     "2026-09-16",
-     "2026-10-15"
+     "2026-09-17",
+     "2026-10-16"
     ],
     "mtd": [
      "2026-10-01",
-     "2026-10-15"
+     "2026-10-16"
     ]
    },
    "calidad": {
@@ -1072,68 +1072,68 @@
      "envio_s": null
     }
    },
-   "hora_ventas": "08:31"
+   "hora_ventas": "08:17"
   },
   "worten": {
    "d7": [
-    9218,
-    78
+    8761,
+    77
    ],
    "p7": [
-    8625,
-    76
+    9187,
+    79
    ],
    "d30": [
-    32800,
-    283
+    32636,
+    284
    ],
    "mtd": [
-    18660,
-    165
+    19874,
+    177
    ],
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "estado": {
-    "carrito": 132,
-    "envio": 11,
+    "carrito": 127,
+    "envio": 15,
     "tardios": 0,
-    "incid": 2,
+    "incid": 1,
     "incid_new": 0,
     "acept": 0,
     "devol": 0,
-    "msgs": 4,
-    "pend": 13452.83,
-    "pagar": 634846.22,
+    "msgs": 2,
+    "pend": 14003.09,
+    "pagar": 635425.71,
     "ult_pago": 0,
     "ult_pago_f": null,
     "prox_fact": "2026-10-20",
     "alerta": null,
     "ofertas": 1210,
-    "hora": "08:30",
-    "msgs_crit": 1,
+    "hora": "08:15",
+    "msgs_crit": 0,
     "incid_disp": 0,
     "devol_sol": 0
    },
    "rangos": {
     "d7": [
-     "2026-10-09",
-     "2026-10-15"
+     "2026-10-10",
+     "2026-10-16"
     ],
     "p7": [
-     "2026-10-02",
-     "2026-10-08"
+     "2026-10-03",
+     "2026-10-09"
     ],
     "d30": [
-     "2026-09-16",
-     "2026-10-15"
+     "2026-09-17",
+     "2026-10-16"
     ],
     "mtd": [
      "2026-10-01",
-     "2026-10-15"
+     "2026-10-16"
     ]
    },
    "calidad": {
     "nota": 4.29,
-    "valoraciones": 597,
+    "valoraciones": 599,
     "premium": true,
     "suspendida": false,
     "estado": "OPEN",
@@ -1143,7 +1143,7 @@
     "suspension_reglas": [
      [
       "EVALUATION_GRADE",
-      "4.17",
+      "4.18",
       "3.5",
       true,
       "LAST_THREE_MONTHS"
@@ -1185,7 +1185,7 @@
      ]
     ],
     "s7": {
-     "ped": 78,
+     "ped": 77,
      "tard": 0,
      "incid": 0,
      "acept": 100,
@@ -1197,37 +1197,37 @@
      "cancel": 0,
      "rech": 0,
      "track": 100,
-     "t_acept_s": 1130,
-     "resp_s": 4760,
-     "envio_s": 31047
+     "t_acept_s": 1004,
+     "resp_s": 10811,
+     "envio_s": 29148
     },
     "s30": {
-     "ped": 283,
+     "ped": 284,
      "tard": 0,
      "incid": 0.34,
      "acept": 100,
      "t_acept": 0.3,
      "resp": 2.4,
      "envio": 7.7,
-     "reemb": 1.02,
+     "reemb": 1.01,
      "devol": 0,
      "cancel": 0,
      "rech": 0,
-     "track": 99.18,
-     "t_acept_s": 1084,
-     "resp_s": 8900,
-     "envio_s": 27907
+     "track": 98.76,
+     "t_acept_s": 1041,
+     "resp_s": 9022,
+     "envio_s": 27894
     }
    },
    "ads_d7": {
-    "inv": 578.89,
-    "ventas": 6928.28,
-    "pedidos": 48,
-    "roas": 12.5,
-    "acos": 8.02,
-    "fecha": "2026-10-15"
+    "inv": 529.1,
+    "ventas": 7961.53,
+    "pedidos": 56,
+    "roas": 15.5,
+    "acos": 6.47,
+    "fecha": "2026-10-16"
    },
-   "hora_ventas": "08:30"
+   "hora_ventas": "08:15"
   },
   "mdm": {
    "d7": [
@@ -1246,7 +1246,7 @@
     0,
     0
    ],
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "estado": {
     "carrito": 0,
     "envio": 0,
@@ -1268,27 +1268,27 @@
      ]
     },
     "ofertas": 0,
-    "hora": "08:32",
+    "hora": "08:17",
     "msgs_crit": 0,
     "incid_disp": null,
     "devol_sol": null
    },
    "rangos": {
     "d7": [
-     "2026-10-09",
-     "2026-10-15"
+     "2026-10-10",
+     "2026-10-16"
     ],
     "p7": [
-     "2026-10-02",
-     "2026-10-08"
+     "2026-10-03",
+     "2026-10-09"
     ],
     "d30": [
-     "2026-09-16",
-     "2026-10-15"
+     "2026-09-17",
+     "2026-10-16"
     ],
     "mtd": [
      "2026-10-01",
-     "2026-10-15"
+     "2026-10-16"
     ]
    },
    "calidad": {
@@ -1337,7 +1337,7 @@
      ],
      [
       "MESSAGE_RESPONSE_TIME",
-      "33",
+      "32",
       "24",
       false,
       "LAST_THREE_MONTHS"
@@ -1436,7 +1436,7 @@
      "envio_s": null
     }
    },
-   "hora_ventas": "08:32"
+   "hora_ventas": "08:17"
   },
   "brico": {
    "d7": [
@@ -1455,7 +1455,7 @@
     0,
     0
    ],
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "estado": {
     "carrito": 0,
     "envio": 0,
@@ -1472,27 +1472,27 @@
     "prox_fact": "2026-10-28",
     "alerta": null,
     "ofertas": 0,
-    "hora": "08:32",
+    "hora": "08:18",
     "msgs_crit": 0,
     "incid_disp": 0,
     "devol_sol": null
    },
    "rangos": {
     "d7": [
-     "2026-10-09",
-     "2026-10-15"
+     "2026-10-10",
+     "2026-10-16"
     ],
     "p7": [
-     "2026-10-02",
-     "2026-10-08"
+     "2026-10-03",
+     "2026-10-09"
     ],
     "d30": [
-     "2026-09-16",
-     "2026-10-15"
+     "2026-09-17",
+     "2026-10-16"
     ],
     "mtd": [
      "2026-10-01",
-     "2026-10-15"
+     "2026-10-16"
     ]
    },
    "calidad": {
@@ -1569,45 +1569,45 @@
      "envio_s": null
     }
    },
-   "hora_ventas": "08:32"
+   "hora_ventas": "08:18"
   }
  },
  "miravia": {
   "somnia-mv": {
-   "fecha": "2026-10-15",
+   "fecha": "2026-10-16",
    "d7": [
-    4632.41,
-    63
+    4792.27,
+    72
    ],
    "p7": [
-    5607.73,
+    5364.56,
     72
    ],
    "mtd": [
-    10240.14,
-    135
+    10915.32,
+    152
    ],
    "d30": [
-    21967.13,
-    238
+    21164.39,
+    245
    ],
-   "ae_d30": 9045.61,
-   "uv_d30": 10008,
+   "ae_d30": 8152.92,
+   "uv_d30": 10304,
    "ads_d7": {
-    "inv": 216.53,
-    "ventas": 1085,
-    "periodo": "8 oct – 14 oct"
+    "inv": 227.22,
+    "ventas": 1018.32,
+    "periodo": "9 oct – 15 oct"
    },
-   "pendientes": 15,
+   "pendientes": 19,
    "sin_stock": 32,
    "sin_stock_nota": "Inicio del Seller Center",
    "aviso": null,
    "salud": {
     "tienda": "Somnia Descanso",
-    "revision": "2026-10-14 21:11:59",
+    "revision": "2026-10-15 21:12:10",
     "pen_mv": 3,
     "pen_ae": 170,
-    "impacto_gmv": "9045,61",
+    "impacto_gmv": "8152,92",
     "mv": {
      "envio_plazo": {
       "v": "99.11%",
@@ -1723,15 +1723,15 @@
      }
     ],
     "pen_ae_pi": 167,
-    "hora": "08:39",
-    "fecha": "2026-10-15"
+    "hora": "08:24",
+    "fecha": "2026-10-16"
    },
    "ae_ads_d7": {
-    "inv": 311.12,
-    "ventas": 1623.31,
-    "pedidos": 15,
-    "periodo": "7 oct – 13 oct",
-    "roas": 3.17
+    "inv": 311.03,
+    "ventas": 1844.97,
+    "pedidos": 17,
+    "periodo": "8 oct – 14 oct",
+    "roas": 3.89
    }
   },
   "duermete-mv": {
